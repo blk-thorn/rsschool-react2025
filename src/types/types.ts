@@ -43,3 +43,10 @@ export interface SuperProps {
   message: string;
   count: number;
 }
+
+
+export const enum CharacterStatus {
+  Alive = 'Alive',
+  Dead = 'Dead',
+  Unknown = 'unknown'
+}
