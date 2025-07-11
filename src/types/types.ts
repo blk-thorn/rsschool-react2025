@@ -33,6 +33,7 @@ export interface ApiResponse {
 
 export interface GalleryState {
   characters: Character[];
+  totalPages: number;
 }
 
 export interface CardProps {

@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
+body {
+  background-color: rgba(202, 234, 212, 0.51);
+}
+
 #root {
   max-width: 1920px;
   text-align: center;
   padding: 3rem;
   margin: 0 auto;
-  background-color: rgba(202, 234, 212, 0.51);
-  /*background: url("./public/peakpx.jpg");*/
 }
 
 .logo {
