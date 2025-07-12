@@ -1,26 +1,26 @@
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 import {CardProps} from '@/types/types.ts';
 import { CharacterStatus } from '@/types/types.ts';
 
 
 class Card extends Component<CardProps> {
 
-  getStatusColor(status: string) {
+  getStatusColor(status: string): string {
     switch (status) {
       case CharacterStatus.Alive:
         return 'text-green-500';
       case CharacterStatus.Dead:
         return 'text-red-500';
       case CharacterStatus.Unknown:
+        return 'text-blue-200';
       default:
         return 'text-blue-200';
     }
   }
 
-  render() {
+  render(): ReactNode {
     const { character } = this.props;
-
-    const statusColorClass = this.getStatusColor(character.status);
+    const statusColorClass: string = this.getStatusColor(character.status);
 
     return (
       <div className="flex max-w-md m-auto bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-600 dark:border-gray-600 overflow-hidden">

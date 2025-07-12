@@ -1,14 +1,29 @@
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
+import { SearchProps } from '@/types/types.ts';
 
-class SearchBar extends Component{
-  render() {
+class SearchBar extends Component<SearchProps> {
+  state = { term: ""};
+
+  onInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({ term: e.target.value.toLowerCase() });
+  }
+
+  onFormSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    this.props.onFormSubmit(this.state.term);
+  }
+
+
+  render(): ReactNode {
     return (
-      <form className="flex items-center max-w-lg mx-auto mb-10">
+      <form onSubmit={this.onFormSubmit} className="flex items-center max-w-lg mx-auto mb-10">
         <label htmlFor="search-bar" className="sr-only">Search</label>
         <div className="relative w-full">
-          <input type="text" id="search-bar"
+          <input type="search" id="search-bar"
+                 value={this.state.term}
+                 onChange={this.onInputChange}
                  className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-5 p-2.5"
-                 placeholder="Search a character..." required />
+                 placeholder="Search a character..."/>
         </div>
         <button type="submit"
                 className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-400 rounded-lg hover:bg-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-300">

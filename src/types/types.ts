@@ -19,7 +19,6 @@ export interface Character {
   created: string;
 }
 
-
 export interface ApiResponse {
   info: {
     count: number;
@@ -30,24 +29,47 @@ export interface ApiResponse {
   results: Character[];
 }
 
+export type ApiPromise = Promise<ApiResponse>;
 
-export interface GalleryState {
+export interface PageState {
   characters: Character[];
+  searchResults?: Character[],
   totalPages: number;
+  searchTotalPages?: number;
+  currentPage: number;
+  searchTerm: string;
+  isSearching?: boolean;
+  itemsPerPage?: number;
+}
+export interface NotFoundMessageProps {
+  searchTerm: string;
+  show: boolean;
 }
 
 export interface CardProps {
   character: Character;
 }
 
-export interface SuperProps {
-  message: string;
-  count: number;
+export interface SearchProps {
+  onFormSubmit: (term: string) => void;
 }
 
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
 export const enum CharacterStatus {
   Alive = 'Alive',
   Dead = 'Dead',
   Unknown = 'unknown'
 }
+
+export type EmptyVoid = () => void;
+
+export type PageVoid = (page: number) => void;
+
+export type SearchVoid = (term: string) => void;
+
+export type LoadingVoid = (page: Parameters<PageVoid>[0], term: Parameters<SearchVoid>[0]) => void;
