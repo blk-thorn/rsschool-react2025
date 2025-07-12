@@ -5,6 +5,7 @@ import SearchBar from '@/Components/SearchBar/SearchBar.tsx';
 import NotFoundMessage from '@/Components/NotFoundMessage/NotFoundMessage.tsx';
 import Pagination from '@/Components/Pagination/Pagination.tsx';
 import Header from '@/Components/Header/Header.tsx';
+import ErrorButton from '@/Components/ErrorButton/ErrorButton.tsx';
 
 class CardGrid extends Component<object, PageState> {
   state: PageState = {
@@ -12,7 +13,8 @@ class CardGrid extends Component<object, PageState> {
     totalPages: 0,
     searchTerm: '',
     currentPage: 1,
-    isSearching: false
+    isSearching: false,
+    shouldThrowError: false
   }
 
   loadPage: LoadingVoid = (page: number, searchTerm: string = ''): void => {
@@ -58,15 +60,25 @@ class CardGrid extends Component<object, PageState> {
     this.loadPage(page, this.state.searchTerm);
   }
 
+  handleErrorClick = (): void => {
+    this.setState({ shouldThrowError: true });
+  }
+
   render(): ReactElement {
+    if (this.state.shouldThrowError) {
+      throw new Error('Something went wrong. Please reload the page.');
+    }
+
     const showNotFound: boolean = this.state.characters.length === 0 && this.state.searchTerm !== '';
     const showPagination: boolean = this.state.totalPages > 0;
 
     return (
       <>
         <Header />
+
+        <main>
         <SearchBar onFormSubmit={this.handleSearch} />
-        <div className="grid gap-2 mt-10 min-sm:grid-cols-2 min-lg:grid-cols-3 min-xl:grid-cols-4 justify-center">
+        <div className="grid gap-4 mt-8 min-sm:grid-cols-2 min-lg:grid-cols-3 min-xl:grid-cols-4 animate-fadeIn justify-center">
           {this.state.characters.map((character: Character): ReactElement => (
             <Card
               key={character.id}
@@ -85,6 +97,11 @@ class CardGrid extends Component<object, PageState> {
             onPageChange={this.handlePageChange}
           />
         )}
+        </main>
+
+        <footer>
+          <ErrorButton onErrorClick={this.handleErrorClick} />
+        </footer>
       </>
     )
   }

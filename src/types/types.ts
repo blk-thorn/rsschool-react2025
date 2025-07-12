@@ -1,3 +1,5 @@
+import { ErrorInfo, ReactNode } from 'react';
+
 export interface Character {
   id: number;
   name: string;
@@ -40,7 +42,9 @@ export interface PageState {
   searchTerm: string;
   isSearching?: boolean;
   itemsPerPage?: number;
+  shouldThrowError: boolean;
 }
+
 export interface NotFoundMessageProps {
   searchTerm: string;
   show: boolean;
@@ -73,3 +77,13 @@ export type PageVoid = (page: number) => void;
 export type SearchVoid = (term: string) => void;
 
 export type LoadingVoid = (page: Parameters<PageVoid>[0], term: Parameters<SearchVoid>[0]) => void;
+
+export interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+export interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+  errorInfo?: ErrorInfo;
+}

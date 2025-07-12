@@ -26,7 +26,7 @@ class SearchBar extends Component<SearchProps> {
                  placeholder="Search a character..."/>
         </div>
         <button type="submit"
-                className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-400 rounded-lg hover:bg-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-300">
+                className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-400 rounded-lg hover:bg-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-300 cursor-pointer">
           <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                viewBox="0 0 20 20">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
