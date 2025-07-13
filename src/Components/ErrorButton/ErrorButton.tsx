@@ -1,11 +1,12 @@
 import { Component, ReactElement } from 'react';
+import { ClickEvent, ClickFunction } from '@/types/types.ts';
 
 interface ErrorButtonProps {
   onErrorClick: () => void;
 }
 
 class ErrorButton extends Component<ErrorButtonProps> {
-  handleClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+  handleClick: ClickFunction = (e: ClickEvent): void => {
     e.preventDefault();
     this.props.onErrorClick();
   }

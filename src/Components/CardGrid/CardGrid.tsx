@@ -65,14 +65,14 @@ class CardGrid extends Component<object, PageState> {
   }
 
   componentDidMount(): void {
-    const savedSearchTerm: string = localStorage.getItem('searchTerm') || '';
+    const savedSearchTerm: string = localStorage.getItem('searchTerm-the-rick-morty-api') || '';
     this.setState({ searchTerm: savedSearchTerm }, ():void => {
       this.loadPage(1, savedSearchTerm);
     });
   }
 
   handleSearch: SearchVoid = (term: string): void => {
-    localStorage.setItem('searchTerm', term);
+    localStorage.setItem('searchTerm-the-rick-morty-api', term);
     this.setState({ searchTerm: term });
     this.loadPage(1, term);
   }

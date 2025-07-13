@@ -89,3 +89,14 @@ export interface ErrorBoundaryState {
   error?: Error;
   errorInfo?: ErrorInfo;
 }
+
+
+export type ChangeFunction = (e: React.ChangeEvent<HTMLInputElement>) => void;
+export type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
+
+export type SubmitFunction = (e: React.FormEvent) => void;
+export type SubmitEvent = React.FormEvent;
+
+export type ClickFunction = (e: React.MouseEvent<HTMLButtonElement>) => void;
+export type ClickEvent = React.MouseEvent<HTMLButtonElement>;
+

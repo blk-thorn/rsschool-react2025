@@ -1,8 +1,8 @@
 import { Component, ReactNode } from 'react';
-import { SearchProps } from '@/types/types.ts';
+import { ChangeEvent, ChangeFunction, SearchProps, SubmitEvent, SubmitFunction } from '@/types/types.ts';
 
 class SearchBar extends Component<SearchProps> {
-  state = {
+  state: {term: string} = {
     term: this.props.initialSearchTerm
   };
 
@@ -13,11 +13,11 @@ class SearchBar extends Component<SearchProps> {
     }
   }
 
-  onInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  onInputChange: ChangeFunction = (e: ChangeEvent): void => {
     this.setState({term: e.target.value});
   }
 
-  onFormSubmit = (e: React.FormEvent): void => {
+  onFormSubmit: SubmitFunction = (e:SubmitEvent): void => {
     e.preventDefault();
     this.props.onFormSubmit(this.state.term);
   }

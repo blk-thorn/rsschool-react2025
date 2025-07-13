@@ -1,8 +1,8 @@
-import { Component } from 'react';
+import { Component, ReactElement } from 'react';
 
 class Loader extends Component {
 
-  render() {
+  render(): ReactElement {
     return (
       <div id="loading-overlay"
            className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/30">
