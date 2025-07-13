@@ -22,7 +22,7 @@ class Pagination extends Component<PaginationProps> {
         <button
           onClick={this.handlePrevPage}
           disabled={currentPage === 1}
-          className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-400 rounded-lg hover:bg-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-300 disabled:pointer-events-none cursor-pointer"
+          className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 focus:ring-1 focus:outline-none focus:ring-sky-600 disabled:pointer-events-none cursor-pointer"
         >
           Prev
         </button>
@@ -32,7 +32,7 @@ class Pagination extends Component<PaginationProps> {
         <button
           onClick={this.handleNextPage}
           disabled={currentPage >= totalPages}
-          className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-blue-400 rounded-lg hover:bg-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-300 disabled:pointer-events-none cursor-pointer"
+          className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 focus:ring-1 focus:outline-none focus:ring-sky-600 disabled:pointer-events-none cursor-pointer"
         >
           Next
         </button>

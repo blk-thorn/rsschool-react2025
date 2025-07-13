@@ -37,7 +37,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             Something went wrong. Please reload the page
           </h1>
           <button
-            className="focus:outline-none text-black border-3 border-blue-100 shadow-md shadow-blue-400/60 bg-blue-50 hover:bg-blue-100 focus:ring-1 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
+            className="focus:outline-none text-black border-3 border-sky-100 shadow-md shadow-sky-400/60 bg-sky-50 hover:bg-sky-100 focus:ring-1 focus:ring-sky-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
             onClick={this.handleReload}
           >
             Reload Page

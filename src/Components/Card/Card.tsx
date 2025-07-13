@@ -8,13 +8,13 @@ class Card extends Component<CardProps> {
   getStatusColor(status: string): string {
     switch (status) {
       case CharacterStatus.Alive:
-        return 'text-green-500';
+        return 'text-emerald-300';
       case CharacterStatus.Dead:
-        return 'text-red-500';
+        return 'text-rose-400';
       case CharacterStatus.Unknown:
-        return 'text-blue-200';
+        return 'text-sky-200';
       default:
-        return 'text-blue-200';
+        return 'text-sky-200';
     }
   }
 
@@ -23,7 +23,7 @@ class Card extends Component<CardProps> {
     const statusColorClass: string = this.getStatusColor(character.status);
 
     return (
-      <div className="flex items-center max-w-xl bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-600 dark:border-gray-600 overflow-hidden">
+      <div className="flex items-center max-w-xl bg-white border border-slate-200 rounded-lg shadow-sm dark:bg-slate-600 dark:border-slate-600 overflow-hidden">
         <div className="relative w-3/4 min-w-120px">
           <img
             className="w-full h-full object-cover min-h-50"
@@ -45,15 +45,15 @@ class Card extends Component<CardProps> {
           </li>
           <li className="mb-1 flex">
             <span className="block text-white font-medium">Gender:</span>
-            <span className="text-gray-300 mx-2">{character.gender}</span>
+            <span className="text-slate-300 mx-2">{character.gender}</span>
           </li>
           <li className="mb-1 flex">
             <span className="block text-white font-medium">Species:</span>
-            <span className="text-gray-300 mx-2">{character.species}</span>
+            <span className="text-slate-300 mx-2">{character.species}</span>
           </li>
           <li className="mb-1 flex flex-col">
             <span className="block text-white font-medium">Location:</span>
-            <span className="text-gray-300 mx-2">
+            <span className="text-slate-300 mx-2">
               {character.location.name}
             </span>
           </li>
