@@ -15,7 +15,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ error, errorInfo });
-    console.log(error, errorInfo);
+    console.error(error, errorInfo);
   }
 
   resetError: EmptyVoid = (): void => {
