@@ -57,6 +57,7 @@ export interface CardProps {
 
 export interface SearchProps {
   onFormSubmit: (term: string) => void;
+  initialSearchTerm: string;
 }
 
 export interface PaginationProps {

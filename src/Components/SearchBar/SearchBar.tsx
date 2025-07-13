@@ -2,10 +2,19 @@ import { Component, ReactNode } from 'react';
 import { SearchProps } from '@/types/types.ts';
 
 class SearchBar extends Component<SearchProps> {
-  state = { term: ""};
+  state = {
+    term: this.props.initialSearchTerm
+  };
+
+
+  componentDidUpdate(prevProps: SearchProps): void {
+    if (prevProps.initialSearchTerm !== this.props.initialSearchTerm) {
+      this.setState({ term: this.props.initialSearchTerm });
+    }
+  }
 
   onInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ term: e.target.value.toLowerCase() });
+    this.setState({term: e.target.value});
   }
 
   onFormSubmit = (e: React.FormEvent): void => {
@@ -15,6 +24,7 @@ class SearchBar extends Component<SearchProps> {
 
 
   render(): ReactNode {
+
     return (
       <form onSubmit={this.onFormSubmit} className="flex items-center max-w-lg mx-auto mb-10">
         <label htmlFor="search-bar" className="sr-only">Search</label>

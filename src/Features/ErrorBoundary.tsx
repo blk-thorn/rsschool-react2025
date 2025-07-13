@@ -6,6 +6,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     hasError: false,
     error: undefined,
     errorInfo: undefined
+
   };
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -14,6 +15,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ error, errorInfo });
+    console.log(error, errorInfo);
   }
 
   resetError: EmptyVoid = (): void => {
@@ -32,17 +34,22 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="error-boundary">
-          <h1 className="mt-40 mb-10 p-4 text-4xl text-red-800 rounded-lg dark:text-red-400">
-            Something went wrong. Please reload the page
+        <main>
+          <div className="animate-bounce">
+          <h1 className="mt-40 p-4 text-4xl text-red-800 rounded-lg dark:text-red-400">
+            Something went wrong...
           </h1>
+          <p className="mb-10 text-3xl text-red-800 rounded-lg dark:text-red-400">
+            Please reload the page.
+          </p>
+          </div>
           <button
-            className="focus:outline-none text-black border-3 border-sky-100 shadow-md shadow-sky-400/60 bg-sky-50 hover:bg-sky-100 focus:ring-1 focus:ring-sky-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
+            className="focus:outline-none text-lg text-black border-2 border-sky-100 shadow-sm shadow-sky-400/60 bg-sky-50 hover:bg-sky-100 focus:ring-1 focus:ring-sky-200 font-medium rounded-lg px-5 py-2.5 me-2 mb-2 cursor-pointer"
             onClick={this.handleReload}
           >
-            Reload Page
+            Start Over
           </button>
-        </div>
+        </main>
       );
     }
 

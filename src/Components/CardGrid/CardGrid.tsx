@@ -32,7 +32,7 @@ class CardGrid extends Component<object, PageState> {
     this.setState({ isLoading: true });
 
     const url: string = searchTerm
-      ? `https://rickandmortyapi.com/api/character/?name=${searchTerm.toLowerCase()}&page=${page}`
+      ? `https://rickandmortyapi.com/api/character/?name=${searchTerm.toLowerCase()}`
       : `https://rickandmortyapi.com/api/character/?page=${page}`;
 
     fetch(url)
@@ -65,10 +65,15 @@ class CardGrid extends Component<object, PageState> {
   }
 
   componentDidMount(): void {
-    this.loadPage(1, '');
+    const savedSearchTerm: string = localStorage.getItem('searchTerm') || '';
+    this.setState({ searchTerm: savedSearchTerm }, ():void => {
+      this.loadPage(1, savedSearchTerm);
+    });
   }
 
   handleSearch: SearchVoid = (term: string): void => {
+    localStorage.setItem('searchTerm', term);
+    this.setState({ searchTerm: term });
     this.loadPage(1, term);
   }
 
@@ -94,7 +99,10 @@ class CardGrid extends Component<object, PageState> {
       <>
         <Header />
         <main>
-          <SearchBar onFormSubmit={this.handleSearch} />
+          <SearchBar
+            onFormSubmit={this.handleSearch}
+            initialSearchTerm={this.state.searchTerm}
+          />
           {isLoading ? ( <Loader /> ) : (
             <>
               <div className="grid gap-4 mt-8 min-sm:grid-cols-2 min-lg:grid-cols-3 min-xl:grid-cols-4 animate-fadeIn justify-center">
