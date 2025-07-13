@@ -42,6 +42,7 @@ export interface PageState {
   searchTerm: string;
   isSearching?: boolean;
   itemsPerPage?: number;
+  isLoading: boolean;
   shouldThrowError: boolean;
 }
 
