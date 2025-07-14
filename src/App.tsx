@@ -1,12 +1,12 @@
 import { Component, ReactNode } from 'react';
-import CardGrid from '@/Components/CardGrid/CardGrid.tsx';
+import HomePage from '@/Pages/HomePage/HomePage.tsx';
 import ErrorBoundary from '@/features/ErrorBoundary.tsx';
 
 class App extends Component {
   render(): ReactNode {
     return (
       <ErrorBoundary>
-        <CardGrid />
+        <HomePage />
       </ErrorBoundary>
     );
   }

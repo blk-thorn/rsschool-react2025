@@ -17,7 +17,7 @@ import Header from '@/Components/Header/Header.tsx';
 import ErrorButton from '@/Components/ErrorButton/ErrorButton.tsx';
 import Loader from '@/Components/Loader/Loader.tsx';
 
-class CardGrid extends Component<object, PageState> {
+class HomePage extends Component<object, PageState> {
   state: PageState = {
     characters: [],
     totalPages: 0,
@@ -139,4 +139,4 @@ class CardGrid extends Component<object, PageState> {
   }
 }
 
-export default CardGrid;
+export default HomePage;
