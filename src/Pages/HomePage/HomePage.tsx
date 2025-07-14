@@ -1,10 +1,10 @@
 import { Component, ReactElement } from 'react';
-import CharactersList from '@/components/CharacterList/CharacterList';
-import ErrorButton from '@/components/ErrorButton/ErrorButton';
-import Header from '@/components/Header/Header';
-import Loader from '@/components/Loader/Loader';
-import SearchBar from '@/components/SearchBar/SearchBar';
-import type {PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid } from '@/types/types.ts';
+import CharactersList from '@/components/CharacterList';
+import ErrorButton from '@/components/ErrorButton';
+import Header from '@/components/Header';
+import Loader from '@/components/Loader';
+import SearchBar from '@/components/SearchBar';
+import type { PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid, ApiResponse } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api';
 
 class HomePage extends Component<object, PageState> {
@@ -21,8 +21,8 @@ class HomePage extends Component<object, PageState> {
   loadPage: LoadingVoid = async (page: number, searchTerm: string = '') => {
     this.setState({ isLoading: true });
     try {
-      const data = await fetchCharacters(searchTerm, page);
-      setTimeout(() => {
+      const data: ApiResponse = await fetchCharacters(searchTerm, page);
+      setTimeout((): void => {
         this.setState({
           characters: data.results || [],
           totalPages: data.info.pages || 0,

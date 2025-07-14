@@ -1,7 +1,7 @@
 import { Component, ReactElement } from 'react';
-import Card from '@/components/Card/Card';
-import NotFoundMessage from '@/components/NotFoundMessage/NotFoundMessage';
-import Pagination from '@/components/Pagination/Pagination';
+import Card from '@/components/Card';
+import NotFoundMessage from '@/components/NotFoundMessage';
+import Pagination from '@/components/Pagination';
 import { CharactersListProps } from '@/types/types.ts';
 
 class CharactersList extends Component<CharactersListProps> {
