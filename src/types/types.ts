@@ -21,13 +21,15 @@ export interface Character {
   created: string;
 }
 
+export interface ApiInfo {
+  count: number;
+  pages: number;
+  next: string | null;
+  prev: string | null;
+}
+
 export interface ApiResponse {
-  info: {
-    count: number;
-    pages: number;
-    next: string | null;
-    prev: string | null;
-  };
+  info: ApiInfo;
   results: Character[];
 }
 
@@ -99,4 +101,3 @@ export type SubmitEvent = React.FormEvent;
 
 export type ClickFunction = (e: React.MouseEvent<HTMLButtonElement>) => void;
 export type ClickEvent = React.MouseEvent<HTMLButtonElement>;
-

@@ -1,6 +1,6 @@
 import { Component, ReactNode } from 'react';
-import HomePage from '@/Pages/HomePage/HomePage.tsx';
 import ErrorBoundary from '@/features/ErrorBoundary.tsx';
+import HomePage from '@/pages/HomePage/HomePage';
 
 class App extends Component {
   render(): ReactNode {

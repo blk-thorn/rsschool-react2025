@@ -1,21 +1,13 @@
 import { Component, ReactElement } from 'react';
-import Card from '@/Components/Card/Card.tsx';
-import type {
-  Character,
-  ApiResponse,
-  PageState,
-  ApiPromise,
-  LoadingVoid,
-  PageVoid,
-  SearchVoid,
-  EmptyVoid,
-} from '@/types/types.ts';
-import SearchBar from '@/Components/SearchBar/SearchBar.tsx';
-import NotFoundMessage from '@/Components/NotFoundMessage/NotFoundMessage.tsx';
-import Pagination from '@/Components/Pagination/Pagination.tsx';
-import Header from '@/Components/Header/Header.tsx';
-import ErrorButton from '@/Components/ErrorButton/ErrorButton.tsx';
-import Loader from '@/Components/Loader/Loader.tsx';
+import Card from '@/components/Card/Card';
+import ErrorButton from '@/components/ErrorButton/ErrorButton';
+import Header from '@/components/Header/Header';
+import Loader from '@/components/Loader/Loader';
+import NotFoundMessage from '@/components/NotFoundMessage/NotFoundMessage';
+import Pagination from '@/components/Pagination/Pagination';
+import SearchBar from '@/components/SearchBar/SearchBar';
+import type { Character, PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid } from '@/types/types.ts';
+import { fetchCharacters } from '@/utils/api';
 
 class HomePage extends Component<object, PageState> {
   state: PageState = {
@@ -28,41 +20,29 @@ class HomePage extends Component<object, PageState> {
     shouldThrowError: false
   }
 
-  loadPage: LoadingVoid = (page: number, searchTerm: string = ''): void => {
+  loadPage: LoadingVoid = async (page: number, searchTerm: string = '') => {
     this.setState({ isLoading: true });
-
-    const url: string = searchTerm
-      ? `https://rickandmortyapi.com/api/character/?name=${searchTerm.toLowerCase()}`
-      : `https://rickandmortyapi.com/api/character/?page=${page}`;
-
-    fetch(url)
-      .then((res: Response): ApiPromise => {
-        if (res.status === 404) {
-          return Promise.resolve({
-            info: {
-              count: 0,
-              pages: 0,
-              next: null,
-              prev: null
-            },
-            results: []
-          });
-        }
-        return res.json();
-      })
-      .then((data: ApiResponse): void => {
-        setTimeout((): void => {
+    try {
+      const data = await fetchCharacters(searchTerm, page);
+      setTimeout(() => {
         this.setState({
           characters: data.results || [],
           totalPages: data.info.pages || 0,
           currentPage: page,
           searchTerm: searchTerm,
           isSearching: Boolean(searchTerm),
-          isLoading: false
+          isLoading: false,
         });
-        }, 200)
-      })
-  }
+      }, 200);
+    } catch (error) {
+      console.error('Error fetching characters:', error);
+      this.setState({
+        isLoading: false,
+        characters: [],
+        totalPages: 0,
+      });
+    }
+  };
 
   componentDidMount(): void {
     const savedSearchTerm: string = localStorage.getItem('searchTerm-the-rick-morty-api') || '';
@@ -95,7 +75,6 @@ class HomePage extends Component<object, PageState> {
     const isLoading: boolean = this.state.isLoading
 
     return (
-
       <>
         <Header />
         <main>
@@ -112,13 +91,11 @@ class HomePage extends Component<object, PageState> {
                     character={character}
                   />
                 ))}
-
                 <NotFoundMessage
                   searchTerm={this.state.searchTerm}
                   show={showNotFound}
                 />
               </div>
-
               {showPagination && (
                 <Pagination
                   currentPage={this.state.currentPage}
