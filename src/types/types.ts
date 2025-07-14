@@ -101,3 +101,12 @@ export type SubmitEvent = React.FormEvent;
 
 export type ClickFunction = (e: React.MouseEvent<HTMLButtonElement>) => void;
 export type ClickEvent = React.MouseEvent<HTMLButtonElement>;
+
+
+export interface CharactersListProps {
+  characters: Character[];
+  searchTerm: string;
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}

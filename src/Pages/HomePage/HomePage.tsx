@@ -1,12 +1,10 @@
 import { Component, ReactElement } from 'react';
-import Card from '@/components/Card/Card';
+import CharactersList from '@/components/CharacterList/CharacterList';
 import ErrorButton from '@/components/ErrorButton/ErrorButton';
 import Header from '@/components/Header/Header';
 import Loader from '@/components/Loader/Loader';
-import NotFoundMessage from '@/components/NotFoundMessage/NotFoundMessage';
-import Pagination from '@/components/Pagination/Pagination';
 import SearchBar from '@/components/SearchBar/SearchBar';
-import type { Character, PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid } from '@/types/types.ts';
+import type {PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api';
 
 class HomePage extends Component<object, PageState> {
@@ -70,8 +68,6 @@ class HomePage extends Component<object, PageState> {
       throw new Error('Something went wrong. Please reload the page.');
     }
 
-    const showNotFound: boolean = this.state.characters.length === 0 && this.state.searchTerm !== '';
-    const showPagination: boolean = this.state.totalPages > 0;
     const isLoading: boolean = this.state.isLoading
 
     return (
@@ -83,27 +79,13 @@ class HomePage extends Component<object, PageState> {
             initialSearchTerm={this.state.searchTerm}
           />
           {isLoading ? ( <Loader /> ) : (
-            <>
-              <div className="grid gap-4 mt-8 min-sm:grid-cols-2 min-lg:grid-cols-3 min-xl:grid-cols-4 animate-fadeIn justify-center">
-                {this.state.characters.map((character: Character): ReactElement => (
-                  <Card
-                    key={character.id}
-                    character={character}
-                  />
-                ))}
-                <NotFoundMessage
-                  searchTerm={this.state.searchTerm}
-                  show={showNotFound}
-                />
-              </div>
-              {showPagination && (
-                <Pagination
-                  currentPage={this.state.currentPage}
-                  totalPages={this.state.totalPages}
-                  onPageChange={this.handlePageChange}
-                />
-              )}
-            </>
+            <CharactersList
+              characters={this.state.characters}
+              searchTerm={this.state.searchTerm}
+              totalPages={this.state.totalPages}
+              currentPage={this.state.currentPage}
+              onPageChange={this.handlePageChange}
+            />
           )}
         </main>
         {!isLoading && (
