@@ -46,6 +46,17 @@
     "typescript-eslint": "^8.34.1",
     "vite": "^7.0.0"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  },
+  "resolutions": {
+    "rollup": "npm:@rollup/wasm-node"
+  },
+  "overrides": {
+    "vite": {
+      "rollup": "npm:@rollup/wasm-node"
+    }
+  },
   "lint-staged": {
     "*.{json, md, css, scss}": "prettier --list-different --ignore-unknown",
     "*.{cjs,js,mjs,jsx,ts,tsx}": "eslint"
