@@ -1,7 +1,7 @@
 import { Component, ReactElement } from 'react';
 import CharactersList from '@/components/CharacterList';
 import ErrorButton from '@/components/ErrorButton';
-import Header from '@/components/Header';
+import Header from '@/components/Header/Header.tsx';
 import Loader from '@/components/Loader';
 import SearchBar from '@/components/SearchBar';
 import type { PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid, ApiResponse } from '@/types/types.ts';

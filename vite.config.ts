@@ -38,6 +38,7 @@ export default defineConfig({
     },
     css: {
       modules: { classNameStrategy: 'non-scoped' },
+      include: /.+/,
     },
     exclude: ['**/node_modules/**', '**/e2e/**'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
