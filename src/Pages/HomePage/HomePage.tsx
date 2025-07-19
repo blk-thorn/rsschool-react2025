@@ -1,6 +1,6 @@
 import { Component, ReactElement } from 'react';
 import CharactersList from '@/components/CharacterList';
-import ErrorButton from '@/components/ErrorButton';
+import ErrorButton from '@/components/ErrorButton/ErrorButton.tsx';
 import Header from '@/components/Header/Header.tsx';
 import Loader from '@/components/Loader';
 import SearchBar from '@/components/SearchBar';

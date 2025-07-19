@@ -1,9 +1,5 @@
 import { Component, ReactElement } from 'react';
-import { ClickEvent, ClickFunction } from '@/types/types.ts';
-
-interface ErrorButtonProps {
-  onErrorClick: () => void;
-}
+import { ClickEvent, ClickFunction, ErrorButtonProps } from '@/types/types.ts';
 
 class ErrorButton extends Component<ErrorButtonProps> {
   handleClick: ClickFunction = (e: ClickEvent): void => {
