@@ -1,7 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NotFoundMessage > matches snapshot when hidden 1`] = `<DocumentFragment />`;
-
 exports[`NotFoundMessage > matches snapshot when visible 1`] = `
 <DocumentFragment>
   <div

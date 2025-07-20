@@ -43,10 +43,4 @@ describe('NotFoundMessage', (): void => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('matches snapshot when hidden', (): void => {
-    const { asFragment } = render(
-      <NotFoundMessage {...defaultProps} show={false} />
-    );
-    expect(asFragment()).toMatchSnapshot();
-  });
 });

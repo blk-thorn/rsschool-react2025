@@ -4,6 +4,7 @@ exports[`Card Component > matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden"
+    data-testid="character-card"
   >
     <div
       class="relative w-3/4 min-w-120px"
