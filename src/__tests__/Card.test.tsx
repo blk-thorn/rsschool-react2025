@@ -4,7 +4,7 @@ import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts'
 import Card from '@/components/Card';
 import { CharacterStatus } from '@/types/types.ts';
 
-describe('Card Component', (): void => {
+describe('Check character card', (): void => {
   it('renders character information correctly', (): void => {
     render(<Card character={mockCharacter} />);
 

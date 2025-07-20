@@ -3,7 +3,7 @@ import { describe, it, expect, vi, Mock } from 'vitest';
 import { mockCharacters } from '@/__tests__/__mocks__/mockData.ts';
 import CharactersList from '@/components/CharacterList'
 
-describe('CharactersList', (): void => {
+describe('Check character list', (): void => {
   const mockPageChange: Mock = vi.fn();
 
   it('renders correct number of cards', (): void => {
