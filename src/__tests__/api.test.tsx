@@ -1,9 +1,9 @@
 import { describe, it, expect, Mock, beforeEach, afterEach } from 'vitest';
-import { fetchCharacters } from '@/utils/api.ts';
-
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
-import { ApiResponse } from '@/types/types.ts';
+import { mockResponseSuccess, mockResponseError } from '@/__tests__/__mocks__/mockData.ts';
+import { ApiPromise, ApiResponse } from '@/types/types.ts';
+import { fetchCharacters } from '@/utils/api.ts';
 
 describe('Fetch characters', (): void => {
   const mockFetch = vi.fn() as Mock;
@@ -17,15 +17,11 @@ describe('Fetch characters', (): void => {
   })
 
   it('fetch all character with specific search term', async (): Promise<void> => {
-    const mockResponse = {
-      info: { count: 1, pages: 1, next: null, prev: null },
-      results: [{ id: 1, name: 'Rick Sanchez' }],
-    };
 
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async () => mockResponse,
+      json: async (): ApiPromise => mockResponseSuccess,
     });
 
     const result: ApiResponse = await fetchCharacters('Rick');
@@ -34,40 +30,15 @@ describe('Fetch characters', (): void => {
       'https://rickandmortyapi.com/api/character/?name=Rick'
     );
 
-    expect(result).toEqual(mockResponse);
+    expect(result).toEqual(mockResponseSuccess);
   });
 
   it('fetch all character with page number', async (): Promise<void> => {
-    const mockResponse: ApiResponse = {
-      info: { count: 1, pages: 1, next: null, prev: null },
-      results: [
-        {
-          id: 1,
-          name: 'Rick Sanchez',
-          status: 'Alive',
-          species: 'Human',
-          type: '',
-          gender: 'Male',
-          origin: {
-            name: 'Earth (C-137)',
-            url: 'https://rickandmortyapi.com/api/location/1',
-          },
-          location: {
-            name: 'Citadel of Ricks',
-            url: 'https://rickandmortyapi.com/api/location/3',
-          },
-          image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-          episode: [],
-          url: 'https://rickandmortyapi.com/api/character/1',
-          created: '2017-11-04T18:48:46.250Z',
-        },
-      ],
-    };
 
    mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async (): Promise<ApiResponse> => mockResponse,
+      json: async (): ApiPromise => mockResponseSuccess,
     })
 
     const result: ApiResponse = await fetchCharacters('', 2);
@@ -75,10 +46,10 @@ describe('Fetch characters', (): void => {
     expect(global.fetch).toHaveBeenCalledWith(
       'https://rickandmortyapi.com/api/character/?page=2'
     );
-    expect(result).toEqual(mockResponse);
+    expect(result).toEqual(mockResponseSuccess);
   });
 
-  it('fetch error 404', async () => {
+  it('fetch error 404', async (): Promise<void> => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 404,
@@ -86,13 +57,10 @@ describe('Fetch characters', (): void => {
 
     const result: ApiResponse = await fetchCharacters('nonexistent');
 
-    expect(result).toEqual({
-      info: { count: 0, pages: 0, next: null, prev: null, },
-      results: [],
-    });
+    expect(result).toEqual(mockResponseError);
   });
 
-  it('throw error for different error status', async () => {
+  it('throw error for different error status', async (): Promise<void> => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 500,

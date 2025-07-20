@@ -114,5 +114,3 @@ export interface CharactersListProps {
   currentPage: number;
   onPageChange: (page: number) => void;
 }
-
-

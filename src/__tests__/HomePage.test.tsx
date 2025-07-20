@@ -2,6 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { vi } from 'vitest';
 import HomePage from '../pages/HomePage/HomePage.tsx';
+import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts';
 import { ApiResponse } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api.ts';
 
@@ -16,28 +17,7 @@ describe('HomePage', (): void => {
   beforeEach((): void => {
     vi.mocked(fetchCharacters).mockResolvedValue({
       info: { count: 1, pages: 1, next: null, prev: null },
-      results: [
-        {
-          id: 1,
-          name: 'Rick Sanchez',
-          status: '',
-          species: '',
-          type: '',
-          gender: '',
-          origin: {
-            name: '',
-            url: '',
-          },
-          location: {
-            name: '',
-            url: '',
-          },
-          image: '',
-          episode: [],
-          url: '',
-          created: '',
-        },
-      ],
+      results: [ mockCharacter ],
     });
   });
 
