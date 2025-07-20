@@ -13,7 +13,7 @@ type ConsoleSpy = {
 
 vi.mock('@/utils/api');
 
-describe('HomePage', (): void => {
+describe('Check HomePage and local storage', (): void => {
   beforeEach((): void => {
     vi.mocked(fetchCharacters).mockResolvedValue({
       info: { count: 1, pages: 1, next: null, prev: null },

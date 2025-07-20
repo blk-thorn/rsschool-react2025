@@ -4,7 +4,7 @@ import { describe, it, expect, Mock } from 'vitest';
 import { vi } from 'vitest';
 import ErrorButton from '@/components/ErrorButton.tsx';
 
-describe('ErrorButton', (): void => {
+describe('Check ErrorButton', (): void => {
 
   it('calls onErrorClick when clicked', (): void => {
     const mockClick: Mock = vi.fn();

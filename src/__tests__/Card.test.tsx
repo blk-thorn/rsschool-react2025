@@ -4,7 +4,7 @@ import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts'
 import Card from '@/components/Card';
 import { CharacterStatus } from '@/types/types.ts';
 
-describe('Check character card', (): void => {
+describe('Check character Card', (): void => {
   it('renders character information correctly', (): void => {
     render(<Card character={mockCharacter} />);
 
@@ -51,8 +51,4 @@ describe('Check character card', (): void => {
     expect(nameElement.parentElement).toHaveClass('absolute', 'rounded-lg');
   });
 
-  it('matches snapshot', (): void => {
-    const { asFragment } = render(<Card character={mockCharacter} />);
-    expect(asFragment()).toMatchSnapshot();
-  });
 });

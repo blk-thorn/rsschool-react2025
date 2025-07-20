@@ -36,10 +36,8 @@ export default defineConfig({
       enabled: true,
       include: ['**/*.test-d.ts'],
     },
-    css: {
-      modules: { classNameStrategy: 'non-scoped' },
-      include: /.+/,
-    },
+    css: false,
+    reporters: ['verbose'],
     exclude: ['**/node_modules/**', '**/e2e/**'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     environment: 'jsdom',

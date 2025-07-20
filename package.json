@@ -12,6 +12,7 @@
     "lint:fix": "eslint --fix --color ./src",
     "preview": "vite preview",
     "prepare": "husky",
+    "prepush": "npm run lint && npm run test:coverage",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },

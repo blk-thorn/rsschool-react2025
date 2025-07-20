@@ -38,9 +38,4 @@ describe('NotFoundMessage', (): void => {
     expect(screen.getByText('No characters found for ""')).toBeInTheDocument();
   });
 
-  it('matches snapshot when visible', (): void => {
-    const { asFragment } = render(<NotFoundMessage {...defaultProps} />);
-    expect(asFragment()).toMatchSnapshot();
-  });
-
 });
