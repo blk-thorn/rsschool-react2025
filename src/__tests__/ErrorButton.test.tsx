@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, Mock } from 'vitest';
-import ErrorButton from '@/components/ErrorButton/ErrorButton.tsx';
+import ErrorButton from '@/components/ErrorButton.tsx';
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 

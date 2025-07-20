@@ -1,4 +1,4 @@
-import type { ApiResponse } from '@/types/types';
+import type { ApiResponse } from '@/types/types.ts';
 
 export const fetchCharacters = async (
   searchTerm: string = '',

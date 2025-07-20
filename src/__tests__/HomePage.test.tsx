@@ -1,9 +1,9 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { vi } from 'vitest';
-import HomePage from './HomePage';
+import HomePage from '../pages/HomePage/HomePage.tsx';
 import { ApiResponse } from '@/types/types.ts';
-import { fetchCharacters } from '@/utils/api';
+import { fetchCharacters } from '@/utils/api.ts';
 
 type ConsoleSpy = {
   mockImplementation: (fn: () => void) => void;
