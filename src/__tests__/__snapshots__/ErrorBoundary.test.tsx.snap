@@ -1,0 +1,27 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ErrorBoundary > matches snapshot when error occurs 1`] = `
+<DocumentFragment>
+  <main>
+    <div
+      class="animate-bounce"
+    >
+      <h1
+        class="mt-40 p-4 text-4xl text-red-800 rounded-lg dark:text-red-400"
+      >
+        Something went wrong...
+      </h1>
+      <p
+        class="mb-10 text-3xl text-red-800 rounded-lg dark:text-red-400"
+      >
+        Please reload the page.
+      </p>
+    </div>
+    <button
+      class="focus:outline-none text-lg text-black border-2 border-sky-100 shadow-sm shadow-sky-400/60 bg-sky-50 hover:bg-sky-100 focus:ring-1 focus:ring-sky-200 font-medium rounded-lg px-5 py-2.5 me-2 mb-2 cursor-pointer"
+    >
+      Start Over
+    </button>
+  </main>
+</DocumentFragment>
+`;
