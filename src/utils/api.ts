@@ -1,4 +1,5 @@
 import type { ApiResponse } from '@/types/types.ts';
+import { mockResponseError } from '@/__tests__/__mocks__/mockData.ts';
 
 export const fetchCharacters = async (
   searchTerm: string = '',
@@ -11,15 +12,7 @@ export const fetchCharacters = async (
   const response: Response  = await fetch(url);
 
   if (response.status === 404) {
-    return {
-      info: {
-        count: 0,
-        pages: 0,
-        next: null,
-        prev: null,
-      },
-      results: [],
-    };
+    return mockResponseError
   }
 
   if (!response.ok) {

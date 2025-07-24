@@ -1,4 +1,4 @@
-import { ErrorInfo, ReactNode } from 'react';
+import React, { ErrorInfo, ReactNode } from 'react';
 
 export interface Character {
   id: number;
@@ -114,3 +114,5 @@ export interface CharactersListProps {
   currentPage: number;
   onPageChange: (page: number) => void;
 }
+
+export type getStatusFunction = (status: string) => string
