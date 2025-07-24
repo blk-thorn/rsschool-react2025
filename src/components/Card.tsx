@@ -1,8 +1,8 @@
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 import { CardProps, getStatusFunction } from '@/types/types.ts';
 import { CharacterStatus } from '@/types/types.ts';
 
-export function Card({ character }: CardProps): ReactElement {
+export default function Card({ character }: CardProps): ReactNode {
   const getStatusColor: getStatusFunction = (status: string): string => {
     switch (status) {
       case CharacterStatus.Alive:
@@ -57,5 +57,3 @@ export function Card({ character }: CardProps): ReactElement {
     </div>
   );
 }
-
-export default Card;

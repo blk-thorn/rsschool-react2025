@@ -1,12 +1,11 @@
-import { Component, ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import Card from '@/components/Card';
 import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
 import { Character, CharactersListProps } from '@/types/types.ts';
 
-class CharactersList extends Component<CharactersListProps> {
-  render(): ReactElement {
-    const { characters, searchTerm, totalPages, currentPage, onPageChange } = this.props;
+export default function CharactersList({characters, searchTerm, totalPages, currentPage, onPageChange}: CharactersListProps): ReactNode {
+
     const showNotFound: boolean= characters.length === 0 && searchTerm !== '';
     const showPagination: boolean= totalPages > 0;
 
@@ -27,7 +26,4 @@ class CharactersList extends Component<CharactersListProps> {
         )}
       </>
     );
-  }
 }
-
-export default CharactersList;
