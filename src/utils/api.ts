@@ -1,10 +1,10 @@
-import type { ApiResponse } from '@/types/types';
+import type { ApiResponse } from '@/types/types.ts';
 
 export const fetchCharacters = async (
   searchTerm: string = '',
   page: number = 1
 ): Promise<ApiResponse> => {
-  const url = searchTerm
+  const url: string = searchTerm
     ? `https://rickandmortyapi.com/api/character/?name=${searchTerm}`
     : `https://rickandmortyapi.com/api/character/?page=${page}`;
 

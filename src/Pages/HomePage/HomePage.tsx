@@ -1,11 +1,11 @@
 import { Component, ReactElement } from 'react';
 import CharactersList from '@/components/CharacterList';
-import ErrorButton from '@/components/ErrorButton';
-import Header from '@/components/Header';
+import ErrorButton from '@/components/ErrorButton.tsx';
+import Header from '@/components/Header.tsx';
 import Loader from '@/components/Loader';
 import SearchBar from '@/components/SearchBar';
 import type { PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid, ApiResponse } from '@/types/types.ts';
-import { fetchCharacters } from '@/utils/api';
+import { fetchCharacters } from '@/utils/api.ts';
 
 class HomePage extends Component<object, PageState> {
   state: PageState = {

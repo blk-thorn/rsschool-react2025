@@ -74,6 +74,10 @@ export const enum CharacterStatus {
   Unknown = 'unknown'
 }
 
+export interface ErrorButtonProps {
+  onErrorClick: () => void;
+}
+
 export type EmptyVoid = () => void;
 
 export type PageVoid = (page: number) => void;

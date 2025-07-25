@@ -23,7 +23,7 @@ class Card extends Component<CardProps> {
     const statusColorClass: string = this.getStatusColor(character.status);
 
     return (
-      <div className="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden">
+      <div data-testid="character-card" className="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden">
         <div className="relative w-3/4 min-w-120px">
           <img
             className="w-full h-full object-cover min-h-58 rounded-lg min-w-33"
