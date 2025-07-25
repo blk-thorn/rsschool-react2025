@@ -1,101 +1,88 @@
-import { Component, ReactElement } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import CharactersList from '@/components/CharacterList';
 import ErrorButton from '@/components/ErrorButton.tsx';
 import Header from '@/components/Header.tsx';
 import Loader from '@/components/Loader';
 import SearchBar from '@/components/SearchBar';
-import type { PageState, LoadingVoid, PageVoid, SearchVoid, EmptyVoid, ApiResponse } from '@/types/types.ts';
+import { ApiResponse, EmptyVoid, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api.ts';
 
-class HomePage extends Component<object, PageState> {
-  state: PageState = {
-    characters: [],
-    totalPages: 0,
-    searchTerm: '',
-    currentPage: 1,
-    isSearching: false,
-    isLoading: true,
-    shouldThrowError: false
-  }
+export default function HomePage(): ReactNode {
+  const [characters, setCharacters] = useState<ApiResponse['results']>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [shouldThrowError, setShouldThrowError] = useState(false);
 
-  loadPage: LoadingVoid = async (page: number, searchTerm: string = '') => {
-    this.setState({ isLoading: true });
+  const loadPage: LoadingVoid = async (page: number, searchTerm: string = ''): Promise<void> => {
+    setIsLoading(true);
     try {
       const data: ApiResponse = await fetchCharacters(searchTerm, page);
       setTimeout((): void => {
-        this.setState({
-          characters: data.results || [],
-          totalPages: data.info.pages || 0,
-          currentPage: page,
-          searchTerm: searchTerm,
-          isSearching: Boolean(searchTerm),
-          isLoading: false,
-        });
+        setCharacters(data.results || []);
+        setTotalPages(data.info?.pages || 0);
+        setCurrentPage(page);
+        setSearchTerm(searchTerm);
+        setIsLoading(false);
       }, 200);
     } catch (error) {
       console.error('Error fetching characters:', error);
-      this.setState({
-        isLoading: false,
-        characters: [],
-        totalPages: 0,
-      });
+      setCharacters([]);
+      setTotalPages(0);
+      setIsLoading(false);
     }
   };
 
-  componentDidMount(): void {
+  useEffect((): void => {
     const savedSearchTerm: string = localStorage.getItem('searchTerm-the-rick-morty-api') || '';
-    this.setState({ searchTerm: savedSearchTerm }, ():void => {
-      this.loadPage(1, savedSearchTerm);
-    });
-  }
+    setSearchTerm(savedSearchTerm);
+    loadPage(1, savedSearchTerm);
+  }, []);
 
-  handleSearch: SearchVoid = (term: string): void => {
+  const handleSearch: SearchVoid = (term: string): void => {
     localStorage.setItem('searchTerm-the-rick-morty-api', term);
-    this.setState({ searchTerm: term });
-    this.loadPage(1, term);
+    setSearchTerm(term);
+    loadPage(1, term);
+  };
+
+  const handlePageChange: PageVoid = (page: number): void => {
+    loadPage(page, searchTerm);
+  };
+
+  const handleErrorClick: EmptyVoid = (): void => {
+    setShouldThrowError(true);
+  };
+
+  if (shouldThrowError) {
+    throw new Error('Something went wrong. Please reload the page.');
   }
 
-  handlePageChange: PageVoid = (page: number): void => {
-    this.loadPage(page, this.state.searchTerm);
-  }
-
-  handleErrorClick: EmptyVoid = (): void => {
-    this.setState({ shouldThrowError: true });
-  }
-
-  render(): ReactElement {
-    if (this.state.shouldThrowError) {
-      throw new Error('Something went wrong. Please reload the page.');
-    }
-
-    const isLoading: boolean = this.state.isLoading
-
-    return (
-      <>
-        <Header />
-        <main>
-          <SearchBar
-            onFormSubmit={this.handleSearch}
-            initialSearchTerm={this.state.searchTerm}
+  return (
+    <>
+      <Header />
+      <main>
+        <SearchBar
+          onFormSubmit={handleSearch}
+          initialSearchTerm={searchTerm}
+        />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <CharactersList
+            characters={characters}
+            searchTerm={searchTerm}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
           />
-          {isLoading ? ( <Loader /> ) : (
-            <CharactersList
-              characters={this.state.characters}
-              searchTerm={this.state.searchTerm}
-              totalPages={this.state.totalPages}
-              currentPage={this.state.currentPage}
-              onPageChange={this.handlePageChange}
-            />
-          )}
-        </main>
-        {!isLoading && (
-        <footer>
-          <ErrorButton onErrorClick={this.handleErrorClick} />
-        </footer>
         )}
-      </>
-    )
-  }
+      </main>
+      {!isLoading && (
+        <footer>
+          <ErrorButton onErrorClick={handleErrorClick} />
+        </footer>
+      )}
+    </>
+  );
 }
-
-export default HomePage;
