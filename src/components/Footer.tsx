@@ -7,7 +7,7 @@ export default function Footer({ isLoading, onErrorClick }: FooterProps): ReactN
 
   return (
     <footer>
-      <ErrorButton onErrorClick={onErrorClick} />
+      {!isLoading && <ErrorButton onErrorClick={onErrorClick} />}
     </footer>
   )
 };

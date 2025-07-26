@@ -1,11 +1,11 @@
 import { ReactNode, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Footer from '@/components/Footer.tsx';
 import Header from '@/components/Header.tsx';
-import HomePage from '@/pages/HomePage/HomePage.tsx';
 
 export default function MainLayout(): ReactNode {
   const [shouldThrowError, setShouldThrowError] = useState(false);
-  const [isMainLoading, setIsMainLoading] = useState(true);
+  const [isMainLoading, setIsMainLoading] = useState(false);
 
   const handleErrorClick = (): void => {
     setShouldThrowError(true);
@@ -18,11 +18,11 @@ export default function MainLayout(): ReactNode {
   return (
     <>
       <Header />
-      <HomePage onLoadingChange={setIsMainLoading} />
+      <Outlet context={{ setIsMainLoading }} />
       <Footer
         isLoading={isMainLoading}
         onErrorClick={handleErrorClick}
       />
     </>
-  );
-}
+  )
+};

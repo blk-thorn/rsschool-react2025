@@ -2,12 +2,8 @@ import { useState, useEffect, ReactNode } from 'react';
 import CharactersList from '@/components/CharacterList';
 import Loader from '@/components/Loader';
 import SearchBar from '@/components/SearchBar';
-import { ApiResponse, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
+import { ApiResponse, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api.ts';
-
-interface HomePageProps {
-  onLoadingChange?: (isLoading: boolean) => void;
-}
 
 export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode {
   const [characters, setCharacters] = useState<ApiResponse['results']>([]);

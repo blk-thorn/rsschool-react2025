@@ -122,3 +122,6 @@ export interface FooterProps {
   onErrorClick: EmptyVoid;
 }
 
+export interface HomePageProps {
+  onLoadingChange?: (isLoading: boolean) => void;
+}
