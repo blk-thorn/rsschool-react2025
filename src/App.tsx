@@ -1,12 +1,12 @@
 import { Component, ReactNode } from 'react';
+import MainLayout from '@/app/layout/MainLayout.tsx';
 import ErrorBoundary from '@/features/ErrorBoundary.tsx';
-import HomePage from '@/pages/HomePage/HomePage';
 
 class App extends Component {
   render(): ReactNode {
     return (
       <ErrorBoundary>
-        <HomePage />
+        <MainLayout />
       </ErrorBoundary>
     );
   }

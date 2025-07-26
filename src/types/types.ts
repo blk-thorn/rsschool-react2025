@@ -115,4 +115,10 @@ export interface CharactersListProps {
   onPageChange: (page: number) => void;
 }
 
-export type getStatusFunction = (status: string) => string
+export type getStatusFunction = (status: string) => string;
+
+export interface FooterProps {
+  isLoading: boolean;
+  onErrorClick: EmptyVoid;
+}
+
