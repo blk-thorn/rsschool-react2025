@@ -1,9 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import MainLayout from '@/app/layout/MainLayout.tsx';
-import { Routes } from '@/app/routes.ts';
-import NotFoundMessage from '@/components/NotFoundMessage.tsx';
+import { ROUTES } from '@/app/routes.ts';
 import ErrorBoundary from '@/features/ErrorBoundary';
 import HomePage from '@/pages/HomePage/HomePage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
   {
@@ -14,13 +14,14 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: Routes.HOME,
+        path: ROUTES.HOME,
         element: <HomePage />,
+        errorElement: <Navigate to={ROUTES.NOT_FOUND} replace />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
-  },
-  {
-    path: Routes.NOT_FOUND,
-    element: <NotFoundMessage searchTerm={''} show={true} />,
   },
 ]);

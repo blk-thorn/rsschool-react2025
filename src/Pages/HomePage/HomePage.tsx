@@ -1,4 +1,6 @@
 import { useState, useEffect, ReactNode } from 'react';
+import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
+import { ROUTES } from '@/app/routes.ts';
 import CharactersList from '@/components/CharacterList';
 import Loader from '@/components/Loader';
 import SearchBar from '@/components/SearchBar';
@@ -8,28 +10,37 @@ import { fetchCharacters } from '@/utils/api.ts';
 export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode {
   const [characters, setCharacters] = useState<ApiResponse['results']>([]);
   const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate: NavigateFunction = useNavigate();
 
-  const loadPage: LoadingVoid = async (page: number, searchTerm: string = ''): Promise<void> => {
+  const currentPage: number = Number(searchParams.get('page')) || 1;
+  const searchTerm: string = searchParams.get('search') || '';
+
+  const loadPage: LoadingVoid = async (page: number, term: string = ''): Promise<void> => {
     setIsLoading(true);
     onLoadingChange?.(true);
 
     try {
-      const data: ApiResponse = await fetchCharacters(searchTerm, page);
-      setTimeout((): void => {
-        setCharacters(data.results || []);
-        setTotalPages(data.info?.pages || 0);
-        setCurrentPage(page);
-        setSearchTerm(searchTerm);
-        setIsLoading(false);
-        onLoadingChange?.(false);
-      }, 200);
+      const data: ApiResponse = await fetchCharacters(term, page);
+
+      if (!data.results || data.results.length === 0) {
+        navigate(ROUTES.NOT_FOUND, { replace: true });
+        return;
+      }
+
+      setCharacters(data.results);
+      setTotalPages(data.info?.pages || 0);
+
+      const newSearchParams = new URLSearchParams();
+      if (term) newSearchParams.set('search', term);
+      if (page > 1) newSearchParams.set('page', page.toString());
+      setSearchParams(newSearchParams, { replace: true });
+
     } catch (error) {
       console.error('Error fetching characters:', error);
-      setCharacters([]);
-      setTotalPages(0);
+      navigate(ROUTES.NOT_FOUND, { replace: true });
+    } finally {
       setIsLoading(false);
       onLoadingChange?.(false);
     }
@@ -37,13 +48,19 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   useEffect((): void => {
     const savedSearchTerm: string = localStorage.getItem('searchTerm-the-rick-morty-api') || '';
-    setSearchTerm(savedSearchTerm);
-    loadPage(1, savedSearchTerm);
+    const initialSearchTerm: string = searchParams.get('search') || savedSearchTerm;
+
+    if (initialSearchTerm && !searchParams.has('search')) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('search', initialSearchTerm);
+      setSearchParams(newSearchParams, { replace: true });
+    } else {
+      loadPage(currentPage, initialSearchTerm);
+    }
   }, []);
 
   const handleSearch: SearchVoid = (term: string): void => {
     localStorage.setItem('searchTerm-the-rick-morty-api', term);
-    setSearchTerm(term);
     loadPage(1, term);
   };
 
