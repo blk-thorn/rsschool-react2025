@@ -1,9 +1,9 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.ts';
-import CharactersList from '@/components/CharacterList';
-import Loader from '@/components/Loader';
-import SearchBar from '@/components/SearchBar';
+import CharactersList from '@/components/CharacterList.tsx';
+import Loader from '@/components/Loader.tsx';
+import SearchBar from '@/components/SearchBar.tsx';
 import { ApiResponse, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api.ts';
 

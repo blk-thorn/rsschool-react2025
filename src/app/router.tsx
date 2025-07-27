@@ -3,7 +3,7 @@ import MainLayout from '@/app/layout/MainLayout.tsx';
 import { ROUTES } from '@/app/routes.ts';
 import ErrorBoundary from '@/features/ErrorBoundary';
 import AboutPage from '@/pages/AboutPage.tsx';
-import HomePage from '@/pages/HomePage/HomePage';
+import HomePage from '@/pages/HomePage.tsx';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
