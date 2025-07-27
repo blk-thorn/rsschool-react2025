@@ -12,7 +12,7 @@ export default function Header(): ReactNode {
           <li>
             <Link
               to={ROUTES.ABOUT}
-              className="text-3xl font-bold mb-6 text-sky-600 hover:underline"
+              className="text-3xl font-bold mb-6 text-slate-800  hover:underline"
             >
               About
             </Link>

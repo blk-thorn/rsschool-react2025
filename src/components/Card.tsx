@@ -1,8 +1,10 @@
 import { ReactNode } from 'react';
-import { CardProps, getStatusFunction } from '@/types/types.ts';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { CardProps, EmptyVoid, getStatusFunction } from '@/types/types.ts';
 import { CharacterStatus } from '@/types/types.ts';
 
 export default function Card({ character }: CardProps): ReactNode {
+  const navigate: NavigateFunction = useNavigate();
   const getStatusColor: getStatusFunction = (status: string): string => {
     switch (status) {
       case CharacterStatus.Alive:
@@ -18,13 +20,22 @@ export default function Card({ character }: CardProps): ReactNode {
 
   const statusColorClass: string = getStatusColor(character.status);
 
+  const handleClick: EmptyVoid = (): void => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('details', character.id.toString());
+    navigate(`?${searchParams.toString()}`);
+  };
+
   return (
-    <div data-testid="character-card" className="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden">
+    <div
+      onClick={handleClick}
+      data-testid="character-card"
+      className="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden">
       <div className="relative w-3/4 min-w-120px">
         <img
           className="w-full h-full object-cover min-h-58 rounded-lg min-w-33"
           src={character.image}
-          alt={character.name}
+          alt="Tiny Rick"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 rounded-lg">
           <h3 className="text-white text-md font-bold truncate">
@@ -36,8 +47,8 @@ export default function Card({ character }: CardProps): ReactNode {
         <li className="mb-1 flex">
           <span className="block text-white font-medium">Status:</span>
           <span className={`mx-2 font-medium ${statusColorClass}`}>
-            {character.status}
-          </span>
+              {character.status}
+            </span>
         </li>
         <li className="mb-1 flex flex-col">
           <span className="block text-white font-medium">Gender:</span>
@@ -50,8 +61,8 @@ export default function Card({ character }: CardProps): ReactNode {
         <li className="mb-1 flex flex-col">
           <span className="block text-white font-medium">Location:</span>
           <span className="text-slate-300 mx-2">
-            {character.location.name}
-          </span>
+              {character.location.name}
+            </span>
         </li>
       </ul>
     </div>

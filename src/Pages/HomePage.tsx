@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.ts';
+import CharacterDetails from '@/components/CharacterDetails.tsx';
 import CharactersList from '@/components/CharacterList.tsx';
 import Loader from '@/components/Loader.tsx';
 import SearchBar from '@/components/SearchBar.tsx';
@@ -16,6 +17,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   const currentPage: number = Number(searchParams.get('page')) || 1;
   const searchTerm: string = searchParams.get('search') || '';
+  const detailsId: string | null = searchParams.get('details');
 
   const loadPage: LoadingVoid = async (page: number, term: string = ''): Promise<void> => {
     setIsLoading(true);
@@ -35,6 +37,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
       const newSearchParams = new URLSearchParams();
       if (term) newSearchParams.set('search', term);
       if (page > 1) newSearchParams.set('page', page.toString());
+      if (detailsId) newSearchParams.set('details', detailsId);
       setSearchParams(newSearchParams, { replace: true });
 
     } catch (error) {
@@ -69,22 +72,34 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
   };
 
   return (
-    <main>
-      <SearchBar
-        onFormSubmit={handleSearch}
-        initialSearchTerm={searchTerm}
-      />
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <CharactersList
-          characters={characters}
-          searchTerm={searchTerm}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
+    <div className="flex flex-1">
+      <div
+        className='p-2 overflow-y-auto transition-all duration-300' style={{ width: "100%" }}
+      >
+        <SearchBar
+          onFormSubmit={handleSearch}
+          initialSearchTerm={searchTerm}
         />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="grid grid-cols-1 gap-2">
+            <CharactersList
+              characters={characters}
+              searchTerm={searchTerm}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+      </div>
+
+      {detailsId && (
+        <div className="w-[30%] p-4 overflow-y-auto border-l border-slate-600">
+          <CharacterDetails />
+        </div>
       )}
-    </main>
+    </div>
   );
 }

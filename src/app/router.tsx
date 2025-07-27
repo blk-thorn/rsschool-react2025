@@ -1,9 +1,9 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '@/app/layout/MainLayout.tsx';
 import { ROUTES } from '@/app/routes.ts';
 import ErrorBoundary from '@/features/ErrorBoundary';
-import AboutPage from '@/pages/AboutPage.tsx';
-import HomePage from '@/pages/HomePage.tsx';
+import AboutPage from '@/pages/AboutPage';
+import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
@@ -17,7 +17,6 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.HOME,
         element: <HomePage />,
-        errorElement: <Navigate to={ROUTES.NOT_FOUND} replace />,
       },
       {
         path: ROUTES.ABOUT,
