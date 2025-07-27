@@ -16,15 +16,15 @@ export default function MainLayout(): ReactNode {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Header />
-      <div className="flex-grow">
+      <main className="flex-grow">
         <Outlet context={{ setIsMainLoading }} />
-      </div>
+      </main>
       <Footer
         isLoading={isMainLoading}
         onErrorClick={handleErrorClick}
       />
-    </div>
+    </>
   )
 };

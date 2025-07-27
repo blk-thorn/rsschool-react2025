@@ -2,8 +2,9 @@ import { ReactElement, useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.ts';
 import Loader from '@/components/Loader.tsx';
-import { Character, CharacterStatus, EmptyVoid } from '@/types/types.ts';
+import { Character, EmptyVoid } from '@/types/types.ts';
 import { fetchCharacter } from '@/utils/api.ts';
+import { getStatusColor } from '@/utils/getStatusColor.ts';
 
 export default function CharacterDetails(): ReactElement | null {
   const [searchParams] = useSearchParams();
@@ -35,18 +36,6 @@ export default function CharacterDetails(): ReactElement | null {
     loadCharacter();
   }, [characterId, navigate]);
 
-  const getStatusColor: (status: string) => string = (status: string): string => {
-    switch (status) {
-      case CharacterStatus.Alive:
-        return 'text-emerald-300';
-      case CharacterStatus.Dead:
-        return 'text-rose-400';
-      case CharacterStatus.Unknown:
-        return 'text-sky-200';
-      default:
-        return 'text-sky-200';
-    }
-  };
 
   const handleClose: EmptyVoid = (): void => {
     const newParams = new URLSearchParams(searchParams);
@@ -63,7 +52,7 @@ export default function CharacterDetails(): ReactElement | null {
 
   return (
     <div className="w-full mt-27">
-      <div className="bg-slate-800 rounded-lg p-6 h-full max-w-sm mx-auto">
+      <div className="bg-slate-800 rounded-lg p-6">
         <button
           onClick={handleClose}
           className="text-white hover:text-red-500 text-xl mb-4 cursor-pointer"

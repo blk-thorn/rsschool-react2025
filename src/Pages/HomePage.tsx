@@ -67,7 +67,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   return (
     <div className="flex flex-1">
-      <div className={`p-4 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[70%]' : 'w-full'}`}>
+      <div className={`p-2 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[95%]' : 'w-full'}`}>
         <SearchBar
           onFormSubmit={handleSearch}
           initialSearchTerm={searchValue}
@@ -92,7 +92,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
       </div>
 
       {detailsId && (
-        <div className="w-[30%] p-4 overflow-y-auto border-l border-slate-600">
+        <div className="w-[30%] p-1 overflow-y-auto border-l border-slate-600">
           <CharacterDetails />
         </div>
       )}

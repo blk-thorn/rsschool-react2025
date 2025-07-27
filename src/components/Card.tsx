@@ -1,22 +1,10 @@
 import { ReactNode } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
-import { CardProps, EmptyVoid, getStatusFunction } from '@/types/types.ts';
-import { CharacterStatus } from '@/types/types.ts';
+import { CardProps, EmptyVoid} from '@/types/types.ts';
+import { getStatusColor } from '@/utils/getStatusColor.ts';
 
 export default function Card({ character }: CardProps): ReactNode {
   const navigate: NavigateFunction = useNavigate();
-  const getStatusColor: getStatusFunction = (status: string): string => {
-    switch (status) {
-      case CharacterStatus.Alive:
-        return 'text-emerald-300';
-      case CharacterStatus.Dead:
-        return 'text-rose-400';
-      case CharacterStatus.Unknown:
-        return 'text-sky-200';
-      default:
-        return 'text-sky-200';
-    }
-  };
 
   const statusColorClass: string = getStatusColor(character.status);
 
@@ -30,7 +18,7 @@ export default function Card({ character }: CardProps): ReactNode {
     <div
       onClick={handleClick}
       data-testid="character-card"
-      className="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden">
+      className="flex items-center max-w-xl bg-slate-600 border border-slate-200 rounded-lg shadow-sm dark:border-slate-600 overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer">
       <div className="relative w-3/4 min-w-120px">
         <img
           className="w-full h-full object-cover min-h-58 rounded-lg min-w-33"
@@ -44,7 +32,7 @@ export default function Card({ character }: CardProps): ReactNode {
         </div>
       </div>
       <ul className="flex flex-col text-left py-3 px-4 w-2/3">
-        <li className="mb-1 flex">
+        <li className="mb-1 flex flex-col">
           <span className="block text-white font-medium">Status:</span>
           <span className={`mx-2 font-medium ${statusColorClass}`}>
               {character.status}
