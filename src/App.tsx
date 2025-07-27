@@ -1,12 +1,13 @@
 import { Component, ReactNode } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { router } from '@/app/router.tsx';
 import ErrorBoundary from '@/features/ErrorBoundary.tsx';
-import HomePage from '@/pages/HomePage/HomePage';
 
 class App extends Component {
   render(): ReactNode {
     return (
       <ErrorBoundary>
-        <HomePage />
+        <RouterProvider router={router} />
       </ErrorBoundary>
     );
   }

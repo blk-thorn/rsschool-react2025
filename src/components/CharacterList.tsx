@@ -1,18 +1,17 @@
-import { Component, ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import Card from '@/components/Card';
 import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
 import { Character, CharactersListProps } from '@/types/types.ts';
 
-class CharactersList extends Component<CharactersListProps> {
-  render(): ReactElement {
-    const { characters, searchTerm, totalPages, currentPage, onPageChange } = this.props;
+export default function CharactersList({characters, searchTerm, totalPages, currentPage, onPageChange}: CharactersListProps): ReactNode {
+
     const showNotFound: boolean= characters.length === 0 && searchTerm !== '';
     const showPagination: boolean= totalPages > 0;
 
     return (
       <>
-        <div className="grid gap-4 mt-8 min-sm:grid-cols-2 min-lg:grid-cols-3 min-xl:grid-cols-4 animate-fadeIn justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 animate-fadeIn justify-center">
           {characters.map((character: Character): ReactElement  => (
             <Card key={character.id} character={character} />
           ))}
@@ -27,7 +26,4 @@ class CharactersList extends Component<CharactersListProps> {
         )}
       </>
     );
-  }
 }
-
-export default CharactersList;

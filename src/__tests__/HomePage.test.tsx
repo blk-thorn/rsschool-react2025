@@ -1,81 +1,200 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { vi } from 'vitest';
-import HomePage from '../pages/HomePage/HomePage.tsx';
-import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts';
-import { ApiResponse } from '@/types/types.ts';
-import { fetchCharacters } from '@/utils/api.ts';
+import { ReactElement } from 'react';
+import { MemoryRouter, useNavigate, useSearchParams, useLoaderData, SetURLSearchParams } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockResponseSuccess, mockResponseError } from '@/__tests__/__mocks__/mockData';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import HomePage from '@/pages/HomePage';
+import { fetchCharacters } from '@/utils/api';
 
-type ConsoleSpy = {
-  mockImplementation: (fn: () => void) => void;
-  mockRestore: () => void;
+type SearchParamsTuple = [URLSearchParams, SetURLSearchParams];
+type RenderHomePageOptions = {
+  props?: Partial<React.ComponentProps<typeof HomePage>>;
+  searchParams?: SearchParamsTuple;
+  loaderData?: { searchTerm: string; page: number };
 };
 
-vi.mock('@/utils/api');
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-router-dom')>();
+  return {
+    ...actual,
+    useNavigate: vi.fn(),
+    useSearchParams: vi.fn(),
+    useLoaderData: vi.fn(),
+  };
+});
 
-describe('Check HomePage and local storage', (): void => {
-  beforeEach((): void => {
-    vi.mocked(fetchCharacters).mockResolvedValue({
-      info: { count: 1, pages: 1, next: null, prev: null },
-      results: [ mockCharacter ],
+vi.mock('@/utils/api', () => ({
+  fetchCharacters: vi.fn(),
+}));
+
+vi.mock('@/hooks/useLocalStorage', () => ({
+  useLocalStorage: vi.fn(),
+}));
+
+vi.mock('@/components/CharacterDetails', (): { default: () => ReactElement} => ({
+  default: (): ReactElement => <div>CharacterDetails</div>,
+}));
+
+vi.mock('@/components/CharacterList', (): { default: () => ReactElement} => ({
+  default: (): ReactElement => <div>CharactersList</div>,
+}));
+
+vi.mock('@/components/Loader', (): { default: () => ReactElement}  => ({
+  default: (): ReactElement => <div>Loader</div>,
+}));
+
+vi.mock('@/components/NotFoundMessage', (): { default: () => ReactElement} => ({
+  default: (): ReactElement => <div>NotFoundMessage</div>,
+}));
+
+vi.mock('@/components/SearchBar', () => ({
+  default: ({ onFormSubmit, initialSearchTerm }: {
+    onFormSubmit: (term: string) => void;
+    initialSearchTerm: string
+  }): ReactElement => (
+    <div>
+      <input
+        defaultValue={initialSearchTerm}
+        onChange={(e ): void => onFormSubmit(e.target.value)}
+        data-testid="search-input"
+      />
+    </div>
+  ),
+}));
+
+const DEFAULT_PROPS = {
+  onLoadingChange: vi.fn(),
+};
+
+const DEFAULT_LOADER_DATA = {
+  searchTerm: '',
+  page: 1,
+};
+
+const PAGE_2_LOADER_DATA = {
+  searchTerm: '',
+  page: 2,
+};
+
+const SEARCH_LOADER_DATA = {
+  searchTerm: 'test',
+  page: 1,
+};
+
+const DETAILS_SEARCH_PARAMS: SearchParamsTuple = [
+  new URLSearchParams('details=1'),
+  vi.fn() as SetURLSearchParams,
+];
+
+const renderHomePage = (options: RenderHomePageOptions = {}) => {
+  const { props = {}, searchParams = [new URLSearchParams(''), vi.fn() as SetURLSearchParams], loaderData = DEFAULT_LOADER_DATA } = options;
+
+  vi.mocked(useSearchParams).mockReturnValue(searchParams);
+  vi.mocked(useLoaderData).mockReturnValue(loaderData);
+
+  return render(
+    <MemoryRouter>
+      <HomePage {...DEFAULT_PROPS} {...props} />
+    </MemoryRouter>
+  );
+};
+
+describe('HomePage Component', () => {
+  const mockNavigate = vi.fn();
+  const mockSetSearchParams = vi.fn() as SetURLSearchParams;
+
+  beforeEach(() => {
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
+    vi.mocked(useSearchParams).mockReturnValue([
+      new URLSearchParams(''),
+      mockSetSearchParams
+    ]);
+    vi.mocked(useLoaderData).mockReturnValue(DEFAULT_LOADER_DATA);
+    vi.mocked(useLocalStorage).mockImplementation(() => ['', vi.fn()]);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should display Loader while data is loading', () => {
+    vi.mocked(fetchCharacters).mockImplementation(() => new Promise(() => {}));
+    renderHomePage();
+    expect(screen.getByText('Loader')).toBeInTheDocument();
+  });
+
+  it('should call onLoadingChange when loading starts and finishes', async (): Promise<void> => {
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    renderHomePage();
+
+    await waitFor(() => {
+      expect(DEFAULT_PROPS.onLoadingChange).toHaveBeenCalledWith(true);
+      expect(DEFAULT_PROPS.onLoadingChange).toHaveBeenCalledWith(false);
     });
   });
 
-  it('check loading characters on mount', async (): Promise<void> => {
-    render(<HomePage />);
-    await waitFor((): void => {
-      expect(fetchCharacters).toHaveBeenCalled();
+  it('should display CharactersList after successful data fetch', async (): Promise<void> => {
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    renderHomePage();
+
+    await waitFor(() => {
+      expect(screen.getByText('CharactersList')).toBeInTheDocument();
     });
   });
 
-  it('check loading state', (): void => {
-    vi.mocked(fetchCharacters).mockImplementation((): Promise<ApiResponse> =>
-      new Promise((): void => {})
-    );
-    render(<HomePage />);
-    expect(screen.queryByText('Loading...')).toBeInTheDocument();
-  });
+  it('should display NotFoundMessage when no results are found', async (): Promise<void> => {
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseError);
+    vi.mocked(useLocalStorage).mockImplementation(() => ['test', vi.fn()]);
+    renderHomePage();
 
-  it('check error state', async (): Promise<void> => {
-    const consoleSpy: ConsoleSpy = vi.spyOn(console, 'error').mockImplementation((): void => {});
-    vi.mocked(fetchCharacters).mockRejectedValue(new Error('API Error'));
-
-    render(<HomePage />);
-    await waitFor((): void => {
-      expect(screen.queryByText('Rick Sanchez')).not.toBeInTheDocument();
-    });
-
-    consoleSpy.mockRestore();
-  });
-
-  it('display footer', async (): Promise<void> => {
-    render(<HomePage />);
-    await waitFor((): void => {
-      expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('NotFoundMessage')).toBeInTheDocument();
     });
   });
 
-  it('check search functionality', async (): Promise<void> => {
-    render(<HomePage />);
+  it('should display CharacterDetails when details param is present', async (): Promise<void> => {
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    renderHomePage({ searchParams: DETAILS_SEARCH_PARAMS });
 
-    const searchInput: HTMLElement = screen.getByPlaceholderText('Search a character...');
-    const searchButton: HTMLElement = screen.getByRole('button', { name: /search/i });
+    await waitFor(() => {
+      expect(screen.getByText('CharacterDetails')).toBeInTheDocument();
+    });
+  });
 
+  it('should handle search through SearchBar', async (): Promise<void> => {
+    const mockSetSearchValue = vi.fn();
+    vi.mocked(useLocalStorage).mockImplementation(() => ['', mockSetSearchValue]);
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    renderHomePage();
+
+    const searchInput = screen.getByTestId('search-input');
     fireEvent.change(searchInput, { target: { value: 'Rick' } });
-    fireEvent.click(searchButton);
 
-    await waitFor((): void => {
-      expect(fetchCharacters).toHaveBeenCalledWith('Rick', 1);
-      expect(localStorage.getItem('searchTerm-the-rick-morty-api')).toBe('Rick');
+    await waitFor(() => {
+      expect(mockSetSearchValue).toHaveBeenCalledWith('Rick');
+      expect(mockNavigate).toHaveBeenCalledWith('?search=Rick&page=1');
     });
   });
 
-  it('throw error when ErrorButton is clicked', async (): Promise<void> => {
-    render(<HomePage />);
+  it('should fetch data when page changes', async (): Promise<void> => {
+    vi.mocked(useLoaderData).mockReturnValue(PAGE_2_LOADER_DATA);
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    renderHomePage({ loaderData: PAGE_2_LOADER_DATA });
 
-    const errorButton: HTMLElement = await screen.findByRole('button', { name: /Error Button/i });
+    await waitFor(() => {
+      expect(fetchCharacters).toHaveBeenCalledWith('', 2);
+    });
+  });
 
-    expect(errorButton).toBeInTheDocument();
-    expect((): boolean => fireEvent.click(errorButton)).toThrow('Something went wrong. Please reload the page.');
+  it('should fetch data with search term when provided', async (): Promise<void> => {
+    vi.mocked(useLoaderData).mockReturnValue(SEARCH_LOADER_DATA);
+    vi.mocked(useLocalStorage).mockImplementation(() => ['test', vi.fn()]);
+    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    renderHomePage({ loaderData: SEARCH_LOADER_DATA });
+
+    await waitFor(() => {
+      expect(fetchCharacters).toHaveBeenCalledWith('test', 1);
+    });
   });
 });

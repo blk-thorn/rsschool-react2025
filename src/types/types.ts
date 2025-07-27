@@ -1,4 +1,4 @@
-import { ErrorInfo, ReactNode } from 'react';
+import React, { ErrorInfo, ReactNode } from 'react';
 
 export interface Character {
   id: number;
@@ -114,3 +114,19 @@ export interface CharactersListProps {
   currentPage: number;
   onPageChange: (page: number) => void;
 }
+
+export type getStatusFunction = (status: string) => string;
+
+export interface FooterProps {
+  isLoading: boolean;
+  onErrorClick: EmptyVoid;
+}
+
+export interface HomePageProps {
+  onLoadingChange?: (isLoading: boolean) => void;
+}
+
+export type UseLocalStorage = (
+  key?: string,
+  defaultValue?: string
+) => [string, (value: string) => void];

@@ -1,4 +1,5 @@
-import type { ApiResponse } from '@/types/types.ts';
+import { mockResponseError } from '@/__tests__/__mocks__/mockData.ts';
+import type { ApiResponse, Character } from '@/types/types.ts';
 
 export const fetchCharacters = async (
   searchTerm: string = '',
@@ -11,15 +12,7 @@ export const fetchCharacters = async (
   const response: Response  = await fetch(url);
 
   if (response.status === 404) {
-    return {
-      info: {
-        count: 0,
-        pages: 0,
-        next: null,
-        prev: null,
-      },
-      results: [],
-    };
+    return mockResponseError
   }
 
   if (!response.ok) {
@@ -27,4 +20,16 @@ export const fetchCharacters = async (
   }
 
   return await response.json() as ApiResponse;
+};
+
+
+export const fetchCharacter: (id: number) => Promise<Character> = async (id: number): Promise<Character> => {
+  const response: Response = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`Error! status: ${response.status}`);
+  }
+ const character = await response.json() as Character;
+  console.log(character);
+  return character;
 };

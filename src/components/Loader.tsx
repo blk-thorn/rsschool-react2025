@@ -1,8 +1,7 @@
-import { Component, ReactElement } from 'react';
+import { ReactNode } from 'react';
 
-class Loader extends Component {
+export default function Loader(): ReactNode{
 
-  render(): ReactElement {
     return (
       <div id="loading-overlay"
            className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/30">
@@ -13,12 +12,7 @@ class Loader extends Component {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
           </path>
         </svg>
-
         <span className="text-white text-3xl font-bold">Loading...</span>
-
       </div>
     )
-  }
-}
-
-export default Loader;
+};
