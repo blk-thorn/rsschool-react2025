@@ -1,7 +1,17 @@
 import { render, screen } from '@testing-library/react';
+import { ReactElement } from 'react';
 import { describe, it, expect, vi, Mock } from 'vitest';
 import { mockCharacters } from '@/__tests__/__mocks__/mockData.ts';
-import CharactersList from '@/components/CharacterList'
+import CharactersList from '@/components/CharacterList';
+import { Character } from '@/types/types.ts';
+
+vi.mock('@/components/Card', () => ({
+  default: vi.fn(({ character }: { character: Character }): ReactElement => (
+    <div data-testid="character-card">
+      {character.name} - {character.status}
+    </div>
+  )),
+}));
 
 describe('Check character list', (): void => {
   const mockPageChange: Mock = vi.fn();
@@ -17,7 +27,7 @@ describe('Check character list', (): void => {
       />
     );
 
-    const cards: HTMLElement[] = screen.getAllByText(/Status:/);
+    const cards: HTMLElement[] = screen.getAllByTestId('character-card');
     expect(cards).toHaveLength(mockCharacters.length);
 
     expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
@@ -35,7 +45,7 @@ describe('Check character list', (): void => {
     );
 
     expect(screen.getByText(/No characters found for "test"/)).toBeInTheDocument();
-    expect(screen.queryByText(/Status:/)).not.toBeInTheDocument();
-    expect(screen.queryByText('Page')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('character-card')).toBeNull();
+    expect(screen.queryByText('Page')).toBeNull();
   });
 });
