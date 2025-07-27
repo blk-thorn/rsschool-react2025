@@ -11,7 +11,7 @@ export default function CharactersList({characters, searchTerm, totalPages, curr
 
     return (
       <>
-        <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-2 animate-fadeIn justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 animate-fadeIn justify-center">
           {characters.map((character: Character): ReactElement  => (
             <Card key={character.id} character={character} />
           ))}
