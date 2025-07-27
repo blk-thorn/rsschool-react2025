@@ -125,3 +125,8 @@ export interface FooterProps {
 export interface HomePageProps {
   onLoadingChange?: (isLoading: boolean) => void;
 }
+
+export type UseLocalStorage = (
+  key?: string,
+  defaultValue?: string
+) => [string, (value: string) => void];
