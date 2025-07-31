@@ -2,6 +2,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.ts';
 import Loader from '@/components/Loader.tsx';
+import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { Character, EmptyVoid } from '@/types/types.ts';
 import { fetchCharacter } from '@/utils/api.ts';
 import { getStatusColor } from '@/utils/getStatusColor.ts';
@@ -14,6 +15,8 @@ export default function CharacterDetails(): ReactElement | null {
   const [character, setCharacter] = useState<Character | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { toggleItem, isItemSelected } = useCharacterStore();
 
   useEffect((): void => {
     if (!characterId) return;
@@ -36,11 +39,16 @@ export default function CharacterDetails(): ReactElement | null {
     loadCharacter();
   }, [characterId, navigate]);
 
-
   const handleClose: EmptyVoid = (): void => {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('details');
     navigate(`?${newParams.toString()}`, { replace: true });
+  };
+
+  const handleCheckboxClick: () => void = (): void => {
+    if (character) {
+      toggleItem(character.id);
+    }
   };
 
   if (!characterId) return null;
@@ -53,12 +61,20 @@ export default function CharacterDetails(): ReactElement | null {
   return (
     <div className="w-full mt-27">
       <div className="bg-slate-800 rounded-lg p-6">
-        <button
-          onClick={handleClose}
-          className="text-white hover:text-red-500 text-xl mb-4 cursor-pointer"
-        >
-          × Close
-        </button>
+        <div className="flex justify-between items-start mb-4">
+          <button
+            onClick={handleClose}
+            className="text-white hover:text-red-500 text-xl cursor-pointer"
+          >
+            × Close
+          </button>
+          <input
+            type="checkbox"
+            checked={isItemSelected(character.id)}
+            onChange={handleCheckboxClick}
+            className="w-5 h-5 cursor-pointer"
+          />
+        </div>
 
         <div className="flex flex-col gap-6">
           <div className="flex justify-center">
