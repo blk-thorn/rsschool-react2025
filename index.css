@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
+:root {
+  --main-bg-color: rgba(214, 236, 247, 0.88);
+}
+
 body {
-  background-color: rgba(214, 236, 247, 0.88);
+  background-color: var(--main-bg-color);
 }
 
 #root {

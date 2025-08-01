@@ -131,7 +131,6 @@ export type UseLocalStorage = (
   defaultValue?: string
 ) => [string, (value: string) => void];
 
-
 export interface DownloadFlyoutProps {
   characters: Character[];
-}
+};
