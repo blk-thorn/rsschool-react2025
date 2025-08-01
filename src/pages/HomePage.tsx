@@ -2,15 +2,16 @@ import { useState, useEffect, ReactNode } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction, useLoaderData } from 'react-router-dom';
 import CharacterDetails from '@/components/CharacterDetails.tsx';
 import CharactersList from '@/components/CharacterList.tsx';
+import DownloadFlyout from '@/components/DownloadFlyout.tsx';
 import Loader from '@/components/Loader.tsx';
 import NotFoundMessage from '@/components/NotFoundMessage.tsx';
 import SearchBar from '@/components/SearchBar.tsx';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { ApiResponse, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
+import { ApiResponse, Character, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api.ts';
 
 export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode {
-  const [characters, setCharacters] = useState<ApiResponse['results']>([]);
+  const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,7 +67,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
   };
 
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1 relative pb-20">
       <div className={`p-2 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[95%]' : 'w-full'}`}>
         <SearchBar
           onFormSubmit={handleSearch}
@@ -96,6 +97,8 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
           <CharacterDetails />
         </div>
       )}
+
+      <DownloadFlyout characters={characters} />
     </div>
   );
 }
