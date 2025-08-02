@@ -30,7 +30,7 @@ export default function SearchBar({initialSearchTerm, onFormSubmit}: SearchProps
                  placeholder="Search a character..."/>
         </div>
         <button type="submit"
-                className={`inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium rounded-lg cursor-pointer focus:ring-1 focus:outline-none ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300' : 'bg-sky-600  hover:bg-sky-700  focus:ring-sky-600 text-white'}`}>
+                className={`inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium rounded-lg cursor-pointer focus:ring-1 focus:outline-none transition-all duration-100 ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300' : 'bg-sky-600  hover:bg-sky-700  focus:ring-sky-600 text-white'}`}>
           <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                viewBox="0 0 20 20">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"

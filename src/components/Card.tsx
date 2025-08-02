@@ -1,16 +1,16 @@
 import { ReactNode } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useTheme } from '@/context/ThemeContext.tsx';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { CardProps } from '@/types/types.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
-import { useTheme } from '@/context/ThemeContext.tsx';
 
 export default function Card({ character }: CardProps): ReactNode {
   const { theme } = useTheme();
   const navigate: NavigateFunction = useNavigate();
   const { toggleItem, isItemSelected } = useCharacterStore();
 
-  const statusColorClass = useStatusColor(character.status);
+  const statusColorClass: string = useStatusColor(character.status);
 
   const handleCardClick: () => void = (): void => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -27,7 +27,7 @@ export default function Card({ character }: CardProps): ReactNode {
     <div
       onClick={handleCardClick}
       data-testid="character-card"
-      className={`flex items-center max-w-xl border rounded-lg shadow-sm overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer ${theme === 'dark' ? 'bg-slate-600/80 hover:bg-slate-700 border-gray-50' : 'bg-sky-800/80  border-slate-600'}`}
+      className={`flex items-center max-w-xl border rounded-lg shadow-sm overflow-hidden hover:scale-105 transition-all duration-100 cursor-pointer ${theme === 'dark' ? 'bg-slate-600/80 hover:bg-slate-700 border-gray-50' : 'bg-slate-800/60  border-slate-400'}`}
     >
       <div className="relative w-3/4 min-w-120px">
         <img

@@ -6,12 +6,12 @@ export function useStatusColor(status: string): string {
 
   switch (status) {
     case CharacterStatus.Alive:
-      return theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
+      return theme === 'dark' ? 'text-emerald-400' : 'text-emerald-300';
     case CharacterStatus.Dead:
-      return theme === 'dark' ? 'text-rose-500' : 'text-rose-700';
+      return theme === 'dark' ? 'text-rose-400' : 'text-rose-300';
     case CharacterStatus.Unknown:
-      return theme === 'dark' ? 'text-sky-300' : 'text-sky-500';
+      return theme === 'dark' ? 'text-sky-400' : 'text-sky-300';
     default:
-      return theme === 'dark' ? 'text-sky-300' : 'text-sky-500';
+      return theme === 'dark' ? 'text-sky-400' : 'text-sky-300';
   }
 };
