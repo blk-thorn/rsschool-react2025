@@ -5,7 +5,7 @@ import Loader from '@/components/Loader.tsx';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { Character, EmptyVoid } from '@/types/types.ts';
 import { fetchCharacter } from '@/utils/api.ts';
-import { getStatusColor } from '@/utils/getStatusColor.ts';
+import { useStatusColor } from '@/utils/useStatusColor.ts';
 
 export default function CharacterDetails(): ReactElement | null {
   const [searchParams] = useSearchParams();
@@ -17,6 +17,8 @@ export default function CharacterDetails(): ReactElement | null {
   const [error, setError] = useState<string | null>(null);
 
   const { toggleItem, isItemSelected } = useCharacterStore();
+
+  const statusColorClass: string = useStatusColor(character?.status || '');
 
   useEffect((): void => {
     if (!characterId) return;
@@ -55,8 +57,6 @@ export default function CharacterDetails(): ReactElement | null {
   if (isLoading) return <Loader />;
   if (error) return null;
   if (!character) return null;
-
-  const statusColorClass: string = getStatusColor(character.status);
 
   return (
     <div className="w-full mt-27">

@@ -1,7 +1,10 @@
 import { ReactNode } from 'react';
 import type { EmptyVoid, PaginationProps } from '@/types/types.ts';
+import { useTheme } from '@/context/ThemeContext.tsx';
 
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps): ReactNode {
+  const {theme} = useTheme();
+
   const handleNextPage: EmptyVoid = (): void => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
@@ -19,7 +22,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         onClick={handlePrevPage}
         disabled={currentPage === 1}
-        className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 focus:ring-1 focus:outline-none focus:ring-sky-600 disabled:pointer-events-none cursor-pointer"
+        className={`inline-flex items-center px-4 py-2 rounded-md ms-2 text-sm font-medium rounded-lg cursor-pointer focus:outline-none focus:ring-sky-600 disabled:pointer-events-none ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300' : 'bg-sky-600  hover:bg-sky-700  focus:ring-sky-600 text-white'}`}
       >
         Prev
       </button>
@@ -29,7 +32,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         onClick={handleNextPage}
         disabled={currentPage >= totalPages}
-        className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 focus:ring-1 focus:outline-none focus:ring-sky-600 disabled:pointer-events-none cursor-pointer"
+        className={`inline-flex items-center px-4 py-2 rounded-md ms-2 text-sm font-medium rounded-lg cursor-pointer focus:outline-none focus:ring-sky-600 disabled:pointer-events-none ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300' : 'bg-sky-600  hover:bg-sky-700  focus:ring-sky-600 text-white'}`}
       >
         Next
       </button>

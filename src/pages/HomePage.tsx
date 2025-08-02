@@ -98,7 +98,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
       </div>
 
       {detailsId && (
-        <div className={`w-[30%] p-1 overflow-y-auto border-l ${theme === 'dark' ? 'border-gray-600' : 'border-slate-200'}`}>
+        <div className={`w-[30%] p-1 overflow-y-auto border-l ${theme === 'dark' ? 'border-gray-600' : 'border-slate-600'}`}>
           <CharacterDetails />
         </div>
       )}
