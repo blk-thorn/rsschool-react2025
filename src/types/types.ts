@@ -130,3 +130,15 @@ export type UseLocalStorage = (
   key?: string,
   defaultValue?: string
 ) => [string, (value: string) => void];
+
+export interface DownloadFlyoutProps {
+  characters: Character[];
+};
+
+export type Theme = 'light' | 'dark';
+
+
+export interface ThemeContextType {
+  theme: Theme;
+  toggleTheme: () => void;
+}

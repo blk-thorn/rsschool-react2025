@@ -6,6 +6,7 @@ import { mockResponseSuccess, mockResponseError } from '@/__tests__/__mocks__/mo
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import HomePage from '@/pages/HomePage';
 import { fetchCharacters } from '@/utils/api';
+import { ThemeProvider } from '@/context/ThemeContext.tsx';
 
 type SearchParamsTuple = [URLSearchParams, SetURLSearchParams];
 type RenderHomePageOptions = {
@@ -95,7 +96,9 @@ const renderHomePage = (options: RenderHomePageOptions = {}) => {
 
   return render(
     <MemoryRouter>
-      <HomePage {...DEFAULT_PROPS} {...props} />
+      <ThemeProvider>
+        <HomePage {...DEFAULT_PROPS} {...props} />
+      </ThemeProvider>
     </MemoryRouter>
   );
 };

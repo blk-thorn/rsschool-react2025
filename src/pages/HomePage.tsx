@@ -2,19 +2,22 @@ import { useState, useEffect, ReactNode } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction, useLoaderData } from 'react-router-dom';
 import CharacterDetails from '@/components/CharacterDetails.tsx';
 import CharactersList from '@/components/CharacterList.tsx';
+import DownloadFlyout from '@/components/DownloadFlyout.tsx';
 import Loader from '@/components/Loader.tsx';
 import NotFoundMessage from '@/components/NotFoundMessage.tsx';
 import SearchBar from '@/components/SearchBar.tsx';
+import { useTheme } from '@/context/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { ApiResponse, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
+import { ApiResponse, Character, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
 import { fetchCharacters } from '@/utils/api.ts';
 
 export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode {
-  const [characters, setCharacters] = useState<ApiResponse['results']>([]);
+  const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate: NavigateFunction = useNavigate();
+  const { theme } = useTheme();
 
   const loaderData = useLoaderData() as { searchTerm: string; page: number };
   const [searchValue, setSearchValue] = useLocalStorage('', loaderData.searchTerm);
@@ -66,7 +69,8 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
   };
 
   return (
-    <div className="flex flex-1">
+    <div data-testid="home-page" className={`flex flex-1 relative pb-20 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'}`}>
+
       <div className={`p-2 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[95%]' : 'w-full'}`}>
         <SearchBar
           onFormSubmit={handleSearch}
@@ -92,10 +96,12 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
       </div>
 
       {detailsId && (
-        <div className="w-[30%] p-1 overflow-y-auto border-l border-slate-600">
+        <div className={`w-[30%] p-1 overflow-y-auto border-l ${theme === 'dark' ? 'border-gray-600' : 'border-slate-600'}`}>
           <CharacterDetails />
         </div>
       )}
+
+      <DownloadFlyout characters={characters} />
     </div>
   );
 }

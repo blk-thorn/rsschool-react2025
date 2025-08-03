@@ -1,12 +1,16 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { EmptyVoid, ErrorBoundaryProps, ErrorBoundaryState } from '@/types/types.ts';
+import { useTheme } from '@/context/ThemeContext.tsx';
+import { EmptyVoid, ErrorBoundaryProps, ErrorBoundaryState, Theme } from '@/types/types.ts';
 
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+interface ThemedErrorBoundaryProps extends ErrorBoundaryProps {
+  theme: Theme;
+}
+
+class ErrorBoundaryBase extends Component<ThemedErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
     error: undefined,
     errorInfo: undefined
-
   };
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -33,18 +37,25 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render(): ReactNode {
     if (this.state.hasError) {
+      const { theme } = this.props;
+
       return (
         <main>
           <div className="animate-bounce">
-          <h1 className="mt-40 p-4 text-4xl text-red-800 rounded-lg dark:text-red-400">
-            Something went wrong...
-          </h1>
-          <p className="mb-10 text-3xl text-red-800 rounded-lg dark:text-red-400">
-            Please reload the page.
-          </p>
+            <h1 className={`mt-40 p-4 text-4xl rounded-lg ${theme === 'dark' ? 'text-red-400' : 'text-sky-600'}`}>
+              Something went wrong...
+            </h1>
+            <p className={`mb-10 text-3xl rounded-lg ${theme === 'dark' ? 'text-red-400' : 'text-sky-600'}`}>
+              Please reload the page.
+            </p>
           </div>
           <button
-            className="focus:outline-none text-lg text-black border-2 border-sky-100 shadow-sm shadow-sky-400/60 bg-sky-50 hover:bg-sky-100 focus:ring-1 focus:ring-sky-200 font-medium rounded-lg px-5 py-2.5 me-2 mb-2 cursor-pointer"
+            className={`focus:outline-none text-lg font-medium rounded-lg px-5 py-2.5 me-2 mb-2 cursor-pointer
+              border-2 shadow-sm focus:ring-1
+              ${theme === 'dark'
+              ? 'text-white border-slate-600 shadow-slate-600/60 bg-slate-700 hover:bg-slate-600 focus:ring-slate-500'
+              : 'text-black border-sky-100 shadow-sky-400/60 bg-sky-50 hover:bg-sky-100 focus:ring-sky-200'
+            }`}
             onClick={this.handleReload}
           >
             Start Over
@@ -57,4 +68,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-export default ErrorBoundary;
+export default function ErrorBoundary(props: ErrorBoundaryProps): ReactNode {
+  const { theme } = useTheme();
+  return <ErrorBoundaryBase {...props} theme={theme} />;
+}

@@ -7,7 +7,7 @@ export default function MainLayout(): ReactNode {
   const [shouldThrowError, setShouldThrowError] = useState(false);
   const [isMainLoading, setIsMainLoading] = useState(false);
 
-  const handleErrorClick = (): void => {
+  const handleErrorClick: () => void = (): void => {
     setShouldThrowError(true);
   };
 
@@ -16,7 +16,7 @@ export default function MainLayout(): ReactNode {
   }
 
   return (
-    <>
+    <div data-testid="main-layout">
       <Header />
       <main className="flex-grow">
         <Outlet context={{ setIsMainLoading }} />
@@ -25,6 +25,6 @@ export default function MainLayout(): ReactNode {
         isLoading={isMainLoading}
         onErrorClick={handleErrorClick}
       />
-    </>
+    </div>
   )
 };
