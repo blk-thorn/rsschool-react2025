@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts';
 import { ROUTES } from '@/app/routes';
 import CharacterDetails from '@/components/CharacterDetails.tsx';
+import { ThemeProvider } from '@/context/ThemeContext.tsx';
 import { fetchCharacter } from '@/utils/api';
 
 vi.mock('react-router-dom', async () => {
@@ -20,7 +21,7 @@ vi.mock('@/utils/api', () => ({
 }));
 
 vi.mock('@/utils/getStatusColor', () => ({
-  getStatusColor: vi.fn().mockReturnValue('text-green-500'),
+  getStatusColor: vi.fn().mockReturnValue('text-emerald-500'),
 }));
 
 describe('CharacterDetails Component', () => {
@@ -39,7 +40,9 @@ describe('CharacterDetails Component', () => {
 
     const { container } = render(
       <MemoryRouter>
-        <CharacterDetails />
+        <ThemeProvider>
+          <CharacterDetails />
+        </ThemeProvider>
       </MemoryRouter>
     );
 
@@ -56,7 +59,9 @@ describe('CharacterDetails Component', () => {
 
     render(
       <MemoryRouter>
-        <CharacterDetails />
+        <ThemeProvider>
+          <CharacterDetails />
+        </ThemeProvider>
       </MemoryRouter>
     );
 
@@ -76,17 +81,25 @@ describe('CharacterDetails Component', () => {
       new URLSearchParams('?details=999'),
       vi.fn()
     ]);
-    vi.mocked(fetchCharacter).mockRejectedValue(new Error('Character not found'));
+
+    const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const mockError = new Error('Character not found');
+    vi.mocked(fetchCharacter).mockRejectedValue(mockError);
 
     render(
       <MemoryRouter>
-        <CharacterDetails />
+        <ThemeProvider>
+          <CharacterDetails />
+        </ThemeProvider>
       </MemoryRouter>
     );
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith(ROUTES.NOT_FOUND, { replace: true });
     });
+
+    consoleErrorMock.mockRestore();
   });
 
   it('should close details when close button is clicked', async () => {
@@ -98,7 +111,9 @@ describe('CharacterDetails Component', () => {
 
     render(
       <MemoryRouter>
-        <CharacterDetails />
+        <ThemeProvider>
+          <CharacterDetails />
+        </ThemeProvider>
       </MemoryRouter>
     );
 
@@ -118,13 +133,15 @@ describe('CharacterDetails Component', () => {
 
     render(
       <MemoryRouter>
-        <CharacterDetails />
+        <ThemeProvider>
+          <CharacterDetails />
+        </ThemeProvider>
       </MemoryRouter>
     );
 
     await waitFor(() => {
       const statusElement = screen.getByText('Alive');
-      expect(statusElement).toHaveClass('text-green-500');
+      expect(statusElement).toHaveClass('text-emerald-300');
     });
   });
 });

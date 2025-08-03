@@ -1,15 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, it, expect } from 'vitest';
-import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts'
+import { describe, it, expect, vi } from 'vitest';
+import { mockCharacter } from '@/__tests__/__mocks__/mockData.ts';
 import Card from '@/components/Card';
 import { CharacterStatus } from '@/types/types.ts';
 
+vi.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'light',
+    toggleTheme: vi.fn(),
+  }),
+}));
+
 describe('Check character Card', (): void => {
-  const renderCard = () => {
+  const renderCard = (character = mockCharacter) => {
     return render(
       <MemoryRouter>
-        <Card character={mockCharacter} />
+        <Card character={character} />
       </MemoryRouter>
     );
   };
@@ -27,44 +34,44 @@ describe('Check character Card', (): void => {
   it('displays correct image with alt text', (): void => {
     renderCard();
 
-    const image: HTMLElement = screen.getByAltText('Tiny Rick');
+    const image: HTMLElement = screen.getByAltText(mockCharacter.name);
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', mockCharacter.image);
   });
 
-  it('applies correct status color classes', (): void => {
+  it('applies correct status color classes for light theme', (): void => {
     const { rerender } = renderCard();
 
-    const aliveStatus: HTMLElement = screen.getByText(mockCharacter.status);
+    const aliveStatus = screen.getByText(mockCharacter.status);
     expect(aliveStatus).toHaveClass('text-emerald-300');
 
     rerender(
       <MemoryRouter>
-        <Card character={{...mockCharacter, status: CharacterStatus.Dead}} />
+        <Card character={{ ...mockCharacter, status: CharacterStatus.Dead }} />
       </MemoryRouter>
     );
-    expect(screen.getByText(CharacterStatus.Dead)).toHaveClass('text-rose-400');
+    expect(screen.getByText(CharacterStatus.Dead)).toHaveClass('text-rose-300');
 
     rerender(
       <MemoryRouter>
-        <Card character={{...mockCharacter, status: CharacterStatus.Unknown}} />
+        <Card character={{ ...mockCharacter, status: CharacterStatus.Unknown }} />
       </MemoryRouter>
     );
-    expect(screen.getByText(CharacterStatus.Unknown)).toHaveClass('text-sky-200');
+    expect(screen.getByText(CharacterStatus.Unknown)).toHaveClass('text-sky-300');
   });
 
   it('have correct container classes', (): void => {
     const { container } = renderCard();
 
-    const cardElement: Element | null = container.querySelector('[data-testid="character-card"]');
+    const cardElement = container.querySelector('[data-testid="character-card"]');
     expect(cardElement).toHaveClass('flex', 'overflow-hidden');
   });
 
   it('renders name and overlay', (): void => {
     renderCard();
 
-    const nameElement: HTMLElement = screen.getByText(mockCharacter.name);
-    expect(nameElement).toHaveClass('text-white', 'font-bold', 'truncate');
+    const nameElement = screen.getByText(mockCharacter.name);
+    expect(nameElement).toHaveClass('font-bold', 'truncate');
     expect(nameElement.parentElement).toHaveClass('absolute', 'rounded-lg');
   });
 });
