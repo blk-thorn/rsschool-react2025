@@ -9,7 +9,7 @@ export default function Header(): ReactNode {
   return (
     <header className="flex flex-col items-center justify-center">
       <img
-        src="/favicon.ico"
+        src="./favicon.ico"
         alt="logo"
         className={`rounded-full w-40 h-40 border-5 transition-all duration-100
           ${theme === 'dark'
