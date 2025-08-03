@@ -7,7 +7,8 @@ import { useTheme } from '@/context/ThemeContext.tsx';
 export default function Header(): ReactNode {
   const { theme } = useTheme();
   return (
-    <header className="flex flex-col items-center justify-center">
+    <header className="relative flex flex-col items-center justify-center pt-12">
+      <ThemeSwitcher />
       <img
         src="./favicon.ico"
         alt="logo"
@@ -29,9 +30,6 @@ export default function Header(): ReactNode {
             >
               About
             </Link>
-          </li>
-          <li>
-            <ThemeSwitcher />
           </li>
         </ul>
       </nav>
