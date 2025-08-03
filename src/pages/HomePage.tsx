@@ -69,7 +69,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
   };
 
   return (
-    <div className={`flex flex-1 relative pb-20 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'}`}>
+    <div data-testid="home-page" className={`flex flex-1 relative pb-20 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'}`}>
 
       <div className={`p-2 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[95%]' : 'w-full'}`}>
         <SearchBar

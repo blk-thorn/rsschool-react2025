@@ -19,6 +19,7 @@ export default function Card({ character }: CardProps): ReactNode {
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    e.preventDefault();
     e.stopPropagation();
     toggleItem(character.id);
   };

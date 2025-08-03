@@ -6,7 +6,7 @@ import { useTheme } from '@/context/ThemeContext.tsx';
 export default function NotFoundPage (): JSX.Element {
   const { theme } = useTheme();
   return (
-    <div className={`flex flex-col items-center p-2 mb-40 ${theme === 'dark' ? 'bg-gray-900' : ''}`}>
+    <div data-testid="not-found-page" className={`flex flex-col items-center p-2 mb-40 ${theme === 'dark' ? 'bg-gray-900' : ''}`}>
       <h1 className={`text-9xl font-bold mb-10 ${theme === 'dark' ? 'text-rose-400' : 'text-sky-600'}`}>404</h1>
       <h2 className={`text-2xl font-semibold mb-2 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-800'}`}>
         Page Not Found
