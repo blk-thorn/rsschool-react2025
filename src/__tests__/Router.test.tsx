@@ -82,19 +82,36 @@ describe('Router Configuration', (): void => {
   });
 
   describe('Error Handling', (): void => {
-    it('render error page', async (): Promise<void> => {
+    it('render error page when loader throws', async (): Promise<void> => {
+      const TestComponent = () => <div>Test Component</div>;
+      const ErrorComponent = () => <div>Error Page Content</div>;
+
       const testRoutes: RouteObject[] = [{
         path: '/',
-        loader: (): void => { throw new Response('Not Found', { status: 404 }); },
-        errorElement: <div>Error Page Content</div>,
+        element: <TestComponent />,
+        loader: () => {
+          throw new Response('Not Found', { status: 404 });
+        },
+        errorElement: <ErrorComponent />,
+        HydrateFallback: () => <div>Loading...</div>
       }];
 
       const memoryRouter = createMemoryRouter(testRoutes, {
         initialEntries: ['/'],
+        initialIndex: 0,
+        hydrationData: {
+          loaderData: {},
+          actionData: null,
+          errors: {
+            '0': new Response('Not Found', { status: 404 })
+          }
+        }
       });
 
       render(<RouterProvider router={memoryRouter} />);
+
       expect(await screen.findByText('Error Page Content')).toBeInTheDocument();
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
   });
 });

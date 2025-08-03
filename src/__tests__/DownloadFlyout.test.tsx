@@ -19,6 +19,8 @@ describe('DownloadFlyout', (): void => {
     global.URL.createObjectURL = mockCreateObjectURL;
     global.URL.revokeObjectURL = mockRevokeObjectURL;
 
+    global.window.open = vi.fn();
+
     vi.mocked(useTheme).mockReturnValue({
       theme: 'light',
       toggleTheme: vi.fn(),
@@ -59,12 +61,14 @@ describe('DownloadFlyout', (): void => {
       throw new Error('Link element not found');
     }
 
-    const clickSpy = vi.spyOn(link, 'click');
+    link.click = vi.fn();
 
     fireEvent.click(screen.getByText('Download'));
 
     expect(link.download).toBe('1_items.csv');
-    expect(clickSpy).toHaveBeenCalledOnce();
+    expect(link.href).toContain('mock-url');
+
+    expect(link.click).toHaveBeenCalledOnce();
     expect(mockCreateObjectURL).toHaveBeenCalled();
 
     await vi.waitFor(() => {

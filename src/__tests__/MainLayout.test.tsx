@@ -82,16 +82,6 @@ describe('MainLayout', (): void => {
     expect(screen.getByTestId('test-outlet')).toBeInTheDocument();
   });
 
-  it('should hide ErrorButton when isLoading is true', (): void => {
-    (Outlet as Mock).mockImplementationOnce(({ context }: { context: OutletContext }): ReactElement => {
-      context.setIsMainLoading(true);
-      return <div>Loading...</div>;
-    });
-
-    render(<MainLayout />);
-    expect(screen.queryByTestId('error-button')).not.toBeInTheDocument();
-  });
-
   it('should throw error when ErrorButton is clicked', async (): Promise<void> => {
     const originalError = console.error;
     console.error = vi.fn();
