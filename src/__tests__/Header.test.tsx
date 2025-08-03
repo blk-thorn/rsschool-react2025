@@ -25,7 +25,7 @@ describe('Header Component', (): void => {
 
     const logo: HTMLElement = screen.getByAltText('logo');
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('src', '/favicon.ico');
+    expect(logo).toHaveAttribute('src', './favicon.ico');
     expect(logo).toHaveClass('rounded-full', 'border-5');
   });
 
