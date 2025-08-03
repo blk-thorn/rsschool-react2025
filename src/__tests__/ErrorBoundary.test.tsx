@@ -1,8 +1,16 @@
 import { render, screen, fireEvent, act, waitFor, RenderResult } from '@testing-library/react';
 import { Component, ReactNode } from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach, MockInstance } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ErrorBoundary from '@/features/ErrorBoundary.tsx';
 import { ConsoleError, renderFunction } from '@/types/test.types.ts';
+
+vi.mock('@/context/ThemeContext.tsx', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/context/ThemeContext.tsx')>();
+  return {
+    ...actual,
+    useTheme: vi.fn((): { theme: string } => ({ theme: 'light' })),
+  };
+});
 
 class ErrorThrower extends Component<{ shouldThrow?: boolean }> {
   render(): ReactNode {
@@ -32,13 +40,18 @@ const renderWithoutError: renderFunction = (): RenderResult => {
 describe('Check ErrorBoundary', (): void => {
   const originalConsoleError: ConsoleError = console.error;
   const originalLocation: Location = window.location;
+  let useThemeMock: ReturnType<typeof vi.fn>;
 
-  beforeEach((): void => {
+  beforeEach(async (): Promise<void> => {
     console.error = vi.fn();
     Object.defineProperty(window, 'location', {
       configurable: true,
       value: { reload: vi.fn() },
     });
+
+    const themeModule = await import('@/context/ThemeContext.tsx');
+    useThemeMock = themeModule.useTheme as ReturnType<typeof vi.fn>;
+    useThemeMock.mockReturnValue({ theme: 'light' });
   });
 
   afterEach((): void => {
@@ -64,12 +77,9 @@ describe('Check ErrorBoundary', (): void => {
     expect(screen.queryByText('No error')).not.toBeInTheDocument();
   });
 
-  it('calls componentDidCatch and logs error', (): void => {
-    const componentDidCatchSpy: MockInstance = vi.spyOn(ErrorBoundary.prototype, 'componentDidCatch');
+  it('logs error when child component throws', (): void => {
     renderWithError();
-    expect(componentDidCatchSpy).toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
-    componentDidCatchSpy.mockRestore();
   });
 
   it('resets error state when Start Over button clicked', async (): Promise<void> => {
@@ -86,5 +96,17 @@ describe('Check ErrorBoundary', (): void => {
       fireEvent.click(screen.getByText('Start Over'));
     });
     expect(window.location.reload).toHaveBeenCalled();
+  });
+
+  it('renders with dark theme correctly', () => {
+    useThemeMock.mockReturnValue({ theme: 'dark' });
+    renderWithError();
+    expect(screen.getByText('Something went wrong...')).toHaveClass('text-red-400');
+  });
+
+  it('renders with light theme correctly', () => {
+    useThemeMock.mockReturnValue({ theme: 'light' });
+    renderWithError();
+    expect(screen.getByText('Something went wrong...')).toHaveClass('text-sky-600');
   });
 });

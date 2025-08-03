@@ -1,13 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ThemeProvider } from '@/context/ThemeContext.tsx';
 import AboutPage from '@/pages/AboutPage.tsx';
+
+vi.mock('@/context/ThemeContext.tsx', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/context/ThemeContext.tsx')>();
+  return {
+    ...actual,
+    useTheme: vi.fn(() => ({ theme: 'light' })),
+  };
+});
 
 describe('AboutPage Component', (): void => {
   beforeEach((): void => {
     render(
       <BrowserRouter>
-        <AboutPage />
+        <ThemeProvider>
+          <AboutPage />
+        </ThemeProvider>
       </BrowserRouter>
     );
   });
