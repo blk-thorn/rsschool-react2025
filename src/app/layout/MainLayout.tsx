@@ -7,7 +7,7 @@ export default function MainLayout(): ReactNode {
   const [shouldThrowError, setShouldThrowError] = useState(false);
   const [isMainLoading, setIsMainLoading] = useState(false);
 
-  const handleErrorClick = (): void => {
+  const handleErrorClick: () => void = (): void => {
     setShouldThrowError(true);
   };
 
