@@ -1,18 +1,20 @@
 import { createContext, useContext, useState, ReactNode, useEffect, Context } from 'react';
+import { Theme, ThemeContextType } from '@/types/types.ts';
 
-type Theme = 'light' | 'dark';
-
-interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-}
 
 const ThemeContext: Context<ThemeContextType | undefined> = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: ({ children }: { children: ReactNode }) => ReactNode = ({ children }: { children: ReactNode }): ReactNode => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>((): Theme => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('rick-morty-api-theme') as Theme | null;
+      return savedTheme || 'light';
+    }
+    return 'light';
+  });
 
   useEffect((): void => {
+    localStorage.setItem('rick-morty-api-theme', theme);
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(theme);
   }, [theme]);
@@ -31,7 +33,7 @@ export const ThemeProvider: ({ children }: { children: ReactNode }) => ReactNode
 export const useTheme: () => ThemeContextType = (): ThemeContextType => {
   const context: ThemeContextType | undefined = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme error');
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 };

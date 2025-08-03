@@ -6,7 +6,6 @@ import DownloadFlyout from '@/components/DownloadFlyout.tsx';
 import Loader from '@/components/Loader.tsx';
 import NotFoundMessage from '@/components/NotFoundMessage.tsx';
 import SearchBar from '@/components/SearchBar.tsx';
-import ThemeSwitcher from '@/components/ThemeSwitcher.tsx';
 import { useTheme } from '@/context/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ApiResponse, Character, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
@@ -71,7 +70,6 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   return (
     <div className={`flex flex-1 relative pb-20 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'}`}>
-      <ThemeSwitcher />
 
       <div className={`p-2 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[95%]' : 'w-full'}`}>
         <SearchBar

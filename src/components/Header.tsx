@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/app/routes';
+import ThemeSwitcher from '@/components/ThemeSwitcher.tsx';
 import { useTheme } from '@/context/ThemeContext.tsx';
 
 export default function Header(): ReactNode {
@@ -28,6 +29,9 @@ export default function Header(): ReactNode {
             >
               About
             </Link>
+          </li>
+          <li>
+            <ThemeSwitcher />
           </li>
         </ul>
       </nav>

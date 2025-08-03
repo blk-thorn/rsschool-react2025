@@ -1,6 +1,7 @@
+import { ReactElement } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
-export default function ThemeSwitcher() {
+export default function ThemeSwitcher(): ReactElement {
   const { theme, toggleTheme } = useTheme();
 
   return (
