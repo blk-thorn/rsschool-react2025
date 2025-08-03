@@ -13,6 +13,13 @@ vi.mock('@/components/Card', () => ({
   )),
 }));
 
+vi.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'light',
+    toggleTheme: vi.fn(),
+  }),
+}));
+
 describe('Check character list', (): void => {
   const mockPageChange: Mock = vi.fn();
 

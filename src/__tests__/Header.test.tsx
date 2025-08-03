@@ -12,6 +12,13 @@ vi.mock('react-router-dom', () => ({
   ),
 }));
 
+vi.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'light',
+    toggleTheme: vi.fn(),
+  }),
+}));
+
 describe('Header Component', (): void => {
   it('renders the application logo with correct attributes', (): void  => {
     render(<Header />);

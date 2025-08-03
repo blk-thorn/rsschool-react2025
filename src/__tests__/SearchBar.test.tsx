@@ -4,6 +4,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import SearchBar from '@/components/SearchBar';
 import { searchBarRender } from '@/types/test.types.ts';
 
+vi.mock('@/context/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'light',
+    toggleTheme: vi.fn(),
+  }),
+}));
+
 describe('SearchBar Component', (): void => {
   const initialTerm = 'Rick';
   let mockSubmit: Mock;
