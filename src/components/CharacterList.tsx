@@ -3,9 +3,9 @@ import Card from '@/components/Card';
 import Loader from '@/components/Loader.tsx';
 import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
+import { useCharactersQuery } from '@/hooks/useQueries.ts';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { Character } from '@/types/types.ts';
-import { useCharactersQuery } from '@/hooks/useQueries.ts';
 
 export default function CharactersList({ searchTerm, currentPage, onPageChange }: {
   searchTerm: string;

@@ -1,11 +1,12 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.ts';
 import Loader from '@/components/Loader.tsx';
 import { useTheme } from '@/context/ThemeContext.tsx';
+import { useCharacterQuery } from '@/hooks/useQueries.ts';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { EmptyVoid } from '@/types/types.ts';
-import { useCharacterQuery } from '@/hooks/useQueries.ts';
+import { queryClient } from '@/utils/react-query.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
 
 export default function CharacterDetails(): ReactElement | null {
@@ -30,6 +31,11 @@ export default function CharacterDetails(): ReactElement | null {
       toggleItem(character.id);
     }
   };
+
+  useEffect((): void  => {
+    const cached: unknown = queryClient.getQueryData(['characters', '', 1]);
+    console.log('Сached data:', cached);
+  }, []);
 
   if (!characterId) return null;
   if (isLoading) return <Loader />;
