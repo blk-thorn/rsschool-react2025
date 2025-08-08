@@ -1,47 +1,23 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
 import { useSearchParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.ts';
 import Loader from '@/components/Loader.tsx';
 import { useTheme } from '@/context/ThemeContext.tsx';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
-import { Character, EmptyVoid } from '@/types/types.ts';
-import { fetchCharacter } from '@/utils/api.ts';
+import { EmptyVoid } from '@/types/types.ts';
+import { useCharacterQuery } from '@/hooks/useQueries.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
 
 export default function CharacterDetails(): ReactElement | null {
   const [searchParams] = useSearchParams();
   const navigate: NavigateFunction = useNavigate();
   const characterId: string | null = searchParams.get('details');
+  const numCharacterId: number | undefined = characterId ? Number(characterId) : undefined;
 
-  const [character, setCharacter] = useState<Character | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const { data: character, isLoading, isError, error } = useCharacterQuery(numCharacterId);
   const { toggleItem, isItemSelected } = useCharacterStore();
-
   const statusColorClass: string = useStatusColor(character?.status || '');
   const { theme } = useTheme();
-
-  useEffect((): void => {
-    if (!characterId) return;
-
-    const loadCharacter: EmptyVoid = async (): Promise<void> => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data: Character = await fetchCharacter(Number(characterId));
-        setCharacter(data);
-      } catch (err) {
-        console.error('Error fetching character:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load character');
-        navigate(ROUTES.NOT_FOUND, { replace: true });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCharacter();
-  }, [characterId, navigate]);
 
   const handleClose: EmptyVoid = (): void => {
     const newParams = new URLSearchParams(searchParams);
@@ -49,7 +25,7 @@ export default function CharacterDetails(): ReactElement | null {
     navigate(`?${newParams.toString()}`, { replace: true });
   };
 
-  const handleCheckboxClick: () => void = (): void => {
+  const handleCheckboxClick: EmptyVoid = (): void => {
     if (character) {
       toggleItem(character.id);
     }
@@ -57,7 +33,11 @@ export default function CharacterDetails(): ReactElement | null {
 
   if (!characterId) return null;
   if (isLoading) return <Loader />;
-  if (error) return null;
+  if (isError) {
+    console.error('Error fetching character:', error);
+    navigate(ROUTES.NOT_FOUND, { replace: true });
+    return null;
+  }
   if (!character) return null;
 
   return (

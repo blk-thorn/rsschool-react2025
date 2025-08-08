@@ -37,7 +37,7 @@ export type ApiPromise = Promise<ApiResponse>;
 
 export interface PageState {
   characters: Character[];
-  searchResults?: Character[],
+  searchResults?: Character[];
   totalPages: number;
   searchTotalPages?: number;
   currentPage: number;
@@ -55,6 +55,7 @@ export interface NotFoundMessageProps {
 
 export interface CardProps {
   character: Character;
+  isSelected?: boolean;
 }
 
 export interface SearchProps {
@@ -71,7 +72,7 @@ export interface PaginationProps {
 export const enum CharacterStatus {
   Alive = 'Alive',
   Dead = 'Dead',
-  Unknown = 'unknown'
+  Unknown = 'unknown',
 }
 
 export interface ErrorButtonProps {
@@ -84,7 +85,10 @@ export type PageVoid = (page: number) => void;
 
 export type SearchVoid = (term: string) => void;
 
-export type LoadingVoid = (page: Parameters<PageVoid>[0], term: Parameters<SearchVoid>[0]) => void;
+export type LoadingVoid = (
+  page: Parameters<PageVoid>[0],
+  term: Parameters<SearchVoid>[0],
+) => void;
 
 export interface ErrorBoundaryProps {
   children: ReactNode;
@@ -96,7 +100,6 @@ export interface ErrorBoundaryState {
   errorInfo?: ErrorInfo;
 }
 
-
 export type ChangeFunction = (e: React.ChangeEvent<HTMLInputElement>) => void;
 export type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
@@ -105,7 +108,6 @@ export type SubmitEvent = React.FormEvent;
 
 export type ClickFunction = (e: React.MouseEvent<HTMLButtonElement>) => void;
 export type ClickEvent = React.MouseEvent<HTMLButtonElement>;
-
 
 export interface CharactersListProps {
   characters: Character[];
@@ -128,15 +130,14 @@ export interface HomePageProps {
 
 export type UseLocalStorage = (
   key?: string,
-  defaultValue?: string
+  defaultValue?: string,
 ) => [string, (value: string) => void];
 
 export interface DownloadFlyoutProps {
   characters: Character[];
-};
+}
 
 export type Theme = 'light' | 'dark';
-
 
 export interface ThemeContextType {
   theme: Theme;
