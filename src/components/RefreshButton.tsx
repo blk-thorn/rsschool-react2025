@@ -1,6 +1,7 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { ReactNode, useState } from 'react';
 import ErrorMessage from './ErrorMessage';
+import RefreshLoader from './RefreshLoader';
 import { useTheme } from '@/context/ThemeContext.tsx';
 
 export default function RefreshButton(): ReactNode {
@@ -46,10 +47,7 @@ export default function RefreshButton(): ReactNode {
         } ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {isRefreshing ? (
-          <span className="flex items-center">
-            <span className="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"></span>
-            Refreshing...
-          </span>
+          <RefreshLoader text="Refreshing..." />
         ) : (
           <>
             <svg
