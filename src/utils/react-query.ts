@@ -1,4 +1,4 @@
-import { QueryCacheNotifyEvent, QueryClient } from '@tanstack/react-query';
+import { QueryCache, QueryCacheNotifyEvent, QueryClient } from '@tanstack/react-query';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -7,8 +7,14 @@ export const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 30,
       retry: 2,
       refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      refetchOnMount: true,
     },
   },
+  queryCache: new QueryCache({
+    onError: (error: Error): void => console.error('Query Error:', error),
+    onSuccess: (data: unknown): void => console.debug('Query Success:', data),
+  })
 });
 
 queryClient.getQueryCache().subscribe((event: QueryCacheNotifyEvent): void => {

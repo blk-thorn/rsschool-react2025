@@ -1,5 +1,6 @@
 import { JSX, ReactElement } from 'react';
 import Card from '@/components/Card';
+import CardSkeleton from '@/components/CardSkeleton';
 import Loader from '@/components/Loader.tsx';
 import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
@@ -12,7 +13,7 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
   currentPage: number;
   onPageChange: (page: number) => void;
 }): JSX.Element {
-  const { data, isLoading, isError, error } = useCharactersQuery(searchTerm, currentPage);
+  const { data, isLoading, isError, error, isRefetching } = useCharactersQuery(searchTerm, currentPage);
   const { isItemSelected } = useCharacterStore();
 
   if (isLoading) return <Loader />;
@@ -26,14 +27,20 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
   return (
     <>
       <div className="grid grid-cols-1 overflow-hidden p-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 animate-fadeIn justify-center">
-        {characters.map((character: Character): ReactElement => (
-          <Card
-            key={character.id}
-            character={character}
-            isSelected={isItemSelected(character.id)}
-          />
-        ))}
-        <NotFoundMessage searchTerm={searchTerm} show={showNotFound} />
+        {isRefetching ? (
+          <CardSkeleton count={characters.length} />
+        ) : (
+          <>
+            {characters.map((character: Character): ReactElement => (
+              <Card
+                key={character.id}
+                character={character}
+                isSelected={isItemSelected(character.id)}
+              />
+            ))}
+            <NotFoundMessage searchTerm={searchTerm} show={showNotFound} />
+          </>
+        )}
       </div>
       {showPagination && (
         <Pagination

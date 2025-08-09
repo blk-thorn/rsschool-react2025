@@ -25,9 +25,12 @@ export default function Card({ character, isSelected }: CardProps & { isSelected
     toggleItem(character.id);
   };
 
-  useEffect((): void  => {
-    const cached: unknown = queryClient.getQueryData(['characters', '', 1]);
-    console.log('Сached data:', cached);
+  useEffect((): void => {
+    const allCharacterQueries = queryClient.getQueryCache().findAll({
+      predicate: query => query.queryKey[0] === 'characters'
+    });
+    const firstCachedData: unknown = allCharacterQueries[0]?.state.data;
+    console.log('Cached data:', firstCachedData);
   }, []);
 
   return (

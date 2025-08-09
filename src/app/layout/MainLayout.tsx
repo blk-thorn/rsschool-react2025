@@ -7,10 +7,9 @@ import Header from '@/components/Header.tsx';
 export default function MainLayout(): ReactNode {
   const [shouldThrowError, setShouldThrowError] = useState(false);
   const [isMainLoading, setIsMainLoading] = useState(false);
-
   const isFetching: number = useIsFetching();
 
-  const handleErrorClick: () => void = (): void => {
+  const handleErrorClick: () => void  = (): void => {
     setShouldThrowError(true);
   };
 
@@ -22,11 +21,6 @@ export default function MainLayout(): ReactNode {
     <div data-testid="main-layout">
       <Header />
       <main className="flex-grow">
-        {isFetching > 0 && (
-          <div className="fixed top-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-md text-sm">
-            Updating data...
-          </div>
-        )}
         <Outlet context={{ setIsMainLoading }} />
       </main>
       <Footer
