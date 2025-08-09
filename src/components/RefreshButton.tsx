@@ -1,35 +1,85 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import ErrorMessage from './ErrorMessage';
 import { useTheme } from '@/context/ThemeContext.tsx';
 
 export default function RefreshButton(): ReactNode {
   const { theme } = useTheme();
   const queryClient: QueryClient = useQueryClient();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRefreshClick: () => void = (): void => {
-    queryClient.invalidateQueries({
-      queryKey: ['characters'],
-      refetchType: 'all'
-    });
-    queryClient.invalidateQueries({
-      queryKey: ['character'],
-      refetchType: 'active'
-    });
+  const handleRefreshClick: () => Promise<void> = async (): Promise<void> => {
+    if (!navigator.onLine) {
+      setError('No internet connection');
+      return;
+    }
+
+    setError(null);
+    setIsRefreshing(true);
+
+    try {
+      await queryClient.invalidateQueries({
+        queryKey: ['characters'],
+        refetchType: 'active',
+      });
+      await queryClient.refetchQueries({
+        queryKey: ['characters'],
+        type: 'active',
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Refresh failed');
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   return (
-    <button
-      onClick={handleRefreshClick}
-      className={`inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium rounded-lg cursor-pointer focus:ring-1 focus:outline-none transition-all duration-100 ${
-        theme === 'dark'
-          ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300'
-          : 'bg-sky-600 hover:bg-sky-700 focus:ring-sky-600 text-white'
-      }`}
-    >
-      <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 1v5h-5M2 17v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
-      </svg>
-      Refresh
-    </button>
+    <div className="relative inline-block">
+      <button
+        onClick={handleRefreshClick}
+        disabled={isRefreshing}
+        className={`inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium rounded-lg cursor-pointer focus:ring-1 focus:outline-none transition-all duration-100 ${
+          theme === 'dark'
+            ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300'
+            : 'bg-sky-600 hover:bg-sky-700 focus:ring-sky-600 text-white'
+        } ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
+      >
+        {isRefreshing ? (
+          <span className="flex items-center">
+            <span className="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"></span>
+            Refreshing...
+          </span>
+        ) : (
+          <>
+            <svg
+              className="w-4 h-4 me-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 18 18"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M16 1v5h-5M2 17v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"
+              />
+            </svg>
+            Refresh
+          </>
+        )}
+      </button>
+
+      {error && (
+        <div className="absolute top-full left-0 mt-2">
+          <ErrorMessage
+            message={error}
+            onDismiss={(): void => setError(null)}
+          />
+        </div>
+      )}
+    </div>
   );
 }
