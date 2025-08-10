@@ -8,8 +8,8 @@ import NotFoundMessage from '@/components/NotFoundMessage.tsx';
 import SearchBar from '@/components/SearchBar.tsx';
 import { useTheme } from '@/context/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { ApiResponse, Character, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
-import { fetchCharacters } from '@/utils/api.ts';
+import { useCharactersQuery } from '@/hooks/useQueries.ts';
+import { Character, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
 
 export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -24,15 +24,15 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
   const currentPage: number = loaderData.page;
   const detailsId: string | null = searchParams.get('details');
 
+  const { data, isFetching, error } = useCharactersQuery(searchValue, currentPage);
+
   const loadPage: LoadingVoid = async (page: number, term: string = ''): Promise<void> => {
     setIsLoading(true);
     onLoadingChange?.(true);
     setNotFound(false);
 
     try {
-      const data: ApiResponse = await fetchCharacters(term, page);
-
-      if (!data.results || data.results.length === 0) {
+      if (!data?.results || data.results.length === 0) {
         setCharacters([]);
         setNotFound(true);
         return;
@@ -57,7 +57,18 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   useEffect((): void => {
     loadPage(currentPage, searchValue);
-  }, [currentPage, searchValue]);
+  }, [currentPage, searchValue, data]);
+
+  useEffect(() => {
+    setIsLoading(isFetching);
+    onLoadingChange?.(isFetching);
+  }, [isFetching, onLoadingChange]);
+
+  useEffect(() => {
+    if (error) {
+      setNotFound(true);
+    }
+  }, [error]);
 
   const handleSearch: SearchVoid = (term: string): void => {
     setSearchValue(term);
@@ -70,7 +81,6 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   return (
     <div data-testid="home-page" className={`flex flex-1 relative pb-20 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'}`}>
-
       <div className={`p-2 overflow-y-auto transition-all duration-300 ${detailsId ? 'w-[95%]' : 'w-full'}`}>
         <SearchBar
           onFormSubmit={handleSearch}
