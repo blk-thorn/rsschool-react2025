@@ -5,6 +5,8 @@ import ErrorBoundary from '@/features/ErrorBoundary';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import { ApiResponse } from '@/types/types.ts';
+import { loadCharacters } from '@/utils/routerLoaderUtils.ts';
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +23,11 @@ export const router = createBrowserRouter([
           const url = new URL(request.url);
           const searchTerm: string = url.searchParams.get('search') || '';
           const page: number = Number(url.searchParams.get('page')) || 1;
+          const data: ApiResponse = await loadCharacters(searchTerm, page);
+
+          if (page > data.info.pages) {
+            throw new Response('Not Found', { status: 404 });
+          }
 
           return { searchTerm, page };
         },
