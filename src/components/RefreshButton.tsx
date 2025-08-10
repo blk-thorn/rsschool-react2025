@@ -22,11 +22,7 @@ export default function RefreshButton(): ReactNode {
     try {
       await queryClient.invalidateQueries({
         queryKey: ['characters'],
-        refetchType: 'active',
-      });
-      await queryClient.refetchQueries({
-        queryKey: ['characters'],
-        type: 'active',
+        refetchType: 'all',
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Refresh failed');

@@ -26,19 +26,20 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
   const loadPage: LoadingVoid = async (page: number, term: string = ''): Promise<void> => {
     setIsLoading(true);
-    setNotFound(false);
     onLoadingChange?.(true);
+    setNotFound(false);
 
     try {
       const data: ApiResponse = await fetchCharacters(term, page);
 
       if (!data.results || data.results.length === 0) {
-        setNotFound(true);
         setCharacters([]);
+        setNotFound(true);
         return;
       }
 
       setCharacters(data.results);
+      setNotFound(false);
 
       const newSearchParams = new URLSearchParams();
       if (term) newSearchParams.set('search', term);
@@ -48,7 +49,6 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
 
     } catch (error) {
       console.error('Error fetching characters:', error);
-      setNotFound(true);
     } finally {
       setIsLoading(false);
       onLoadingChange?.(false);
@@ -86,9 +86,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
           />
         ) : (
           <CharactersList
-            characters={characters}
             searchTerm={searchValue}
-            totalPages={characters.length > 0 ? 42 : 0}
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />

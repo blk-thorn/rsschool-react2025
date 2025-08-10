@@ -32,10 +32,10 @@ export default function CharacterDetails(): ReactElement | null {
     }
   };
 
-  useEffect((): void  => {
-    const cached: unknown = queryClient.getQueryData(['characters', '', 1]);
-    console.log('Сached data:', cached);
-  }, []);
+  useEffect((): void => {
+    const characterCache: unknown = queryClient.getQueryData(['character', numCharacterId]);
+    console.log('Character cache:', characterCache);
+  }, [numCharacterId]);
 
   if (!characterId) return null;
   if (isLoading) return <Loader />;
