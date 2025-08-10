@@ -42,7 +42,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     maxConcurrency: 4,
-    setupFiles: ['./vitest.setup.mjs'],
+    setupFiles: ['./vitest.setup.mjs', './src/__tests__/logMock.ts'],
     cache: { dir: './node_modules/.vite/.vitest-cache' },
   },
 });

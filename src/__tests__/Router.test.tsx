@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { ReactElement } from 'react';
 import { RouterProvider, createMemoryRouter, RouteObject, LoaderFunction } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockResponseSuccess } from '@/__tests__/__mocks__/mockData.ts';
@@ -96,8 +95,9 @@ describe('Router Configuration', (): void => {
 
   describe('Error Handling', (): void => {
     it('render error page when loader throws', async (): Promise<void> => {
-      const TestComponent = (): ReactElement => <div>Test Component</div>;
-      const ErrorComponent = (): ReactElement => <div>Error Page Content</div>;
+      const TestComponent = () => <div>Test Component</div>;
+      const ErrorComponent = () => <div>Error Page Content</div>;
+      const FallbackComponent = () => <div>Loading...</div>;
 
       const testRoutes: RouteObject[] = [{
         path: '/',
@@ -106,6 +106,7 @@ describe('Router Configuration', (): void => {
           throw new Response('Not Found', { status: 404 });
         }) as LoaderFunction,
         errorElement: <ErrorComponent />,
+        HydrateFallback: FallbackComponent,
       }];
 
       const memoryRouter = createMemoryRouter(testRoutes, {
@@ -116,5 +117,5 @@ describe('Router Configuration', (): void => {
 
       expect(await screen.findByText('Error Page Content')).toBeInTheDocument();
     });
-  });
+  })
 });
