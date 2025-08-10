@@ -1,4 +1,4 @@
-import { JSX, ReactElement } from 'react';
+import { JSX, ReactElement, useEffect } from 'react';
 import Card from '@/components/Card';
 import CardSkeleton from '@/components/CardSkeleton';
 import Loader from '@/components/Loader.tsx';
@@ -7,6 +7,7 @@ import Pagination from '@/components/Pagination';
 import { useCharactersQuery } from '@/hooks/useQueries.ts';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { Character } from '@/types/types.ts';
+import { queryClient } from '@/utils/react-query.ts';
 
 export default function CharactersList({ searchTerm, currentPage, onPageChange }: {
   searchTerm: string;
@@ -15,6 +16,15 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
 }): JSX.Element {
   const { data, isLoading, isError, error, isRefetching } = useCharactersQuery(searchTerm, currentPage);
   const { isItemSelected } = useCharacterStore();
+
+  useEffect((): void => {
+    if (data) {
+      const cachedData = queryClient.getQueryCache().findAll({
+        predicate: query => query.queryKey[0] === 'characters'
+      });
+      console.log('Cached data:', cachedData[0]?.state.data);
+    }
+  }, [data]);
 
   if (isLoading) return <Loader />;
   if (isError) return <div>Error: {error?.message}</div>;

@@ -1,9 +1,8 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode} from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext.tsx';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { CardProps } from '@/types/types.ts';
-import { queryClient } from '@/utils/react-query.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
 
 export default function Card({ character, isSelected }: CardProps & { isSelected: boolean }): ReactNode {
@@ -24,14 +23,6 @@ export default function Card({ character, isSelected }: CardProps & { isSelected
     e.stopPropagation();
     toggleItem(character.id);
   };
-
-  useEffect((): void => {
-    const allCharacterQueries = queryClient.getQueryCache().findAll({
-      predicate: query => query.queryKey[0] === 'characters'
-    });
-    const firstCachedData: unknown = allCharacterQueries[0]?.state.data;
-    console.log('Cached data:', firstCachedData);
-  }, []);
 
   return (
     <div
