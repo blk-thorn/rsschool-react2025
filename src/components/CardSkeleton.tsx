@@ -5,7 +5,7 @@ interface CardSkeletonProps {
   count?: number;
 }
 
-const CARD_SKELETON_LINES_COUNT = 4;
+export const CARD_SKELETON_LINES_COUNT = 4;
 
 export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNode {
   const { theme } = useTheme();
@@ -15,6 +15,7 @@ export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNod
       {Array.from({ length: count }).map((_: unknown, index: number): ReactNode => (
         <div
           key={index}
+          data-testid="skeleton-card"
           className={`flex items-center max-w-xl border rounded-lg shadow-sm overflow-hidden ${
             theme === 'dark'
               ? 'bg-slate-600/80 border-gray-50'

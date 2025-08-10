@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, RenderResult, screen } from '@testing-library/react';
+import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import SearchBar from '@/components/SearchBar';
@@ -61,4 +61,26 @@ describe('SearchBar Component', (): void => {
     );
     expect(getSearchInput().value).toBe(initialTerm);
   });
-});
+
+  it('should update input value when typing', (): void => {
+    renderSearchBar();
+    const input: HTMLInputElement = getSearchInput();
+    const testValue = 'Morty';
+
+    fireEvent.change(input, { target: { value: testValue } });
+    expect(input.value).toBe(testValue);
+
+    expect(screen.getByDisplayValue(testValue)).toBeInTheDocument();
+  });
+
+  it('should call current term when form is submitted', (): void => {
+    const testTerm = 'Rick Sanchez';
+    renderSearchBar(testTerm, mockSubmit);
+
+    const searchButton: HTMLElement = screen.getByRole('button', { name: /search/i });
+    fireEvent.click(searchButton);
+
+    expect(mockSubmit).toHaveBeenCalledWith(testTerm);
+    expect(mockSubmit).toHaveBeenCalledTimes(1);
+  });
+})

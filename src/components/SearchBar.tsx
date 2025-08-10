@@ -22,7 +22,7 @@ export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchPro
 
   return (
     <div className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto mb-10">
-      <form onSubmit={handleFormSubmit} className="flex items-center w-full">
+      <form onSubmit={handleFormSubmit} className="flex items-center w-full" role="form">
         <label htmlFor="search-bar" className="sr-only">Search</label>
         <div className="relative w-full">
           <input
