@@ -2,11 +2,12 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { MemoryRouter, useNavigate, useSearchParams, useLoaderData, SetURLSearchParams } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mockResponseSuccess, mockResponseError } from '@/__tests__/__mocks__/mockData';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import HomePage from '@/pages/HomePage';
-import { fetchCharacters } from '@/utils/api';
+import { mockResponseSuccess } from '@/__tests__/__mocks__/mockData';
 import { ThemeProvider } from '@/context/ThemeContext.tsx';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useCharactersQuery } from '@/hooks/useQueries.ts';
+import HomePage from '@/pages/HomePage';
+import { MockUseCharactersQueryReturn } from '@/types/test.types.ts';
 
 type SearchParamsTuple = [URLSearchParams, SetURLSearchParams];
 type RenderHomePageOptions = {
@@ -25,8 +26,8 @@ vi.mock('react-router-dom', async (importOriginal) => {
   };
 });
 
-vi.mock('@/utils/api', () => ({
-  fetchCharacters: vi.fn(),
+vi.mock('@/hooks/useQueries', () => ({
+  useCharactersQuery: vi.fn(),
 }));
 
 vi.mock('@/hooks/useLocalStorage', () => ({
@@ -115,6 +116,11 @@ describe('HomePage Component', () => {
     ]);
     vi.mocked(useLoaderData).mockReturnValue(DEFAULT_LOADER_DATA);
     vi.mocked(useLocalStorage).mockImplementation(() => ['', vi.fn()]);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: undefined,
+      isFetching: true,
+      error: null,
+    } as MockUseCharactersQueryReturn);
   });
 
   afterEach(() => {
@@ -122,13 +128,17 @@ describe('HomePage Component', () => {
   });
 
   it('should display Loader while data is loading', () => {
-    vi.mocked(fetchCharacters).mockImplementation(() => new Promise(() => {}));
     renderHomePage();
     expect(screen.getByText('Loader')).toBeInTheDocument();
   });
 
   it('should call onLoadingChange when loading starts and finishes', async (): Promise<void> => {
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: mockResponseSuccess,
+      isFetching: false,
+      error: null,
+    } as MockUseCharactersQueryReturn);
+
     renderHomePage();
 
     await waitFor(() => {
@@ -138,7 +148,12 @@ describe('HomePage Component', () => {
   });
 
   it('should display CharactersList after successful data fetch', async (): Promise<void> => {
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: mockResponseSuccess,
+      isFetching: false,
+      error: null,
+    } as MockUseCharactersQueryReturn);
+
     renderHomePage();
 
     await waitFor(() => {
@@ -147,7 +162,12 @@ describe('HomePage Component', () => {
   });
 
   it('should display NotFoundMessage when no results are found', async (): Promise<void> => {
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseError);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      error: new Error('Not found'),
+    } as MockUseCharactersQueryReturn);
+
     vi.mocked(useLocalStorage).mockImplementation(() => ['test', vi.fn()]);
     renderHomePage();
 
@@ -157,7 +177,12 @@ describe('HomePage Component', () => {
   });
 
   it('should display CharacterDetails when details param is present', async (): Promise<void> => {
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: mockResponseSuccess,
+      isFetching: false,
+      error: null,
+    } as MockUseCharactersQueryReturn);
+
     renderHomePage({ searchParams: DETAILS_SEARCH_PARAMS });
 
     await waitFor(() => {
@@ -168,7 +193,12 @@ describe('HomePage Component', () => {
   it('should handle search through SearchBar', async (): Promise<void> => {
     const mockSetSearchValue = vi.fn();
     vi.mocked(useLocalStorage).mockImplementation(() => ['', mockSetSearchValue]);
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: mockResponseSuccess,
+      isFetching: false,
+      error: null,
+    } as MockUseCharactersQueryReturn);
+
     renderHomePage();
 
     const searchInput = screen.getByTestId('search-input');
@@ -182,22 +212,32 @@ describe('HomePage Component', () => {
 
   it('should fetch data when page changes', async (): Promise<void> => {
     vi.mocked(useLoaderData).mockReturnValue(PAGE_2_LOADER_DATA);
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: mockResponseSuccess,
+      isFetching: false,
+      error: null,
+    } as MockUseCharactersQueryReturn);
+
     renderHomePage({ loaderData: PAGE_2_LOADER_DATA });
 
     await waitFor(() => {
-      expect(fetchCharacters).toHaveBeenCalledWith('', 2);
+      expect(useCharactersQuery).toHaveBeenCalledWith('', 2);
     });
   });
 
   it('should fetch data with search term when provided', async (): Promise<void> => {
     vi.mocked(useLoaderData).mockReturnValue(SEARCH_LOADER_DATA);
     vi.mocked(useLocalStorage).mockImplementation(() => ['test', vi.fn()]);
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(useCharactersQuery).mockReturnValue({
+      data: mockResponseSuccess,
+      isFetching: false,
+      error: null,
+    } as MockUseCharactersQueryReturn);
+
     renderHomePage({ loaderData: SEARCH_LOADER_DATA });
 
     await waitFor(() => {
-      expect(fetchCharacters).toHaveBeenCalledWith('test', 1);
+      expect(useCharactersQuery).toHaveBeenCalledWith('test', 1);
     });
   });
 });

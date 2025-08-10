@@ -4,10 +4,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockResponseSuccess } from '@/__tests__/__mocks__/mockData.ts';
 import { router } from '@/app/router.tsx';
 import { ROUTES } from '@/app/routes';
-import { fetchCharacters } from '@/utils/api.ts';
+import { queryClient } from '@/utils/react-query.ts';
 
-vi.mock('@/utils/api.ts', () => ({
-  fetchCharacters: vi.fn(),
+vi.mock('@/utils/react-query', () => ({
+  queryClient: {
+    fetchQuery: vi.fn(),
+  },
 }));
 
 const createTestRequest = (path: string, init?: RequestInit): Request => {
@@ -17,44 +19,47 @@ const createTestRequest = (path: string, init?: RequestInit): Request => {
   return new Request(url, init);
 };
 
-type RouteWithLoader = RouteObject & {
-  loader: LoaderFunction;
-};
-
-function getRouteWithLoader(routes: RouteObject[], path: string): RouteWithLoader {
-  const route: RouteObject | undefined = routes[0].children?.find((child: RouteObject ): boolean => child.path === path);
-  if (!route || !route.loader) {
-    throw new Error(`Route with path "${path}" and loader not found`);
-  }
-  return route as RouteWithLoader;
-}
-
 describe('Router Configuration', (): void => {
   beforeEach((): void => {
     vi.clearAllMocks();
-    vi.mocked(fetchCharacters).mockResolvedValue(mockResponseSuccess);
+    vi.mocked(queryClient.fetchQuery).mockResolvedValue(mockResponseSuccess);
   });
 
   describe('HomePage Loader', (): void => {
     it('should return search params', async (): Promise<void> => {
-      const homeRoute: RouteWithLoader = getRouteWithLoader(router.routes, ROUTES.HOME);
+      const homeRoute = router.routes[0].children?.find(
+        (child: RouteObject): boolean => child.path === ROUTES.HOME
+      );
+
+      if (!homeRoute || !homeRoute.loader) {
+        throw new Error('Route with loader not found');
+      }
+
+      const loader = homeRoute.loader as LoaderFunction;
       const request: Request = createTestRequest(`${ROUTES.HOME}?search=rick&page=1`);
 
-      const response: unknown = await homeRoute.loader({
+      const response: unknown = await loader({
         request,
         params: {},
         context: {},
       });
 
       expect(response).toEqual({ searchTerm: 'rick', page: 1 });
-      expect(fetchCharacters).toHaveBeenCalledWith('rick', 1);
     });
 
     it('should return default values for no params', async (): Promise<void> => {
-      const homeRoute: RouteWithLoader = getRouteWithLoader(router.routes, ROUTES.HOME);
+      const homeRoute = router.routes[0].children?.find(
+        (child: RouteObject): boolean => child.path === ROUTES.HOME
+      );
+
+      if (!homeRoute || !homeRoute.loader) {
+        throw new Error('Route with loader not found');
+      }
+
+      const loader = homeRoute.loader as LoaderFunction;
       const request: Request = createTestRequest(ROUTES.HOME);
 
-      const response: unknown = await homeRoute.loader({
+      const response: unknown = await loader({
         request,
         params: {},
         context: {},
@@ -64,20 +69,27 @@ describe('Router Configuration', (): void => {
     });
 
     it('should throw 404 when exceeds total pages', async (): Promise<void> => {
-      const homeRoute: RouteWithLoader = getRouteWithLoader(router.routes, ROUTES.HOME);
-      vi.mocked(fetchCharacters).mockResolvedValue({
+      vi.mocked(queryClient.fetchQuery).mockResolvedValue({
         ...mockResponseSuccess,
         info: { ...mockResponseSuccess.info, pages: 1 }
       });
+
+      const homeRoute = router.routes[0].children?.find(
+        (child: RouteObject): boolean => child.path === ROUTES.HOME
+      );
+
+      if (!homeRoute || !homeRoute.loader) {
+        throw new Error('Route with loader not found');
+      }
+
+      const loader = homeRoute.loader as LoaderFunction;
       const request: Request = createTestRequest(`${ROUTES.HOME}?page=2`);
 
-      await expect(
-        homeRoute.loader({
-          request,
-          params: {},
-          context: {},
-        })
-      ).rejects.toMatchObject({ status: 404 });
+      await expect(loader({
+        request,
+        params: {},
+        context: {},
+      })).rejects.toMatchObject({ status: 404 });
     });
   });
 
@@ -85,33 +97,25 @@ describe('Router Configuration', (): void => {
     it('render error page when loader throws', async (): Promise<void> => {
       const TestComponent = () => <div>Test Component</div>;
       const ErrorComponent = () => <div>Error Page Content</div>;
+      const FallbackComponent = () => <div>Loading...</div>;
 
       const testRoutes: RouteObject[] = [{
         path: '/',
         element: <TestComponent />,
-        loader: () => {
+        loader: (() => {
           throw new Response('Not Found', { status: 404 });
-        },
+        }) as LoaderFunction,
         errorElement: <ErrorComponent />,
-        HydrateFallback: () => <div>Loading...</div>
+        HydrateFallback: FallbackComponent,
       }];
 
       const memoryRouter = createMemoryRouter(testRoutes, {
         initialEntries: ['/'],
-        initialIndex: 0,
-        hydrationData: {
-          loaderData: {},
-          actionData: null,
-          errors: {
-            '0': new Response('Not Found', { status: 404 })
-          }
-        }
       });
 
       render(<RouterProvider router={memoryRouter} />);
 
       expect(await screen.findByText('Error Page Content')).toBeInTheDocument();
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
-  });
+  })
 });

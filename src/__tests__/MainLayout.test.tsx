@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactElement } from 'react';
@@ -6,6 +7,7 @@ import { describe, it, expect, vi, Mock, afterEach, beforeEach } from 'vitest';
 import MainLayout from '@/app/layout/MainLayout.tsx';
 import ErrorButton from '@/components/ErrorButton';
 
+const queryClient = new QueryClient();
 
 type FooterProps = {
   isLoading: boolean;
@@ -58,8 +60,16 @@ describe('MainLayout', (): void => {
     vi.clearAllMocks();
   });
 
+  const renderMainLayout = () => {
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <MainLayout />
+      </QueryClientProvider>
+    );
+  };
+
   it('should render correctly with all nested components', () => {
-    render(<MainLayout />);
+    renderMainLayout();
 
     expect(screen.getByTestId('header')).toBeInTheDocument();
     expect(screen.getByTestId('outlet')).toBeInTheDocument();
@@ -76,7 +86,7 @@ describe('MainLayout', (): void => {
 
     (Outlet as Mock).mockImplementationOnce(TestOutlet);
 
-    render(<MainLayout />);
+    renderMainLayout();
 
     expect(mockSetIsMainLoading).toHaveBeenCalledWith(true);
     expect(screen.getByTestId('test-outlet')).toBeInTheDocument();
@@ -86,7 +96,7 @@ describe('MainLayout', (): void => {
     const originalError = console.error;
     console.error = vi.fn();
 
-    const { unmount } = render(<MainLayout />);
+    const { unmount } = renderMainLayout();
 
     const errorButton: HTMLElement = screen.getByTestId('error-button');
     await expect((): Promise<void> => userEvent.click(errorButton)).rejects.toThrow(

@@ -23,13 +23,15 @@ export const fetchCharacters = async (
 };
 
 
-export const fetchCharacter: (id: number) => Promise<Character> = async (id: number): Promise<Character> => {
+export const fetchCharacter: (id: number | undefined) => Promise<Character> = async (id: number | undefined): Promise<Character> => {
+  if (id === undefined) {
+    throw new Error('Character ID is required');
+  }
   const response: Response = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
 
   if (!response.ok) {
     throw new Error(`Error! status: ${response.status}`);
   }
- const character = await response.json() as Character;
-  console.log(character);
-  return character;
+
+  return await response.json() as Character;
 };

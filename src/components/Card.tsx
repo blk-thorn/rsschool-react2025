@@ -1,14 +1,14 @@
-import { ReactNode } from 'react';
+import { ReactNode} from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext.tsx';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { CardProps } from '@/types/types.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
 
-export default function Card({ character }: CardProps): ReactNode {
+export default function Card({ character, isSelected }: CardProps & { isSelected: boolean }): ReactNode {
+  const { toggleItem } = useCharacterStore();
   const { theme } = useTheme();
   const navigate: NavigateFunction = useNavigate();
-  const { toggleItem, isItemSelected } = useCharacterStore();
 
   const statusColorClass: string = useStatusColor(character.status);
 
@@ -39,7 +39,7 @@ export default function Card({ character }: CardProps): ReactNode {
         <div className="absolute top-2 left-2">
           <input
             type="checkbox"
-            checked={isItemSelected(character.id)}
+            checked={isSelected}
             onChange={handleCheckboxChange}
             className="w-5 h-5 cursor-pointer"
           />

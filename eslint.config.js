@@ -5,9 +5,11 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
+import jsxA11y from 'eslint-plugin-jsx-a11y';fetch
+import pluginQuery from '@tanstack/eslint-plugin-query'
 
 export default [
+  ...pluginQuery.configs['flat/recommended'],
   // Base
   {
     ignores: ['dist/**', '**/*.d.ts', 'node_modules', 'vite.http-config.ts'],

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import type { EmptyVoid, PaginationProps } from '@/types/types.ts';
 import { useTheme } from '@/context/ThemeContext.tsx';
+import type { EmptyVoid, PaginationProps } from '@/types/types.ts';
 
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps): ReactNode {
   const {theme} = useTheme();

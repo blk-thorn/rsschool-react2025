@@ -30,7 +30,11 @@ describe('Card Component', (): void => {
   const mockNavigate: Mock = vi.fn();
   const mockToggleItem: Mock = vi.fn();
 
-  const renderCard = (character: Character = mockCharacter, theme: Theme = 'light') => {
+  const renderCard = (
+    character: Character = mockCharacter,
+    theme: Theme = 'light',
+    isSelected: boolean = false
+  ) => {
     mockUseTheme.mockReturnValue({
       theme,
       toggleTheme: vi.fn(),
@@ -40,8 +44,8 @@ describe('Card Component', (): void => {
 
     return render(
       <MemoryRouter>
-        <Card character={character} />
-      </MemoryRouter>
+        <Card character={character} isSelected={isSelected} />
+      </MemoryRouter>,
     );
   };
 
@@ -113,15 +117,9 @@ describe('Card Component', (): void => {
     expect(mockStopPropagation).toHaveBeenCalled();
   });
 
-  it('shows checked checkbox when item selected', (): void  => {
-    mockUseCharacterStore.mockReturnValue({
-      toggleItem: mockToggleItem,
-      isItemSelected: vi.fn().mockImplementation(
-        (id: number): boolean => id === mockCharacter.id
-      ),
-    });
+  it('shows checked checkbox when item selected', (): void => {
+    renderCard(mockCharacter, 'light', true);
 
-    renderCard();
     const checkbox = screen.getByRole('checkbox') as HTMLInputElement;
     expect(checkbox.checked).toBe(true);
   });
