@@ -1,45 +1,37 @@
-import { createBrowserRouter, LoaderFunctionArgs } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import MainLayout from '@/app/layout/MainLayout.tsx';
 import { ROUTES } from '@/app/routes.ts';
-import ErrorBoundary from '@/features/ErrorBoundary';
+import ErrorBoundary from '@/features/ErrorBoundary.tsx';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import { ApiResponse } from '@/types/types.ts';
-import { loadCharacters } from '@/utils/routerLoaderUtils.ts';
+import { homeLoader } from '@/utils/homeLoader.ts';
 
 export const router = createBrowserRouter([
   {
-    element: (
-      <ErrorBoundary>
-        <MainLayout />
-      </ErrorBoundary>
-    ),
+    path: ROUTES.HOME,
+    element:
+    <ErrorBoundary>
+      <MainLayout />
+    </ErrorBoundary>,
     children: [
       {
-        path: ROUTES.HOME,
+        index: true,
         element: <HomePage />,
-        loader: async ({ request }: LoaderFunctionArgs<string>): Promise<{ searchTerm: string, page: number }> => {
-          const url = new URL(request.url);
-          const searchTerm: string = url.searchParams.get('search') || '';
-          const page: number = Number(url.searchParams.get('page')) || 1;
-          const data: ApiResponse = await loadCharacters(searchTerm, page);
-
-          if (page > data.info.pages) {
-            throw new Response('Not Found', { status: 404 });
-          }
-
-          return { searchTerm, page };
-        },
-        errorElement: <NotFoundPage />,
+        loader: homeLoader,
+        errorElement: <NotFoundPage />
       },
       {
         path: ROUTES.ABOUT,
         element: <AboutPage />,
       },
       {
-        path: '*',
+        path: ROUTES.NOT_FOUND,
         element: <NotFoundPage />,
+      },
+      {
+        path: ROUTES.WILDCARD,
+        element: <Navigate to={ROUTES.NOT_FOUND} replace />,
       },
     ],
   },

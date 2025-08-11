@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from 'react';
-import { useSearchParams, useNavigate, NavigateFunction, useLoaderData } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import CharacterDetails from '@/components/CharacterDetails.tsx';
 import CharactersList from '@/components/CharacterList.tsx';
 import DownloadFlyout from '@/components/DownloadFlyout.tsx';
@@ -9,74 +9,47 @@ import SearchBar from '@/components/SearchBar.tsx';
 import { useTheme } from '@/context/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCharactersQuery } from '@/hooks/useQueries.ts';
-import { Character, HomePageProps, LoadingVoid, PageVoid, SearchVoid } from '@/types/types.ts';
+import { Character, HomePageProps, PageVoid, SearchVoid } from '@/types/types.ts';
 
 export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode {
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate: NavigateFunction = useNavigate();
   const { theme } = useTheme();
 
-  const loaderData = useLoaderData() as { searchTerm: string; page: number };
-  const [searchValue, setSearchValue] = useLocalStorage('', loaderData.searchTerm);
-  const currentPage: number = loaderData.page;
+  const searchTerm: string = searchParams.get('search') ?? '';
+  const page: number = Number(searchParams.get('page')) || 1;
   const detailsId: string | null = searchParams.get('details');
 
-  const { data, isFetching, error } = useCharactersQuery(searchValue, currentPage);
+  const [searchValue, setSearchValue] = useLocalStorage('', searchTerm);
 
-  const loadPage: LoadingVoid = async (page: number, term: string = ''): Promise<void> => {
-    setIsLoading(true);
-    onLoadingChange?.(true);
-    setNotFound(false);
+  const { data, isFetching, error } = useCharactersQuery(searchTerm, page);
 
-    try {
-      if (!data?.results || data.results.length === 0) {
-        setCharacters([]);
-        setNotFound(true);
-        return;
-      }
-
-      setCharacters(data.results);
-      setNotFound(false);
-
-      const newSearchParams = new URLSearchParams();
-      if (term) newSearchParams.set('search', term);
-      if (page > 1) newSearchParams.set('page', page.toString());
-      if (detailsId) newSearchParams.set('details', detailsId);
-      setSearchParams(newSearchParams, { replace: true });
-
-    } catch (error) {
-      console.error('Error fetching characters:', error);
-    } finally {
-      setIsLoading(false);
-      onLoadingChange?.(false);
-    }
-  };
+  const [notFound, setNotFound] = useState(false);
+  const characters: Character[] = data?.results ?? [];
 
   useEffect((): void => {
-    loadPage(currentPage, searchValue);
-  }, [currentPage, searchValue, data]);
-
-  useEffect(() => {
-    setIsLoading(isFetching);
     onLoadingChange?.(isFetching);
   }, [isFetching, onLoadingChange]);
 
-  useEffect(() => {
-    if (error) {
+  useEffect((): void => {
+    if (error || data?.results?.length === 0) {
       setNotFound(true);
+    } else {
+      setNotFound(false);
     }
-  }, [error]);
+  }, [error, data]);
 
   const handleSearch: SearchVoid = (term: string): void => {
     setSearchValue(term);
-    navigate(`?search=${term}&page=1`);
+    setSearchParams({ search: term, page: '1' });
   };
 
-  const handlePageChange: PageVoid = (page: number): void => {
-    navigate(`?search=${searchValue}&page=${page}`);
+  const handlePageChange: PageVoid = (newPage: number): void => {
+    setSearchParams((prev: URLSearchParams): URLSearchParams => {
+      const updated = new URLSearchParams(prev);
+      updated.set('page', newPage.toString());
+      if (searchValue) updated.set('search', searchValue);
+      return updated;
+    });
   };
 
   return (
@@ -87,7 +60,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
           initialSearchTerm={searchValue}
         />
 
-        {isLoading ? (
+        {isFetching ? (
           <Loader />
         ) : notFound ? (
           <NotFoundMessage
@@ -97,7 +70,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
         ) : (
           <CharactersList
             searchTerm={searchValue}
-            currentPage={currentPage}
+            currentPage={page}
             onPageChange={handlePageChange}
           />
         )}
