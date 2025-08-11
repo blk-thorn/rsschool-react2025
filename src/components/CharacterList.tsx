@@ -6,7 +6,7 @@ import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
 import { useCharactersQuery } from '@/hooks/useQueries.ts';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
-import { Character } from '@/types/types.ts';
+import { ApiResponse, Character } from '@/types/types.ts';
 import { queryClient } from '@/utils/react-query.ts';
 
 export default function CharactersList({ searchTerm, currentPage, onPageChange }: {
@@ -14,17 +14,28 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
   currentPage: number;
   onPageChange: (page: number) => void;
 }): JSX.Element {
+  const componentKey = `${searchTerm}-${currentPage}`;
+
   const { data, isLoading, isError, error, isRefetching } = useCharactersQuery(searchTerm, currentPage);
   const { isItemSelected } = useCharacterStore();
 
   useEffect((): void => {
-    if (data) {
-      const cachedData = queryClient.getQueryCache().findAll({
-        predicate: query => query.queryKey[0] === 'characters'
+    const currentData: unknown = queryClient.getQueryData(['characters', searchTerm, currentPage]);
+
+    if (currentData && typeof currentData === 'object' && 'results' in currentData) {
+      const results: Character[] = (currentData as ApiResponse).results;
+      console.log('Current page data:', {
+        page: currentPage,
+        characters: results.map((character: Character): number => character.id)
       });
-      console.log('Cached data:', cachedData[0]?.state.data);
     }
-  }, [data]);
+  }, [data, searchTerm, currentPage]);
+
+  useEffect((): void => {
+    if (data?.info.pages && currentPage > data.info.pages) {
+      onPageChange(1);
+    }
+  }, [data, currentPage, onPageChange]);
 
   if (isLoading) return <Loader />;
   if (isError) return <div>Error: {error?.message}</div>;
@@ -32,10 +43,9 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
   const characters: Character[] = data?.results || [];
   const totalPages: number = data?.info.pages || 0;
   const showNotFound: boolean = characters.length === 0 && searchTerm !== '';
-  const showPagination: boolean = totalPages > 0;
 
   return (
-    <>
+    <div key={componentKey}>
       <div className="grid grid-cols-1 overflow-hidden p-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-4 animate-fadeIn justify-center">
         {isRefetching ? (
           <CardSkeleton count={characters.length} />
@@ -43,7 +53,7 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
           <>
             {characters.map((character: Character): ReactElement => (
               <Card
-                key={character.id}
+                key={`${character.id}-${currentPage}`}
                 character={character}
                 isSelected={isItemSelected(character.id)}
               />
@@ -52,13 +62,14 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
           </>
         )}
       </div>
-      {showPagination && (
+
+      {totalPages > 0 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}
         />
       )}
-    </>
+    </div>
   );
 }

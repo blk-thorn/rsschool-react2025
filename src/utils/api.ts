@@ -5,12 +5,9 @@ export const fetchCharacters = async (
   searchTerm: string = '',
   page: number = 1
 ): Promise<ApiResponse> => {
-  const url: string = searchTerm
-    ? `https://rickandmortyapi.com/api/character/?name=${searchTerm}`
-    : `https://rickandmortyapi.com/api/character/?page=${page}`;
-
+  const url: string = `https://rickandmortyapi.com/api/character?page=${page}&name=${searchTerm}`
   const response: Response  = await fetch(url);
-
+console.log(response)
   if (response.status === 404) {
     return mockResponseError
   }
