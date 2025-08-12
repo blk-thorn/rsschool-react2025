@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockResponseSuccess } from '@/__tests__/__mocks__/mockData.ts';
 import { router } from '@/app/router.tsx';
 import { ROUTES } from '@/app/routes';
-import { queryClient } from '@/utils/react-query.ts';
+import { queryClient } from '@/utils/queryClient.ts';
 
 vi.mock('@/utils/react-query', () => ({
   queryClient: {

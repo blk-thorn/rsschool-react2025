@@ -16,7 +16,7 @@ export default function HomePage({ onLoadingChange }: HomePageProps): ReactNode 
   const { theme } = useTheme();
 
   const searchTerm: string = searchParams.get('search') ?? '';
-  const page: number = Number(searchParams.get('page')) || 1;
+  const page: number = Number(searchParams.get('page')) ?? 1;
   const detailsId: string | null = searchParams.get('details');
 
   const [searchValue, setSearchValue] = useLocalStorage('', searchTerm);

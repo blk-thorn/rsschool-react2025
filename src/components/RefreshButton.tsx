@@ -3,12 +3,15 @@ import { ReactNode, useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import RefreshLoader from './RefreshLoader';
 import { useTheme } from '@/context/ThemeContext.tsx';
+import { useCharacterStore } from '@/store/useCharacterStore.ts';
 
 export default function RefreshButton(): ReactNode {
   const { theme } = useTheme();
   const queryClient: QueryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const selectedItems: number[] = useCharacterStore((state): number[] => state.selectedItems);
 
   const handleRefreshClick: () => Promise<void> = async (): Promise<void> => {
     if (!navigator.onLine) {
@@ -24,6 +27,15 @@ export default function RefreshButton(): ReactNode {
         queryKey: ['characters'],
         refetchType: 'all',
       });
+
+      for (const id of selectedItems) {
+        await queryClient.invalidateQueries({
+          queryKey: ['character', id],
+          refetchType: 'all',
+        });
+        const updatedData: unknown = queryClient.getQueryData(['character', id]);
+        console.log(`Update cache for character ${id}:`, updatedData);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Refresh failed');
     } finally {

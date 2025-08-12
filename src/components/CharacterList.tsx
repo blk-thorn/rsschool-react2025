@@ -6,8 +6,7 @@ import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
 import { useCharactersQuery } from '@/hooks/useQueries.ts';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
-import { ApiResponse, Character } from '@/types/types.ts';
-import { queryClient } from '@/utils/react-query.ts';
+import { Character } from '@/types/types.ts';
 
 export default function CharactersList({ searchTerm, currentPage, onPageChange }: {
   searchTerm: string;
@@ -18,18 +17,6 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
 
   const { data, isLoading, isError, error, isRefetching } = useCharactersQuery(searchTerm, currentPage);
   const { isItemSelected } = useCharacterStore();
-
-  useEffect((): void => {
-    const currentData: unknown = queryClient.getQueryData(['characters', searchTerm, currentPage]);
-
-    if (currentData && typeof currentData === 'object' && 'results' in currentData) {
-      const results: Character[] = (currentData as ApiResponse).results;
-      console.log('Current page data:', {
-        page: currentPage,
-        characters: results.map((character: Character): number => character.id)
-      });
-    }
-  }, [data, searchTerm, currentPage]);
 
   useEffect((): void => {
     if (data?.info.pages && currentPage > data.info.pages) {

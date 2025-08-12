@@ -6,7 +6,7 @@ import { useTheme } from '@/context/ThemeContext.tsx';
 import { useCharacterQuery } from '@/hooks/useQueries.ts';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 import { EmptyVoid } from '@/types/types.ts';
-import { queryClient } from '@/utils/react-query.ts';
+import { queryClient } from '@/utils/queryClient.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
 
 export default function CharacterDetails(): ReactElement | null {

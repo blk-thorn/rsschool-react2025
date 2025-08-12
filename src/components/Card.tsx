@@ -6,20 +6,20 @@ import { CardProps } from '@/types/types.ts';
 import { useStatusColor } from '@/utils/useStatusColor.ts';
 
 export default function Card({ character, isSelected }: CardProps & { isSelected: boolean }): ReactNode {
-  const { toggleItem } = useCharacterStore();
+  const { toggleItem, setSelectedCharacterId } = useCharacterStore();
   const { theme } = useTheme();
   const navigate: NavigateFunction = useNavigate();
 
   const statusColorClass: string = useStatusColor(character.status);
 
   const handleCardClick: () => void = (): void => {
+    setSelectedCharacterId(character.id);
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('details', character.id.toString());
     navigate(`?${searchParams.toString()}`);
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    e.preventDefault();
     e.stopPropagation();
     toggleItem(character.id);
   };
