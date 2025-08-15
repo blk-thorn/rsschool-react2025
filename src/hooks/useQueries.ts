@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import type { ApiResponse, Character } from '@/types/types.ts';
-import { fetchCharacters, fetchCharacter } from '@/utils/api.ts'
+import { fetchCharacters, fetchCharacter } from '@/utils/api'
 
 export const useCharactersQuery = (searchTerm: string = '', page: number = 1): UseQueryResult<ApiResponse, Error> => {
 

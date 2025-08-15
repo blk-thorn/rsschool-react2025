@@ -24,7 +24,7 @@ export default function CharactersList({ searchTerm, currentPage, onPageChange }
 
   const { isItemSelected } = useCharacterStore();
 
-  useEffect(() => {
+  useEffect((): void => {
     if (data?.info.pages && currentPage > data.info.pages) {
       onPageChange(1);
     }

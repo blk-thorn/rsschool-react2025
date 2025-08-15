@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UseLocalStorage } from '@/types/types.ts';
+import { UseLocalStorage } from '@/types/types';
 
 export const useLocalStorage: UseLocalStorage = (
   key: string = 'searchTerm-the-rick-morty-api',

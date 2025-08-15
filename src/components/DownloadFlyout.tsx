@@ -1,7 +1,7 @@
 import { ReactElement, useRef } from 'react';
-import { useTheme } from '@/context/ThemeContext.tsx';
-import { useCharacterStore } from '@/store/useCharacterStore.ts';
-import { Character, DownloadFlyoutProps } from '@/types/types.ts';
+import { useTheme } from '@/context/ThemeContext';
+import { useCharacterStore } from '@/store/useCharacterStore';
+import { Character, DownloadFlyoutProps } from '@/types/types';
 
 export default function DownloadFlyout({ characters }: DownloadFlyoutProps): ReactElement | null {
   const { selectedItems, unselectAll } = useCharacterStore();

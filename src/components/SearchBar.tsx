@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import RefreshButton from './RefreshButton';
-import { useTheme } from '@/context/ThemeContext.tsx';
+import { useTheme } from '@/context/ThemeContext';
 import { ChangeEvent, ChangeFunction, SearchProps, SubmitEvent, SubmitFunction } from '@/types/types';
 
 export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchProps): ReactNode {

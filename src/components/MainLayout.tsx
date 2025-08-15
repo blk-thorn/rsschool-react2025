@@ -13,7 +13,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [shouldThrowError, setShouldThrowError] = useState(false);
   const isFetching: number = useIsFetching();
 
-  const handleErrorClick = () => {
+  const handleErrorClick: () => void = (): void => {
     setShouldThrowError(true);
   };
 

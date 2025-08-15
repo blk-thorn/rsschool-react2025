@@ -18,9 +18,9 @@ export default function HomePage(): JSX.Element {
   const router = useRouter();
   const { theme } = useTheme();
 
-  const searchTerm = searchParams.get('search') ?? '';
-  const page = Number(searchParams.get('page')) || 1;
-  const detailsId = searchParams.get('details');
+  const searchTerm: string = searchParams.get('search') ?? '';
+  const page: number = Number(searchParams.get('page')) ?? 1;
+  const detailsId: string = searchParams.get('details');
 
   const [searchValue, setSearchValue] = useLocalStorage('', searchTerm);
   const { data, isFetching, error } = useCharactersQuery(searchTerm, page);
@@ -28,7 +28,7 @@ export default function HomePage(): JSX.Element {
 
   const characters: Character[] = data?.results ?? [];
 
-  useEffect(() => {
+  useEffect((): void => {
     if (error || data?.results?.length === 0) {
       setNotFound(true);
     } else {
@@ -36,12 +36,12 @@ export default function HomePage(): JSX.Element {
     }
   }, [error, data]);
 
-  const handleSearch = (term: string): void => {
+  const handleSearch: (term: string) => void = (term: string): void => {
     setSearchValue(term);
     router.push(`/?search=${term}&page=1`);
   };
 
-  const handlePageChange = (newPage: number): void => {
+  const handlePageChange: (newPage: number) => void = (newPage: number): void => {
     const params = new URLSearchParams();
     params.set('page', newPage.toString());
     if (searchValue) params.set('search', searchValue);

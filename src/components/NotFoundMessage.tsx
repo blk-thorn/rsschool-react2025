@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { NotFoundMessageProps } from '@/types/types.ts';
+import { NotFoundMessageProps } from '@/types/types';
 
 export default function NotFoundMessage({searchTerm, show}: NotFoundMessageProps): JSX.Element | null {
     if (!show) return null;

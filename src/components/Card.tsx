@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
 import { JSX } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useCharacterStore } from '@/store/useCharacterStore';
 import { CardProps } from '@/types/types';
 import { useStatusColor } from '@/utils/useStatusColor';
-import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Card(
   { character, isSelected }: CardProps & { isSelected: boolean }

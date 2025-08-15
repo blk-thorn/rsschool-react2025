@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
 interface CardSkeletonProps {
@@ -14,7 +14,7 @@ export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNod
 
   return (
     <>
-      {Array.from({ length: count }).map((_, index) => (
+      {Array.from({ length: count }).map((_: unknown, index: number): ReactElement => (
         <div
           key={index}
           data-testid="skeleton-card"
@@ -32,7 +32,7 @@ export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNod
             />
           </div>
           <ul className="flex flex-col text-left py-3 px-4 w-2/3 space-y-3">
-            {Array.from({ length: CARD_SKELETON_LINES_COUNT }).map((_, itemIndex) => (
+            {Array.from({ length: CARD_SKELETON_LINES_COUNT }).map((_: unknown, itemIndex: number): ReactElement => (
               <li key={itemIndex} className="mb-1 flex flex-col">
                 <div
                   className={`h-5 rounded w-3/4 animate-pulse ${

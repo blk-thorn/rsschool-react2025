@@ -2,8 +2,8 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { JSX, useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import RefreshLoader from './RefreshLoader';
-import { useTheme } from '@/context/ThemeContext.tsx';
-import { useCharacterStore } from '@/store/useCharacterStore.ts';
+import { useTheme } from '@/context/ThemeContext';
+import { useCharacterStore } from '@/store/useCharacterStore';
 
 export default function RefreshButton(): JSX.Element {
   const { theme } = useTheme();
@@ -11,7 +11,7 @@ export default function RefreshButton(): JSX.Element {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const selectedItems: number[] = useCharacterStore((state): number[] => state.selectedItems);
+  const selectedItems: number[] = useCharacterStore((state ): number[] => state.selectedItems);
 
   const handleRefreshClick: () => Promise<void> = async (): Promise<void> => {
     if (!navigator.onLine) {
