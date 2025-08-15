@@ -55,6 +55,7 @@
     "vite-tsconfig-paths": "^5.1.0",
     "vitest": "^3.2.4"
   },
+  "type": "module",
   "lint-staged": {
     "*.{json,md,css,scss}": "prettier --list-different --ignore-unknown",
     "*.{cjs,js,mjs,jsx,ts,tsx}": "eslint"

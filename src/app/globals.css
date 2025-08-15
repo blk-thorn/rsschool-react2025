@@ -1,14 +1,22 @@
 @import 'tailwindcss';
 
-body {
-  @apply bg-sky-300 dark:bg-gray-900 transition-colors duration-200;
+:root {
+  --main-bg-color: rgba(214, 236, 247, 0.88);
+  --main-text-color: #333;
 }
 
-#root {
+body {
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
   max-width: 1920px;
   text-align: center;
   padding: 1rem;
   margin: 0 auto;
+}
+
+body.dark {
+  --main-bg-color: rgba(17, 24, 39, 1);
+  --main-text-color: #fff;
 }
 
 .logo {

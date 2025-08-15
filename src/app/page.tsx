@@ -19,7 +19,7 @@ export default function HomePage(): JSX.Element {
   const { theme } = useTheme();
 
   const searchTerm: string = searchParams.get('search') ?? '';
-  const page: number = Number(searchParams.get('page')) ?? 1;
+  const page: number = Number(searchParams.get('page')) || 1;
   const detailsId: string = searchParams.get('details');
 
   const [searchValue, setSearchValue] = useLocalStorage('', searchTerm);
