@@ -1,24 +1,30 @@
+'use client';
+
 import { JSX, ReactElement, useEffect } from 'react';
 import Card from '@/components/Card';
 import CardSkeleton from '@/components/CardSkeleton';
-import Loader from '@/components/Loader.tsx';
+import Loader from '@/components/Loader';
 import NotFoundMessage from '@/components/NotFoundMessage';
 import Pagination from '@/components/Pagination';
-import { useCharactersQuery } from '@/hooks/useQueries.ts';
-import { useCharacterStore } from '@/store/useCharacterStore.ts';
-import { Character } from '@/types/types.ts';
+import { useCharactersQuery } from '@/hooks/useQueries';
+import { useCharacterStore } from '@/store/useCharacterStore';
+import { Character } from '@/types/types';
 
-export default function CharactersList({ searchTerm, currentPage, onPageChange }: {
+interface CharactersListProps {
   searchTerm: string;
   currentPage: number;
   onPageChange: (page: number) => void;
-}): JSX.Element {
+}
+
+export default function CharactersList({ searchTerm, currentPage, onPageChange }: CharactersListProps): JSX.Element {
   const componentKey = `${searchTerm}-${currentPage}`;
 
-  const { data, isLoading, isError, error, isRefetching } = useCharactersQuery(searchTerm, currentPage);
+  const { data, isLoading, isError, error, isRefetching } =
+    useCharactersQuery(searchTerm, currentPage);
+
   const { isItemSelected } = useCharacterStore();
 
-  useEffect((): void => {
+  useEffect(() => {
     if (data?.info.pages && currentPage > data.info.pages) {
       onPageChange(1);
     }

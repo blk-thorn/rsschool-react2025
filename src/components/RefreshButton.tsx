@@ -1,11 +1,11 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { ReactNode, useState } from 'react';
+import { JSX, useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import RefreshLoader from './RefreshLoader';
 import { useTheme } from '@/context/ThemeContext.tsx';
 import { useCharacterStore } from '@/store/useCharacterStore.ts';
 
-export default function RefreshButton(): ReactNode {
+export default function RefreshButton(): JSX.Element {
   const { theme } = useTheme();
   const queryClient: QueryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);

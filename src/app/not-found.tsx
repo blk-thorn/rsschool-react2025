@@ -1,7 +1,9 @@
+'use client';
+
+import Link from 'next/link';
 import { JSX } from 'react';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '@/app/routes';
-import { useTheme } from '@/context/ThemeContext.tsx';
+import { ROUTES } from '@/constants/routes.ts';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function NotFoundPage (): JSX.Element {
   const { theme } = useTheme();
@@ -14,8 +16,7 @@ export default function NotFoundPage (): JSX.Element {
       <p className={`mb-6 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
         Oops! The page you're looking for doesn't exist or has been moved.
       </p>
-      <Link
-        to={ROUTES.HOME}
+      <Link href={ROUTES.HOME}
         className={`inline-block px-6 py-3 font-medium rounded-lg transition-colors ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300' : 'bg-sky-600 text-white hover:bg-sky-700'}`}
       >
         Go Back Home

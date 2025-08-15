@@ -1,6 +1,6 @@
-import { ApiResponse } from '@/types/types.ts';
+import { ApiResponse } from '@/types/types';
 import { fetchCharacters } from '@/utils/api';
-import { queryClient } from '@/utils/queryClient.ts';
+import { queryClient } from '@/utils/queryClient';
 
 export async function loadCharacters(searchTerm: string, page: number): Promise<ApiResponse> {
   return queryClient.fetchQuery({

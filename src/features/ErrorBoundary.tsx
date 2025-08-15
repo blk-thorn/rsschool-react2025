@@ -1,3 +1,5 @@
+'use client';
+
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { useTheme } from '@/context/ThemeContext.tsx';
 import { EmptyVoid, ErrorBoundaryProps, ErrorBoundaryState, Theme } from '@/types/types.ts';

@@ -1,5 +1,7 @@
+'use client';
+
 import { ReactNode } from 'react';
-import { useTheme } from '@/context/ThemeContext.tsx';
+import { useTheme } from '@/context/ThemeContext';
 
 interface CardSkeletonProps {
   count?: number;
@@ -12,7 +14,7 @@ export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNod
 
   return (
     <>
-      {Array.from({ length: count }).map((_: unknown, index: number): ReactNode => (
+      {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
           data-testid="skeleton-card"
@@ -22,20 +24,26 @@ export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNod
               : 'bg-slate-800/60 border-slate-400'
           }`}
         >
-          <div className="relative w-3/4 min-w-120px">
-            <div className={`w-full h-58 rounded-lg min-w-33 animate-pulse ${
-              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'
-            }`} />
+          <div className="relative w-3/4 min-w-[120px]">
+            <div
+              className={`w-full h-[58px] rounded-lg min-w-[33px] animate-pulse ${
+                theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'
+              }`}
+            />
           </div>
           <ul className="flex flex-col text-left py-3 px-4 w-2/3 space-y-3">
-            {Array.from({ length: CARD_SKELETON_LINES_COUNT }).map((_: unknown, itemIndex: number): ReactNode => (
+            {Array.from({ length: CARD_SKELETON_LINES_COUNT }).map((_, itemIndex) => (
               <li key={itemIndex} className="mb-1 flex flex-col">
-                <div className={`h-5 rounded w-3/4 animate-pulse ${
-                  theme === 'dark' ? 'bg-gray-500' : 'bg-gray-400'
-                }`} />
-                <div className={`h-4 mt-1 rounded w-full animate-pulse ${
-                  theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200'
-                }`} />
+                <div
+                  className={`h-5 rounded w-3/4 animate-pulse ${
+                    theme === 'dark' ? 'bg-gray-500' : 'bg-gray-400'
+                  }`}
+                />
+                <div
+                  className={`h-4 mt-1 rounded w-full animate-pulse ${
+                    theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200'
+                  }`}
+                />
               </li>
             ))}
           </ul>

@@ -1,15 +1,19 @@
+'use client';
+
 import { useIsFetching } from '@tanstack/react-query';
 import { ReactNode, useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import Footer from '@/components/Footer.tsx';
-import Header from '@/components/Header.tsx';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
-export default function MainLayout(): ReactNode {
+interface MainLayoutProps {
+  children: ReactNode;
+}
+
+export default function MainLayout({ children }: MainLayoutProps) {
   const [shouldThrowError, setShouldThrowError] = useState(false);
-  const [isMainLoading, setIsMainLoading] = useState(false);
   const isFetching: number = useIsFetching();
 
-  const handleErrorClick: () => void  = (): void => {
+  const handleErrorClick = () => {
     setShouldThrowError(true);
   };
 
@@ -20,11 +24,9 @@ export default function MainLayout(): ReactNode {
   return (
     <div data-testid="main-layout">
       <Header />
-      <main className="flex-grow">
-        <Outlet context={{ setIsMainLoading }} />
-      </main>
+      <main className="flex-grow">{children}</main>
       <Footer
-        isLoading={isMainLoading || isFetching > 0}
+        isLoading={isFetching > 0}
         onErrorClick={handleErrorClick}
       />
     </div>

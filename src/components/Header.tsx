@@ -1,8 +1,10 @@
+'use client';
+
+import Link from 'next/link';
 import { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '@/app/routes';
-import ThemeSwitcher from '@/components/ThemeSwitcher.tsx';
-import { useTheme } from '@/context/ThemeContext.tsx';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+import { ROUTES } from '@/constants/routes';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Header(): ReactNode {
   const { theme } = useTheme();
@@ -10,7 +12,7 @@ export default function Header(): ReactNode {
     <header className="relative flex flex-col items-center justify-center pt-12">
       <ThemeSwitcher />
       <img
-        src="./favicon.ico"
+        src="/favicon.ico"
         alt="logo"
         className={`rounded-full w-40 h-40 border-5 transition-all duration-100
           ${theme === 'dark'
@@ -18,15 +20,21 @@ export default function Header(): ReactNode {
           : 'text-sky-600 shadow-lg shadow-slate-400/50 filter brightness-100'
         }`}
       />
-      <h1 className={`text-center mt-8 mb-8 font-bold text-5xl transition-all duration-100 ${theme === 'dark' ? 'text-slate-600' : 'text-sky-600'}`}>
+      <h1
+        className={`text-center mt-8 mb-8 font-bold text-5xl transition-all duration-100 ${
+          theme === 'dark' ? 'text-slate-600' : 'text-sky-600'
+        }`}
+      >
         The Rick and Morty API
       </h1>
       <nav className="mb-4">
         <ul className="flex space-x-4">
           <li>
             <Link
-              to={ROUTES.ABOUT}
-              className={`text-3xl font-bold mb-6 hover:underline transition-all duration-100 ${theme === 'dark' ? 'text-slate-600' : 'text-slate-800'}`}
+              href={ROUTES.ABOUT}
+              className={`text-3xl font-bold mb-6 hover:underline transition-all duration-100 ${
+                theme === 'dark' ? 'text-slate-600' : 'text-slate-800'
+              }`}
             >
               About
             </Link>
@@ -34,5 +42,5 @@ export default function Header(): ReactNode {
         </ul>
       </nav>
     </header>
-  )
+  );
 }

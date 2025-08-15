@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
-import { ClickEvent, ClickFunction, ErrorButtonProps } from '@/types/types.ts';
+import { JSX } from 'react';
 import { useTheme } from '@/context/ThemeContext.tsx';
+import { ClickEvent, ClickFunction, ErrorButtonProps } from '@/types/types.ts';
 
-export default function ErrorButton({onErrorClick}: ErrorButtonProps): ReactNode  {
+export default function ErrorButton({onErrorClick}: ErrorButtonProps): JSX.Element {
   const { theme } = useTheme();
 
   const handleClick: ClickFunction = (e: ClickEvent): void => {

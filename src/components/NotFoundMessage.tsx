@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { JSX } from 'react';
 import { NotFoundMessageProps } from '@/types/types.ts';
 
-export default function NotFoundMessage({searchTerm, show}: NotFoundMessageProps): ReactNode | null {
+export default function NotFoundMessage({searchTerm, show}: NotFoundMessageProps): JSX.Element | null {
     if (!show) return null;
     return (
       <div className="col-span-full text-center py-10">

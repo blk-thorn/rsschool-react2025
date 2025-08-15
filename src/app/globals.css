@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 body {
   @apply bg-sky-300 dark:bg-gray-900 transition-colors duration-200;

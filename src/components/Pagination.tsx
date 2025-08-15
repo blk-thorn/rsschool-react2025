@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { JSX } from 'react';
 import { useTheme } from '@/context/ThemeContext.tsx';
 import type { EmptyVoid, PaginationProps } from '@/types/types.ts';
 
-export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps): ReactNode {
+export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps): JSX.Element {
   const {theme} = useTheme();
 
   const handleNextPage: EmptyVoid = (): void => {

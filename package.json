@@ -2,27 +2,27 @@
   "name": "rick-morty-react",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "ci:format": "prettier --check .",
-    "format": "prettier --write .",
-    "build": "tsc -b && vite build",
+    "dev": "next dev",
+    "build": "next build",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix --color ./src",
-    "preview": "vite preview",
+    "format": "prettier --write .",
+    "ci:format": "prettier --check .",
     "prepare": "husky",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.11",
+    "-": "^0.0.1",
+    "@tailwindcss/postcss": "^4.1.12",
     "@tanstack/eslint-plugin-query": "^5.83.1",
     "@tanstack/react-query": "^5.84.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.1",
-    "tailwindcss": "^4.1.11",
+    "next": "^15.4.6",
+    "postcss": "^8.5.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.12",
     "zustand": "^5.0.7"
   },
   "devDependencies": {
@@ -37,7 +37,6 @@
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
-    "@vitejs/plugin-react": "^4.5.2",
     "@vitest/coverage-v8": "^3.1.2",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
@@ -53,22 +52,11 @@
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
-    "vite": "^7.0.0",
+    "vite-tsconfig-paths": "^5.1.0",
     "vitest": "^3.2.4"
   },
-  "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.9.5"
-  },
-  "resolutions": {
-    "rollup": "npm:@rollup/wasm-node"
-  },
-  "overrides": {
-    "vite": {
-      "rollup": "npm:@rollup/wasm-node"
-    }
-  },
   "lint-staged": {
-    "*.{json, md, css, scss}": "prettier --list-different --ignore-unknown",
+    "*.{json,md,css,scss}": "prettier --list-different --ignore-unknown",
     "*.{cjs,js,mjs,jsx,ts,tsx}": "eslint"
   }
 }

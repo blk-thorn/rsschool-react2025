@@ -1,6 +1,7 @@
+'use client';
+
 import { createContext, useContext, useState, ReactNode, useEffect, Context } from 'react';
 import { Theme, ThemeContextType } from '@/types/types.ts';
-
 
 const ThemeContext: Context<ThemeContextType | undefined> = createContext<ThemeContextType | undefined>(undefined);
 
