@@ -1,17 +1,21 @@
 'use client';
 
-import Link from 'next/link';
+import Image from 'next/image';
+import { createNavigation } from 'next-intl/navigation';
 import { ReactNode } from 'react';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/context/ThemeContext';
+
+
+const { Link } = createNavigation();
 
 export default function Header(): ReactNode {
   const { theme } = useTheme();
   return (
     <header className="relative flex flex-col items-center justify-center pt-12">
       <ThemeSwitcher />
-      <img
+      <Image
         src="/favicon.ico"
         alt="logo"
         className={`rounded-full w-40 h-40 border-5 transition-all duration-100

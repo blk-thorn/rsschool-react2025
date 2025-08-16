@@ -1,4 +1,4 @@
-import { mockResponseError } from '@/__tests__/__mocks__/mockData.ts';
+import { mockResponseError } from '@/__tests__/__mocks__/mockData';
 import type { ApiResponse, Character } from '@/types/types.ts';
 
 export const fetchCharacters = async (

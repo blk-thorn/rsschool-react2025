@@ -15,12 +15,12 @@ import { useStatusColor } from '@/utils/useStatusColor';
 export default function CharacterDetails(): ReactElement | null {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const characterId = searchParams.get('details');
-  const numCharacterId = characterId ? Number(characterId) : undefined;
+  const characterId: string = searchParams.get('details');
+  const numCharacterId: number = characterId ? Number(characterId) : undefined;
 
   const { data: character, isLoading, isError, error } = useCharacterQuery(numCharacterId);
   const { toggleItem, isItemSelected } = useCharacterStore();
-  const statusColorClass = useStatusColor(character?.status || '');
+  const statusColorClass: string  = useStatusColor(character?.status || '');
   const { theme } = useTheme();
 
   const handleClose: EmptyVoid = (): void => {
@@ -35,8 +35,8 @@ export default function CharacterDetails(): ReactElement | null {
     }
   };
 
-  useEffect(() => {
-    const characterCache = queryClient.getQueryData(['character', numCharacterId]);
+  useEffect((): void => {
+    const characterCache: unknown = queryClient.getQueryData(['character', numCharacterId]);
     console.log('Character cache:', characterCache);
   }, [numCharacterId]);
 

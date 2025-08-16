@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { JSX } from 'react';
 import { useTheme } from '@/context/ThemeContext';
@@ -42,7 +43,7 @@ export default function Card(
       }`}
     >
       <div className="relative w-3/4 min-w-[120px]">
-        <img
+        <Image
           className="w-full h-full object-cover min-h-[58px] rounded-lg min-w-[33px]"
           src={character.image}
           alt={character.name}

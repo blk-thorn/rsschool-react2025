@@ -1,9 +1,11 @@
 'use client';
 
-import Link from 'next/link';
+import { createNavigation } from 'next-intl/navigation';
 import { JSX } from 'react';
-import { ROUTES } from '@/constants/routes.ts';
+import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/context/ThemeContext';
+
+const { Link } = createNavigation();
 
 export default function NotFoundPage (): JSX.Element {
   const { theme } = useTheme();

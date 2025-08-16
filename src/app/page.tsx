@@ -18,9 +18,9 @@ export default function HomePage(): JSX.Element {
   const router = useRouter();
   const { theme } = useTheme();
 
-  const searchTerm: string = searchParams.get('search') ?? '';
-  const page: number = Number(searchParams.get('page')) || 1;
-  const detailsId: string = searchParams.get('details');
+  const searchTerm: string = searchParams?.get('search') ?? '';
+  const page: number = Number(searchParams?.get('page') ?? '1');
+  const detailsId: string = searchParams?.get('details') ?? '';
 
   const [searchValue, setSearchValue] = useLocalStorage('', searchTerm);
   const { data, isFetching, error } = useCharactersQuery(searchTerm, page);
@@ -29,16 +29,16 @@ export default function HomePage(): JSX.Element {
   const characters: Character[] = data?.results ?? [];
 
   useEffect((): void => {
-    if (error || data?.results?.length === 0) {
+    if (error || (data && data.results?.length === 0)) {
       setNotFound(true);
     } else {
       setNotFound(false);
     }
   }, [error, data]);
 
-  const handleSearch: (term: string) => void = (term: string): void => {
+  const handleSearch: (term: string) => void  = (term: string): void => {
     setSearchValue(term);
-    router.push(`/?search=${term}&page=1`);
+    router.push(`/?search=${encodeURIComponent(term)}&page=1`);
   };
 
   const handlePageChange: (newPage: number) => void = (newPage: number): void => {
@@ -51,19 +51,16 @@ export default function HomePage(): JSX.Element {
   return (
     <div
       data-testid="home-page"
-      className={`flex flex-1 relative pb-20 ${
-        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'
+      className={`flex flex-1 relative pb-20 transition-colors duration-300 ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-50 text-black'
       }`}
     >
       <div
         className={`p-2 overflow-y-auto transition-all duration-300 ${
-          detailsId ? 'w-[95%]' : 'w-full'
+          detailsId ? 'w-[70%]' : 'w-full'
         }`}
       >
-        <SearchBar
-          onFormSubmit={handleSearch}
-          initialSearchTerm={searchValue}
-        />
+        <SearchBar onFormSubmit={handleSearch} initialSearchTerm={searchValue} />
 
         {isFetching ? (
           <Loader />
@@ -80,7 +77,7 @@ export default function HomePage(): JSX.Element {
 
       {detailsId && (
         <div
-          className={`w-[30%] p-1 overflow-y-auto border-l ${
+          className={`w-[30%] p-1 overflow-y-auto border-l transition-colors duration-300 ${
             theme === 'dark' ? 'border-gray-600' : 'border-slate-600'
           }`}
         >
