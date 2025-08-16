@@ -1,8 +1,18 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function ThemeSwitcher(): ReactElement {
   const { theme, toggleTheme } = useTheme();
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect((): void => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="absolute top-4 right-4">
