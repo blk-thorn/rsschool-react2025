@@ -1,0 +1,49 @@
+{
+  "Home": {
+    "searchPlaceholder": "Поиск персонажей...",
+    "notFound": "Персонажи не найдены",
+    "loading": "Загрузка..."
+  },
+  "Header": {
+    "title": "Рик и Морти АПИ",
+    "about": "О проекте",
+    "themeToggle": "Сменить тему"
+  },
+  "SearchBar": {
+    "placeholder": "Поиск...",
+    "button": "Искать"
+  },
+  "NotFoundMessage": {
+    "title": "Ничего не найдено",
+    "description": "По вашему запросу ничего не найдено: {searchTerm}"
+  },
+  "Loader": {
+    "loading": "Загрузка..."
+  },
+  "DownloadFlyout": {
+    "downloadCsv": "Скачать CSV",
+    "close": "Закрыть"
+  },
+  "Card": {
+    "status": "Статус",
+    "gender": "Пол",
+    "species": "Вид",
+    "location": "Локация"
+  },
+  "CharacterDetails": {
+    "title": "Детали",
+    "name": "Имя",
+    "status": "Статус",
+    "species": "Вид",
+    "gender": "Пол",
+    "origin": "Происхождение",
+    "location": "Локация",
+    "episodes": "Эпизоды"
+  },
+  "CharacterList": {
+    "title": "Персонажи",
+    "prevPage": "Предыдущая",
+    "nextPage": "Следующая",
+    "page": "Страница {current} из {total}"
+  }
+}

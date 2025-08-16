@@ -1,86 +1,50 @@
 'use client';
 
-import Image from 'next/image';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { ReactElement, useEffect } from 'react';
-import Loader from '@/components/Loader';
-import { ROUTES } from '@/constants/routes';
+import { useTranslations } from 'next-intl';
+import { JSX } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { useCharacterQuery } from '@/hooks/useQueries';
-import { useCharacterStore } from '@/store/useCharacterStore';
-import { EmptyVoid } from '@/types/types';
-import { queryClient } from '@/utils/queryClient';
+import { Character } from '@/types/types';
 import { useStatusColor } from '@/utils/useStatusColor';
 
-export default function CharacterDetails(): ReactElement | null {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const characterId: string = searchParams.get('details');
-  const numCharacterId: number = characterId ? Number(characterId) : undefined;
+interface Props {
+  character?: Character;
+  onClose?: () => void;
+  onToggleFavorite?: (id: number) => void;
+  isFavorite?: boolean;
+}
 
-  const { data: character, isLoading, isError, error } = useCharacterQuery(numCharacterId);
-  const { toggleItem, isItemSelected } = useCharacterStore();
-  const statusColorClass: string  = useStatusColor(character?.status || '');
+export default function CharacterDetails({ character, onClose, onToggleFavorite, isFavorite }: Props): JSX.Element {
+  const t = useTranslations('CharacterDetails');
   const { theme } = useTheme();
 
-  const handleClose: EmptyVoid = (): void => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.delete('details');
-    router.replace(`?${newParams.toString()}`);
-  };
+  const statusColorClass: string = useStatusColor(character?.status ?? '');
 
-  const handleCheckboxClick: EmptyVoid = (): void => {
-    if (character) {
-      toggleItem(character.id);
-    }
-  };
-
-  useEffect((): void => {
-    const characterCache: unknown = queryClient.getQueryData(['character', numCharacterId]);
-    console.log('Character cache:', characterCache);
-  }, [numCharacterId]);
-
-  if (!characterId) return null;
-  if (isLoading) return <Loader />;
-  if (isError) {
-    console.error('Error fetching character:', error);
-    router.replace(ROUTES.NOT_FOUND);
-    return null;
-  }
   if (!character) return null;
 
   return (
     <div className="w-full mt-26">
       <div
-        className={`border rounded-lg p-6 transition-all duration-100 ${
-          theme === 'dark'
-            ? 'bg-slate-700/80 hover:bg-slate-700 border-gray-50'
-            : 'bg-slate-900/70 border-slate-400'
+        className={`border rounded-lg p-6 transition-all duration-100
+        ${theme === 'dark'
+          ? 'bg-slate-700/80 hover:bg-slate-700 border-gray-50'
+          : 'bg-slate-900/70 border-slate-400'
         }`}
       >
         <div className="flex justify-between items-start mb-4">
-          <button
-            onClick={handleClose}
-            className={`text-xl cursor-pointer ${theme === 'dark' ? 'text-slate-300' : 'text-white'}`}
-          >
-            × Close
-          </button>
-          <input
-            type="checkbox"
-            checked={isItemSelected(character.id)}
-            onChange={handleCheckboxClick}
-            className="w-5 h-5 cursor-pointer"
-          />
+          {onClose && (
+            <button onClick={onClose} className={`text-xl cursor-pointer ${theme === 'dark' ? 'text-slate-300' : 'text-white'}`}>
+              × {t('close')}
+            </button>
+          )}
+          {onToggleFavorite && (
+            <input type="checkbox" checked={isFavorite} onChange={(): void => onToggleFavorite(character.id)} className="w-5 h-5 cursor-pointer"
+            />
+          )}
         </div>
 
         <div className="flex flex-col gap-6">
           <div className="flex justify-center">
-            <Image
-              src={character.image}
-              alt={character.name}
-              width={256}
-              height={256}
-              className="rounded-lg object-cover"
+            <img src={character.image} alt={character.name} className="rounded-lg w-64 h-64 object-cover"
             />
           </div>
 
@@ -91,38 +55,46 @@ export default function CharacterDetails(): ReactElement | null {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                  Status:
+                <h3 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  {t('status')}:
                 </h3>
                 <p className={statusColorClass}>{character.status}</p>
               </div>
 
               <div>
-                <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                  Species:
+                <h3 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  {t('species')}:
                 </h3>
-                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>{character.species}</p>
+                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>
+                  {character.species}
+                </p>
               </div>
 
               <div>
-                <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                  Gender:
+                <h3 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  {t('gender')}:
                 </h3>
-                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>{character.gender}</p>
+                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>
+                  {character.gender}
+                </p>
               </div>
 
               <div>
-                <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                  Origin:
+                <h3 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  {t('origin')}:
                 </h3>
-                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>{character.origin.name}</p>
+                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>
+                  {character.origin?.name}
+                </p>
               </div>
 
               <div className="md:col-span-2">
-                <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                  Location:
+                <h3 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  {t('location')}:
                 </h3>
-                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>{character.location.name}</p>
+                <p className={theme === 'dark' ? 'text-slate-300' : 'text-white'}>
+                  {character.location?.name}
+                </p>
               </div>
             </div>
           </div>

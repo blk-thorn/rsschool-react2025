@@ -1,0 +1,48 @@
+{
+  "Home": {
+    "searchPlaceholder": "Search characters...",
+    "notFound": "No characters found",
+    "loading": "Loading..."
+  },
+  "Header": {
+    "title": "The Rick and Morty API",
+    "about": "About",
+    "themeToggle": "Switch theme"
+  },
+  "SearchBar": {
+    "placeholder": "Search...",
+    "button": "Search"
+  },
+  "NotFoundMessage": {
+    "title": "No results",
+    "description": "Nothing was found for your request: {searchTerm}"
+  },
+  "Loader": {
+    "loading": "Loading..."
+  },
+  "DownloadFlyout": {
+    "downloadCsv": "Download CSV",
+    "close": "Close"
+  },
+  "Card": {
+    "status": "Status",
+    "gender": "Gender",
+    "species": "Species",
+    "location": "Location"
+  },
+  "CharacterDetails": {
+    "title": "Character Details",
+    "name": "Name",
+    "status": "Status",
+    "species": "Species",
+    "gender": "Gender",
+    "origin": "Origin",
+    "location": "Location"
+  },
+  "CharacterList": {
+    "title": "Characters",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "page": "Page {current} of {total}"
+  }
+}

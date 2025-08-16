@@ -1,0 +1,39 @@
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import { ReactNode } from 'react';
+import { AbstractIntlMessages } from 'use-intl';
+import MainLayout from '@/components/MainLayout';
+import { ThemeProvider } from '@/context/ThemeContext';
+import ErrorBoundary from '@/features/ErrorBoundary';
+import { QueryProvider } from '@/providers/QueryProvider';
+
+type LocaleLayoutProps = {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+};
+
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale } = await params;
+
+  let messages: AbstractIntlMessages;
+  try {
+    const importedMessages = (await import(`../../messages/${locale}.json`)) as {
+      default: AbstractIntlMessages;
+    };
+    messages = importedMessages.default;
+  } catch {
+    notFound();
+  }
+
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Moscow">
+      <ThemeProvider>
+        <QueryProvider>
+          <ErrorBoundary>
+            <MainLayout>{children}</MainLayout>
+          </ErrorBoundary>
+        </QueryProvider>
+      </ThemeProvider>
+    </NextIntlClientProvider>
+  );
+}

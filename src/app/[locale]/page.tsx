@@ -51,12 +51,12 @@ export default function HomePage(): JSX.Element {
   return (
     <div
       data-testid="home-page"
-      className={`flex flex-1 relative pb-20 transition-colors duration-300 ${
-        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-50 text-black'
+      className={`flex flex-1 relative pb-20 transition-colors ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'
       }`}
     >
       <div
-        className={`p-2 overflow-y-auto transition-all duration-300 ${
+        className={`p-2 overflow-y-auto transition-all ${
           detailsId ? 'w-[70%]' : 'w-full'
         }`}
       >

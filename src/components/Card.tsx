@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { JSX } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import { useCharacterStore } from '@/store/useCharacterStore';
@@ -15,10 +16,11 @@ export default function Card(
   const { theme } = useTheme();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('Card');
 
   const statusColorClass: string = useStatusColor(character.status);
 
-  const handleCardClick = (): void => {
+  const handleCardClick: () => void = (): void => {
     setSelectedCharacterId(character.id);
 
     const params = new URLSearchParams(searchParams.toString());
@@ -47,6 +49,8 @@ export default function Card(
           className="w-full h-full object-cover min-h-[58px] rounded-lg min-w-[33px]"
           src={character.image}
           alt={character.name}
+          width={300}
+          height={300}
         />
         <div className="absolute top-2 left-2">
           <input
@@ -72,7 +76,7 @@ export default function Card(
       <ul className="flex flex-col text-left py-3 px-4 w-2/3">
         <li className="mb-1 flex flex-col">
           <span className={`block font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            Status:
+            {t('status')}
           </span>
           <span className={`mx-2 font-medium ${statusColorClass}`}>
             {character.status}
@@ -80,7 +84,7 @@ export default function Card(
         </li>
         <li className="mb-1 flex flex-col">
           <span className={`block font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            Gender:
+            {t('gender')}
           </span>
           <span className={`block text-lg mx-2 ${theme === 'dark' ? 'text-slate-300' : 'text-white'}`}>
             {character.gender}
@@ -88,7 +92,7 @@ export default function Card(
         </li>
         <li className="mb-1 flex flex-col">
           <span className={`block font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            Species:
+            {t('species')}
           </span>
           <span className={`block text-lg mx-2 ${theme === 'dark' ? 'text-slate-300' : 'text-white'}`}>
             {character.species}
@@ -96,7 +100,7 @@ export default function Card(
         </li>
         <li className="mb-1 flex flex-col">
           <span className={`block font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            Location:
+            {t('location')}
           </span>
           <span className={`block text-lg mx-2 ${theme === 'dark' ? 'text-slate-300' : 'text-white'}`}>
             {character.location.name}
