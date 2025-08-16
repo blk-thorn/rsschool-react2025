@@ -31,18 +31,23 @@
     "location": "Location"
   },
   "CharacterDetails": {
+    "error": "Failed to load character",
     "title": "Character Details",
     "name": "Name",
     "status": "Status",
     "species": "Species",
     "gender": "Gender",
     "origin": "Origin",
-    "location": "Location"
+    "location": "Location",
+    "close": "Close"
   },
   "CharacterList": {
     "title": "Characters",
     "prevPage": "Previous",
     "nextPage": "Next",
     "page": "Page {current} of {total}"
+  },
+  "CharacterPage": {
+    "invalidId": "Invalid character ID"
   }
 }

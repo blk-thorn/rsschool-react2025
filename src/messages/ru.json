@@ -31,6 +31,7 @@
     "location": "Локация"
   },
   "CharacterDetails": {
+    "error": "Ошибка загрузки персонажа",
     "title": "Детали",
     "name": "Имя",
     "status": "Статус",
@@ -38,12 +39,16 @@
     "gender": "Пол",
     "origin": "Происхождение",
     "location": "Локация",
-    "episodes": "Эпизоды"
+    "episodes": "Эпизоды",
+    "close": "Закрыть"
   },
   "CharacterList": {
     "title": "Персонажи",
     "prevPage": "Предыдущая",
     "nextPage": "Следующая",
     "page": "Страница {current} из {total}"
+  },
+  "CharacterPage": {
+    "invalidId": "Некорректный ID персонажа"
   }
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import { createNavigation } from 'next-intl/navigation';
 import { JSX } from 'react';
 import { ROUTES } from '@/constants/routes';

@@ -55,10 +55,7 @@ export default function HomePage(): JSX.Element {
         theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-sky-20 text-black'
       }`}
     >
-      <div
-        className={`p-2 overflow-y-auto transition-all ${
-          detailsId ? 'w-[70%]' : 'w-full'
-        }`}
+      <div className={`p-2 overflow-y-auto transition-all ${ detailsId ? 'w-[90%]' : 'w-full'}`}
       >
         <SearchBar onFormSubmit={handleSearch} initialSearchTerm={searchValue} />
 
@@ -81,7 +78,7 @@ export default function HomePage(): JSX.Element {
             theme === 'dark' ? 'border-gray-600' : 'border-slate-600'
           }`}
         >
-          <CharacterDetails />
+          <CharacterDetails id={Number(detailsId)} />
         </div>
       )}
 
