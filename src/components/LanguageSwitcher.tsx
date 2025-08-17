@@ -29,7 +29,7 @@ export default function LanguageSwitcher(): ReactElement {
   };
 
   return (
-    <div className="absolute top-4 right-28">
+    <div className="absolute top-4 right-20">
       <button
         onClick={toggleLanguage}
         className={`inline-flex items-center px-4 py-2 rounded-md ms-2 text-sm font-medium rounded-lg cursor-pointer transition-all duration-100 ${

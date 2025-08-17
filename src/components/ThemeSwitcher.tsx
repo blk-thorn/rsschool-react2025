@@ -21,7 +21,7 @@ export default function ThemeSwitcher(): ReactElement {
         onClick={toggleTheme}
         className={`inline-flex items-center px-4 py-2 rounded-md ms-2 text-sm font-medium rounded-lg cursor-pointer transition-all duration-100 ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 border-gray-50 text-slate-300' : 'bg-sky-600  hover:bg-sky-700  focus:ring-sky-600 text-white'}`}
       >
-        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+        {theme === 'light' ? '🌙' : '☀️'}
       </button>
     </div>
   );

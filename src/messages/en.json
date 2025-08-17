@@ -9,10 +9,6 @@
     "about": "About",
     "themeToggle": "Switch theme"
   },
-  "SearchBar": {
-    "placeholder": "Search...",
-    "button": "Search"
-  },
   "NotFoundMessage": {
     "title": "No results",
     "description": "Nothing was found for your request: {searchTerm}"
@@ -49,5 +45,23 @@
   },
   "CharacterPage": {
     "invalidId": "Invalid character ID"
+  },
+  "About": {
+    "authorTitle": "Author Information:",
+    "authorDescription1": "This app was created as part of the RS School React course to demonstrate the use of React with TypeScript, React Router, and the Rick and Morty API.",
+    "authorDescription2": "It allows you to browse characters from the Rick and Morty universe, search for specific characters, and paginate through the results.",
+    "courseTitle": "Course Information:",
+    "backHome": "Back Home"
+  },
+  "SearchBar": {
+    "label": "Search",
+    "placeholder": "Search a character...",
+    "button": "Search"
+  },
+  "RefreshButton": {
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "noInternet": "No internet connection",
+    "failed": "Refresh failed"
   }
 }

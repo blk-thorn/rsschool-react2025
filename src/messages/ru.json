@@ -9,10 +9,6 @@
     "about": "О проекте",
     "themeToggle": "Сменить тему"
   },
-  "SearchBar": {
-    "placeholder": "Поиск...",
-    "button": "Искать"
-  },
   "NotFoundMessage": {
     "title": "Ничего не найдено",
     "description": "По вашему запросу ничего не найдено: {searchTerm}"
@@ -50,5 +46,23 @@
   },
   "CharacterPage": {
     "invalidId": "Некорректный ID персонажа"
+  },
+  "About": {
+    "authorTitle": "Информация об авторе:",
+    "authorDescription1": "Это приложение создано в рамках курса RS School React, чтобы продемонстрировать навыки использования React с TypeScript, React Router и Rick and Morty API.",
+    "authorDescription2": "Здесь можно просматривать персонажей из вселенной Рика и Морти, искать кого-то конкретного и переключаться между страницами.",
+    "courseTitle": "Информация о курсе:",
+    "backHome": "На главную"
+  },
+  "SearchBar": {
+    "label": "Поиск",
+    "placeholder": "Найти персонажа...",
+    "button": "Поиск"
+  },
+  "RefreshButton": {
+    "refresh": "Обновить",
+    "refreshing": "Обновление...",
+    "noInternet": "Подключение к Интернету отсутствует",
+    "failed": "Ошибка обновления"
   }
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { ReactNode, useEffect, useState } from 'react';
 import RefreshButton from './RefreshButton';
 import { useTheme } from '@/context/UseTheme';
@@ -8,6 +9,7 @@ import { ChangeEvent, ChangeFunction, SearchProps, SubmitEvent, SubmitFunction }
 export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchProps): ReactNode {
   const [term, setTerm] = useState(initialSearchTerm);
   const { theme } = useTheme();
+  const t = useTranslations('SearchBar');
 
   useEffect((): void => {
     setTerm(initialSearchTerm);
@@ -23,9 +25,9 @@ export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchPro
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto mb-10">
+    <div className="flex flex-col md:flex-row max-w-lg mx-auto mb-10">
       <form onSubmit={handleFormSubmit} className="flex items-center w-full" role="form">
-        <label htmlFor="search-bar" className="sr-only">Search</label>
+        <label htmlFor="search-bar" className="sr-only">{t('label')}</label>
         <div className="relative w-full">
           <input
             type="search"
@@ -37,7 +39,7 @@ export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchPro
               ? 'bg-gray-900 border-gray-50 text-white'
               : 'bg-gray-100 border-gray-300 text-gray-900'
             }`}
-            placeholder="Search a character..."
+            placeholder={t('placeholder')}
           />
         </div>
         <button
@@ -63,7 +65,7 @@ export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchPro
               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
             />
           </svg>
-          Search
+          {t('button')}
         </button>
       </form>
 

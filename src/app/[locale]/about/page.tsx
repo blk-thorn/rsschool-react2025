@@ -1,15 +1,16 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { createNavigation } from 'next-intl/navigation';
 import { JSX } from 'react';
 import { ROUTES } from '@/constants/routes';
-
 import { useTheme } from '@/context/UseTheme';
 
 const { Link } = createNavigation();
 
 export default function AboutPage(): JSX.Element {
   const { theme } = useTheme();
+  const t = useTranslations('About');
 
   return (
     <div
@@ -17,20 +18,13 @@ export default function AboutPage(): JSX.Element {
       className="max-w-2xl mx-auto p-4 border-t-2 border-b-2"
     >
       <section className="mb-8">
-        <h1 className="text-xl font-semibold mb-2">Author Information:</h1>
-        <p className="mb-4">
-          This app was created as part of the RS School React course to
-          demonstrate the use of React with TypeScript, React Router, and the
-          Rick and Morty API.
-        </p>
-        <p>
-          It allows you to browse characters from the Rick and Morty universe,
-          search for specific characters, and paginate through the results.
-        </p>
+        <h1 className="text-xl font-semibold mb-2">{t('authorTitle')}</h1>
+        <p className="mb-4">{t('authorDescription1')}</p>
+        <p>{t('authorDescription2')}</p>
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-10">Course Information:</h2>
+        <h2 className="text-xl font-semibold mb-10">{t('courseTitle')}</h2>
         <a
           href="https://rs.school/courses/reactjs"
           className="inline-block"
@@ -53,7 +47,7 @@ export default function AboutPage(): JSX.Element {
             : 'bg-sky-600 hover:bg-sky-700 text-white'
         }`}
       >
-        Back Home
+        {t('backHome')}
       </Link>
     </div>
   );
