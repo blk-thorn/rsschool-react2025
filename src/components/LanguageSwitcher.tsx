@@ -26,6 +26,7 @@ export default function LanguageSwitcher(): ReactElement {
   const toggleLanguage: EmptyVoid = (): void => {
     const newLocale = locale === 'en' ? 'ru' : 'en';
     router.push(`/${newLocale}${pathname.replace(/^\/(en|ru)/, '')}`);
+    router.refresh();
   };
 
   return (

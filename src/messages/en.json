@@ -16,10 +16,6 @@
   "Loader": {
     "loading": "Loading..."
   },
-  "DownloadFlyout": {
-    "downloadCsv": "Download CSV",
-    "close": "Close"
-  },
   "Card": {
     "status": "Status",
     "gender": "Gender",
@@ -39,7 +35,7 @@
   },
   "CharacterList": {
     "title": "Characters",
-    "prevPage": "Previous",
+    "prevPage": "Prev",
     "nextPage": "Next",
     "page": "Page {current} of {total}"
   },
@@ -63,5 +59,23 @@
     "refreshing": "Refreshing...",
     "noInternet": "No internet connection",
     "failed": "Refresh failed"
+  },
+  "Pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "page": "Page {current} of {total}"
+  },
+  "ErrorButton": {
+    "label": "Error Button"
+  },
+  "ErrorBoundary": {
+    "title": "Something went wrong...",
+    "description": "Please reload the page.",
+    "reload": "Start Over"
+  },
+  "DownloadFlyout": {
+    "selected": "{count, plural, one {# item selected} other {# items selected}}",
+    "download": "Download",
+    "unselect": "Unselect all"
   }
 }

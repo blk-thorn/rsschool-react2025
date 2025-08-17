@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { AbstractIntlMessages } from 'use-intl';
 import MainLayout from '@/components/MainLayout';
@@ -14,6 +15,7 @@ type LocaleLayoutProps = {
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   let messages: AbstractIntlMessages;
   try {

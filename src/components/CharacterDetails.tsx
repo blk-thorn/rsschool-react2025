@@ -76,7 +76,7 @@ export default function CharacterDetails({ id }: CharacterDetailsProps): ReactEl
             onClick={handleClose}
             className={`text-xl cursor-pointer ${theme === "dark" ? "text-slate-300" : "text-white"}`}
           >
-            &times; Close
+            &times; {t("close")}
           </button>
         </div>
 
@@ -123,7 +123,7 @@ export default function CharacterDetails({ id }: CharacterDetailsProps): ReactEl
               </div>
 
               <div>
-                <h3 className={`text-lg font-medium mb-4 ${theme === "dark" ? "text-white" : "text-black"}`}>
+                <h3 className={`text-lg font-medium mb-4 truncate ${theme === "dark" ? "text-white" : "text-black"}`}>
                   {t("origin")}
                 </h3>
                 <p className={theme === "dark" ? "text-slate-300" : "text-white"}>

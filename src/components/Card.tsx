@@ -49,6 +49,7 @@ export default function Card({ character, isSelected }: CardProps & { isSelected
           alt={character.name}
           width={300}
           height={300}
+          priority
         />
         <div className="absolute top-2 left-2">
           <input

@@ -2,6 +2,7 @@
 
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { JSX } from "react";
 import { useTheme } from '@/context/UseTheme';
 import { useCharacterStore } from "@/store/useCharacterStore";
@@ -11,6 +12,7 @@ export default function UnselectAllButton(): JSX.Element {
   const router: AppRouterInstance = useRouter();
   const { unselectAll } = useCharacterStore();
   const { theme } = useTheme();
+  const t = useTranslations("DownloadFlyout");
 
   const handleClick: EmptyVoid = (): void => {
     unselectAll();
@@ -27,7 +29,7 @@ export default function UnselectAllButton(): JSX.Element {
           : "bg-sky-700 hover:bg-sky-800 text-white"
       }`}
     >
-      Unselect all
+      {t("unselect")}
     </button>
   );
 }
