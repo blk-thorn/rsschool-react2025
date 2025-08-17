@@ -1,7 +1,7 @@
 'use client';
 
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import { EmptyVoid, ErrorBoundaryProps, ErrorBoundaryState, Theme } from '@/types/types';
 
 interface ThemedErrorBoundaryProps extends ErrorBoundaryProps {

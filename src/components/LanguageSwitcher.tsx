@@ -3,7 +3,8 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { ReactElement, useEffect, useState } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+
+import { useTheme } from '@/context/UseTheme';
 
 export default function LanguageSwitcher(): ReactElement {
   const router = useRouter();

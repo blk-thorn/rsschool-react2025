@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import type { EmptyVoid, PaginationProps } from '@/types/types.ts';
 
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps): JSX.Element {

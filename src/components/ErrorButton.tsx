@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import { ClickEvent, ClickFunction, ErrorButtonProps } from '@/types/types';
 
 export default function ErrorButton({onErrorClick}: ErrorButtonProps): JSX.Element {

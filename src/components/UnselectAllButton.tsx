@@ -3,7 +3,7 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter } from "next/navigation";
 import { JSX } from "react";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from '@/context/UseTheme';
 import { useCharacterStore } from "@/store/useCharacterStore";
 import { EmptyVoid } from '@/types/types';
 

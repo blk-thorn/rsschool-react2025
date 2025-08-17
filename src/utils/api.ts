@@ -9,7 +9,7 @@ export const fetchCharacters = async (
   const response: Response  = await fetch(url);
 console.log(response)
   if (response.status === 404) {
-    return mockResponseError
+    return mockResponseError as ApiResponse;
   }
 
   if (!response.ok) {

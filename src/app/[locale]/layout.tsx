@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { ReactNode } from 'react';
 import { AbstractIntlMessages } from 'use-intl';
 import MainLayout from '@/components/MainLayout';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { ThemeProvider } from '@/context/ThemeProvider';
 import ErrorBoundary from '@/features/ErrorBoundary';
 import { QueryProvider } from '@/providers/QueryProvider';
 

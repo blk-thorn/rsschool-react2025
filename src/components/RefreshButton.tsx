@@ -2,7 +2,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { JSX, useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import RefreshLoader from './RefreshLoader';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import { useCharacterStore } from '@/store/useCharacterStore';
 
 export default function RefreshButton(): JSX.Element {

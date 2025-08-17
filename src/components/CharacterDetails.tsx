@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { ReactElement, useEffect } from "react";
 import Loader from "@/components/Loader";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from '@/context/UseTheme';
 import { useCharacterQuery } from "@/hooks/useQueries";
 import { useCharacterStore } from "@/store/useCharacterStore";
 import { Character, EmptyVoid } from '@/types/types';

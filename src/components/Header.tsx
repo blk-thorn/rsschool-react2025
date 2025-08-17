@@ -7,7 +7,8 @@ import { ReactNode } from 'react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import { ROUTES } from '@/constants/routes';
-import { useTheme } from '@/context/ThemeContext';
+
+import { useTheme } from '@/context/UseTheme';
 
 const { Link } = createNavigation();
 

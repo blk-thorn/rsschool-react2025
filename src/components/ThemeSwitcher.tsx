@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+
+import { useTheme } from '@/context/UseTheme';
 
 export default function ThemeSwitcher(): ReactElement {
   const { theme, toggleTheme } = useTheme();

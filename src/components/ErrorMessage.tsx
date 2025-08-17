@@ -1,5 +1,6 @@
 import { JSX } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+
+import { useTheme } from '@/context/UseTheme';
 
 interface ErrorMessageProps {
   message: string;

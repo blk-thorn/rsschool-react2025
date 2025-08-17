@@ -3,7 +3,8 @@
 import { createNavigation } from 'next-intl/navigation';
 import { JSX } from 'react';
 import { ROUTES } from '@/constants/routes';
-import { useTheme } from '@/context/ThemeContext';
+
+import { useTheme } from '@/context/UseTheme';
 
 const { Link } = createNavigation();
 

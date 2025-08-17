@@ -1,13 +1,13 @@
 'use client';
 
 import { ReactElement, ReactNode } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+import { CARD_SKELETON_LINES_COUNT } from '@/constants/general';
+
+import { useTheme } from '@/context/UseTheme';
 
 interface CardSkeletonProps {
   count?: number;
 }
-
-export const CARD_SKELETON_LINES_COUNT = 4;
 
 export default function CardSkeleton({ count = 1 }: CardSkeletonProps): ReactNode {
   const { theme } = useTheme();

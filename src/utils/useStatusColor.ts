@@ -1,4 +1,4 @@
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import { CharacterStatus } from '@/types/types.ts';
 
 export function useStatusColor(status: string): string {

@@ -8,7 +8,7 @@ import CharactersList from '@/components/CharacterList';
 import Loader from '@/components/Loader';
 import NotFoundMessage from '@/components/NotFoundMessage';
 import SearchBar from '@/components/SearchBar';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCharactersQuery } from '@/hooks/useQueries';
 import { PageVoid, SearchVoid } from '@/types/types';

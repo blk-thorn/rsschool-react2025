@@ -1,10 +1,11 @@
 'use client';
 
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { JSX } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/context/UseTheme';
 import { useCharacterStore } from '@/store/useCharacterStore';
 import { CardProps } from '@/types/types';
 import { useStatusColor } from '@/utils/useStatusColor';
@@ -12,8 +13,8 @@ import { useStatusColor } from '@/utils/useStatusColor';
 export default function Card({ character, isSelected }: CardProps & { isSelected: boolean }): JSX.Element {
   const { toggleItem, setSelectedCharacterId } = useCharacterStore();
   const { theme } = useTheme();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router: AppRouterInstance = useRouter();
+  const searchParams: ReadonlyURLSearchParams = useSearchParams();
   const t = useTranslations('Card');
 
   const statusColorClass: string = useStatusColor(character.status);
@@ -32,7 +33,7 @@ export default function Card({ character, isSelected }: CardProps & { isSelected
   };
 
   return (
-    <div
+    <button
       onClick={handleCardClick}
       data-testid="character-card"
       className={`flex items-center max-w-xl border rounded-lg shadow-sm overflow-hidden hover:scale-105 transition-all duration-100 cursor-pointer ${
@@ -104,6 +105,6 @@ export default function Card({ character, isSelected }: CardProps & { isSelected
           </span>
         </li>
       </ul>
-    </div>
+    </button>
   );
 }
