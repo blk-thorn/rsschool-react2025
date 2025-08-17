@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { createNavigation } from 'next-intl/navigation';
 import { JSX } from 'react';
@@ -31,7 +32,7 @@ export default function AboutPage(): JSX.Element {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
+          <Image
             src={theme === 'dark' ? '/rs_school_dark.svg' : '/rs_school.svg'}
             alt="RS School logo"
             className="h-30 hover:opacity-80 transition-opacity rounded-md border-2 p-3"

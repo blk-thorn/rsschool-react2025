@@ -1,5 +1,12 @@
 import CharacterDetails from '@/components/CharacterDetails';
 
-export default function CharacterPage({ params }: { params: { id: string } }) {
-  return <CharacterDetails id={Number(params.id)} />;
+type CharacterPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function CharacterPage({ params }: CharacterPageProps) {
+  const { id } = await params;
+
+  return <CharacterDetails id={Number(id)} />;
 }
+
