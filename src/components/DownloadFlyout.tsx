@@ -35,6 +35,10 @@ export default async function DownloadFlyout(): Promise<JSX.Element | null> {
   const csvContent: string = await generateCsv(ids);
   const base64: string = Buffer.from(csvContent, 'utf-8').toString('base64');
 
+  console.log('CSV Content:', csvContent);
+  console.log('Base64:', base64);
+
+
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 border rounded-lg shadow-lg p-4 z-50 bg-slate-800 border-slate-400">
       <div className="flex items-center justify-between gap-4">

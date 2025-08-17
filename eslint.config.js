@@ -21,6 +21,7 @@ export default [
   {
     files: ['src/**/*.{ts,tsx,js,jsx}'],
     plugins: {
+      'next': nextPlugin,
       '@next/next': nextPlugin,
     },
     rules: {

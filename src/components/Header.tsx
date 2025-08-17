@@ -22,7 +22,7 @@ export default function Header(): ReactNode {
         <ThemeSwitcher />
         <LanguageSwitcher />
       </div>
-      <Image src="/favicon.ico" alt="logo" width={40} height={40}
+      <Image src="/logo.png" alt="logo" width={40} height={40}
         className={`rounded-full w-40 h-40 border-5 transition-all duration-100
           ${theme === 'dark'
           ? 'bg-slate-500 text-slate-600 shadow-lg border-slate-600 shadow-sky-500/50 filter brightness-80 invert-[0.1]'
