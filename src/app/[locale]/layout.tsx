@@ -4,9 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { AbstractIntlMessages } from 'use-intl';
 import MainLayout from '@/components/MainLayout';
-import { ThemeProvider } from '@/context/ThemeProvider';
 import ErrorBoundary from '@/features/ErrorBoundary';
-import { QueryProvider } from '@/providers/QueryProvider';
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -29,13 +27,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Moscow">
-      <ThemeProvider>
-        <QueryProvider>
-          <ErrorBoundary>
-            <MainLayout>{children}</MainLayout>
-          </ErrorBoundary>
-        </QueryProvider>
-      </ThemeProvider>
+      <ErrorBoundary>
+        <MainLayout>{children}</MainLayout>
+      </ErrorBoundary>
     </NextIntlClientProvider>
   );
 }

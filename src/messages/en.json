@@ -77,5 +77,10 @@
     "selected": "{count, plural, one {# item selected} other {# items selected}}",
     "download": "Download",
     "unselect": "Unselect all"
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "Oops! The page you’re looking for has been moved to a parallel universe. We’re working on bringing it back!",
+    "backHome": "Go Back Home"
   }
 }
