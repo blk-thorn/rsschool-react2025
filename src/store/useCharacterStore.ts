@@ -1,4 +1,4 @@
-import { create, StoreApi, UseBoundStore } from 'zustand';
+import { create, StoreApi, UseBoundStore } from "zustand";
 
 interface CharacterStore {
   selectedCharacterId: number | null;
@@ -11,22 +11,41 @@ interface CharacterStore {
   getSelectedCount: () => number;
 }
 
-export const useCharacterStore: UseBoundStore<StoreApi<CharacterStore>>  = create<CharacterStore>((set, get) => ({
-  selectedCharacterId: null,
-  selectedItems: [],
+function syncToCookies(items: number[]): void {
+  if (typeof document !== "undefined") {
+    document.cookie = `selected-ids=${items.join(",")}; path=/; SameSite=Lax`;
+  }
+}
 
-  setSelectedCharacterId: (id: number | null): void => set({ selectedCharacterId: id }),
-  clearSelectedCharacter: (): void => set({ selectedCharacterId: null }),
+export const useCharacterStore: UseBoundStore<StoreApi<CharacterStore>> =
+  create<CharacterStore>((set, get) => ({
+    selectedCharacterId: null,
+    selectedItems: [],
 
-  toggleItem: (id: number): void => set((state: CharacterStore): {selectedItems: number[]} => ({
-    selectedItems: state.selectedItems.includes(id)
-      ? state.selectedItems.filter((itemId: number): boolean => itemId !== id)
-      : [...state.selectedItems, id]
-  })),
+    setSelectedCharacterId: (id: number | null): void =>
+      set({ selectedCharacterId: id }),
 
-  unselectAll: (): void => set({ selectedItems: [] }),
+    clearSelectedCharacter: (): void => set({ selectedCharacterId: null }),
 
-  isItemSelected: (id: number): boolean => get().selectedItems.includes(id),
+    toggleItem: (id: number): void =>
+      set((state: CharacterStore) => {
+        const newItems = state.selectedItems.includes(id)
+          ? state.selectedItems.filter(
+            (itemId: number): boolean => itemId !== id
+          )
+          : [...state.selectedItems, id];
 
-  getSelectedCount: (): number => get().selectedItems.length,
-}));
+        syncToCookies(newItems);
+        return { selectedItems: newItems };
+      }),
+
+    unselectAll: (): void => {
+      syncToCookies([]);
+      set({ selectedItems: [] });
+    },
+
+    isItemSelected: (id: number): boolean =>
+      get().selectedItems.includes(id),
+
+    getSelectedCount: (): number => get().selectedItems.length,
+  }));
