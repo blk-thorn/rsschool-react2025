@@ -11,7 +11,8 @@ import SearchBar from '@/components/SearchBar';
 import { useTheme } from '@/context/UseTheme';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCharactersQuery } from '@/hooks/useQueries';
-import { PageVoid, SearchVoid } from '@/types/types';
+import { useCharacterStore } from '@/store/useCharacterStore';
+import { EmptyVoid, PageVoid, SearchVoid } from '@/types/types';
 
 export default function HomeClient(): JSX.Element {
   const searchParams: ReadonlyURLSearchParams = useSearchParams();
@@ -25,6 +26,11 @@ export default function HomeClient(): JSX.Element {
   const [searchValue, setSearchValue] = useLocalStorage('', searchTerm);
   const { data, isFetching, error } = useCharactersQuery(searchTerm, page);
   const [notFound, setNotFound] = useState(false);
+
+  const hydrateFromCookies: EmptyVoid = useCharacterStore((state): EmptyVoid => state.hydrateFromCookies);
+  useEffect((): void => {
+    hydrateFromCookies();
+  }, [hydrateFromCookies]);
 
   useEffect((): void => {
     if (error || (data && data.results?.length === 0)) {

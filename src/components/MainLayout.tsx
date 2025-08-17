@@ -1,7 +1,7 @@
 'use client';
 
 import { useIsFetching } from '@tanstack/react-query';
-import { ReactNode, useState } from 'react';
+import { JSX, ReactNode, useState } from 'react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 
@@ -9,7 +9,7 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
-export default function MainLayout({ children }: MainLayoutProps) {
+export default function MainLayout({ children }: MainLayoutProps): JSX.Element {
   const [shouldThrowError, setShouldThrowError] = useState(false);
   const isFetching: number = useIsFetching();
 

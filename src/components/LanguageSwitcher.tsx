@@ -1,15 +1,16 @@
 'use client';
 
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { ReactElement, useEffect, useState } from 'react';
-
 import { useTheme } from '@/context/UseTheme';
+import { EmptyVoid } from '@/types/types';
 
 export default function LanguageSwitcher(): ReactElement {
-  const router = useRouter();
-  const pathname = usePathname();
-  const locale = useLocale();
+  const router: AppRouterInstance = useRouter();
+  const pathname: string = usePathname();
+  const locale: string = useLocale();
   const { theme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
@@ -22,7 +23,7 @@ export default function LanguageSwitcher(): ReactElement {
     return null;
   }
 
-  const toggleLanguage = () => {
+  const toggleLanguage: EmptyVoid = (): void => {
     const newLocale = locale === 'en' ? 'ru' : 'en';
     router.push(`/${newLocale}${pathname.replace(/^\/(en|ru)/, '')}`);
   };

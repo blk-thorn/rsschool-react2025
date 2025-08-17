@@ -9,7 +9,7 @@ export default function SearchBar({ initialSearchTerm, onFormSubmit }: SearchPro
   const [term, setTerm] = useState(initialSearchTerm);
   const { theme } = useTheme();
 
-  useEffect(() => {
+  useEffect((): void => {
     setTerm(initialSearchTerm);
   }, [initialSearchTerm]);
 

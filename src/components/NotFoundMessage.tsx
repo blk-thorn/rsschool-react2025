@@ -1,13 +1,14 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { JSX } from 'react';
 
 interface Props {
   searchTerm: string;
   show: boolean;
 }
 
-export default function NotFoundMessage({ searchTerm, show }: Props) {
+export default function NotFoundMessage({ searchTerm, show }: Props): JSX.Element {
   const t = useTranslations('NotFoundMessage');
 
   if (!show) return null;

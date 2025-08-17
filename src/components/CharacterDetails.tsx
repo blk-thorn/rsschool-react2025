@@ -1,7 +1,8 @@
 "use client";
 
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import Image from 'next/image';
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, ReadonlyURLSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ReactElement, useEffect } from "react";
 import Loader from "@/components/Loader";
@@ -23,8 +24,8 @@ export default function CharacterDetails({ id }: CharacterDetailsProps): ReactEl
   const statusColorClass: string = useStatusColor(character?.status || "");
   const t = useTranslations('CharacterDetails');
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const searchParams: ReadonlyURLSearchParams = useSearchParams();
+  const router: AppRouterInstance = useRouter();
 
   const handleClose: EmptyVoid = (): void => {
     const newParams = new URLSearchParams(searchParams.toString());

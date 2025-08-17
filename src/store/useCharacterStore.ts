@@ -9,6 +9,7 @@ interface CharacterStore {
   unselectAll: () => void;
   isItemSelected: (id: number) => boolean;
   getSelectedCount: () => number;
+  hydrateFromCookies: () => void;
 }
 
 function syncToCookies(items: number[]): void {
@@ -17,8 +18,14 @@ function syncToCookies(items: number[]): void {
   }
 }
 
+function readFromCookies(): number[] {
+  if (typeof document === "undefined") return [];
+  const match: RegExpMatchArray = document.cookie.match(/(?:^|; )selected-ids=([^;]*)/);
+  return match?.[1] ? match[1].split(",").map(Number) : [];
+}
+
 export const useCharacterStore: UseBoundStore<StoreApi<CharacterStore>> =
-  create<CharacterStore>((set, get) => ({
+  create<CharacterStore>((set, get: () => CharacterStore) => ({
     selectedCharacterId: null,
     selectedItems: [],
 
@@ -28,8 +35,8 @@ export const useCharacterStore: UseBoundStore<StoreApi<CharacterStore>> =
     clearSelectedCharacter: (): void => set({ selectedCharacterId: null }),
 
     toggleItem: (id: number): void =>
-      set((state: CharacterStore) => {
-        const newItems = state.selectedItems.includes(id)
+      set((state: CharacterStore):{selectedItems:number[]} => {
+        const newItems: number[] = state.selectedItems.includes(id)
           ? state.selectedItems.filter(
             (itemId: number): boolean => itemId !== id
           )
@@ -48,4 +55,9 @@ export const useCharacterStore: UseBoundStore<StoreApi<CharacterStore>> =
       get().selectedItems.includes(id),
 
     getSelectedCount: (): number => get().selectedItems.length,
+
+    hydrateFromCookies: (): void => {
+      const items: number[] = readFromCookies();
+      set({ selectedItems: items });
+    },
   }));
