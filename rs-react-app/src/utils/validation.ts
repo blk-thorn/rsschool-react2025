@@ -4,7 +4,7 @@ const passwordRegex = {
   number: /\d/,
   uppercase: /[A-Z]/,
   lowercase: /[a-z]/,
-  special: /[!@#$%^&*(),.?":{}|<>]/,
+  special: /[_!@#$%^&*(),.?":{}|<>]/,
 };
 
 export const formSchema = z
@@ -14,13 +14,9 @@ export const formSchema = z
       .min(1, 'Name is required')
       .regex(/^[A-Z][a-zA-Z]*$/, 'Name must start with an uppercase letter'),
     age: z
-      .string()
-      .refine(
-        (val: string): boolean => !isNaN(Number(val)),
-        'Age must be a number'
-      )
-      .transform((val: string): number => Number(val))
-      .refine((num: number): boolean => num >= 0, 'Age cannot be negative'),
+      .number()
+      .min(0, 'Age cannot be negative')
+      .refine((val: number): boolean => val >= 0, 'Age cannot be negative'),
     email: z.string().email('Invalid email address'),
     password: z
       .string()
@@ -43,23 +39,11 @@ export const formSchema = z
       ),
     confirmPassword: z.string(),
     gender: z.string().min(1, 'Gender is required'),
-    acceptTerms: z.literal(true, {
-      errorMap: (): { message: string } => ({
-        message: 'You must accept Terms & Conditions',
-      }),
+    accept: z.boolean().refine((val: boolean): boolean => val, {
+      message: 'You must accept Terms & Conditions',
     }),
     country: z.string().min(1, 'Country is required'),
-    picture: z
-      .instanceof(File, { message: 'Picture is required' })
-      .refine(
-        (file: File): boolean =>
-          ['image/png', 'image/jpeg'].includes(file.type),
-        'Only PNG or JPEG files are allowed'
-      )
-      .refine(
-        (file: File): boolean => file.size <= 2 * 1024 * 1024,
-        'File size must be less than 2MB'
-      ),
+    picture: z.string().min(1, 'Picture is required'),
   })
   .refine((data): boolean => data.password === data.confirmPassword, {
     message: 'Passwords must match',
