@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal } from './components/Modal';
 import { UncontrolledForm } from './components/UncontrolledForm.tsx';
+import { ControlledForm } from './components/ControlledForm.tsx';
 import { type FormData } from './utils/validation';
 import { useFormsStore } from './store/useFormsStore.ts';
 
@@ -9,12 +10,18 @@ function App() {
   const [modalB, setModalB] = useState(false);
 
   const addUncontrolled = useFormsStore((s) => s.addUncontrolled);
+  const addControlled = useFormsStore((s) => s.addControlled);
   const uncontrolled = useFormsStore((s) => s.uncontrolled);
   const controlled = useFormsStore((s) => s.controlled);
 
   const handleUncontrolledSubmit = (data: FormData) => {
     addUncontrolled(data);
     setModalA(false);
+  };
+
+  const handleControlledSubmit = (data: FormData) => {
+    addControlled(data);
+    setModalB(false);
   };
 
   return (
@@ -46,9 +53,10 @@ function App() {
 
       <Modal isOpen={modalB} onClose={(): void => setModalB(false)}>
         <h2 className="text-lg font-semibold mb-2">Controlled Form</h2>
+        <ControlledForm onSubmit={handleControlledSubmit} />
       </Modal>
 
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 mx-auto">
         {uncontrolled.map((formData, index) => (
           <div key={index} className="p-4 border rounded-lg shadow bg-white">
             <p>

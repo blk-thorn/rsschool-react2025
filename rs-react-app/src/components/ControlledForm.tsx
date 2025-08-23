@@ -1,171 +1,166 @@
-import React, { useRef, useState } from 'react';
-import { formSchema, type FormData } from '../utils/validation.ts';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type FormData, formSchema } from '../utils/validation';
+import { countries } from '../constats/countries.ts';
 
 interface Props {
   onSubmit: (data: FormData) => void;
 }
 
-export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+export function ControlledForm({ onSubmit }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    setValue,
+    watch,
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    mode: 'all',
+  });
 
-    if (!formRef.current) return;
+  const password = watch('password');
+  const confirmPassword = watch('confirmPassword');
 
-    const form: HTMLFormElement = formRef.current;
-    const raw = new FormData(form);
-
-    const data = formSchema.safeParse({
-      name: raw.get('name') as string,
-      age: Number(raw.get('age')),
-      email: raw.get('email') as string,
-      password: raw.get('password') as string,
-      confirmPassword: raw.get('confirmPassword') as string,
-      gender: raw.get('gender') as string,
-      accept: raw.get('accept') === 'on',
-      country: raw.get('country') as string,
-      picture: preview ?? '',
-    });
-
-    const result = formSchema.safeParse(data);
-
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err): void => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    onSubmit(result.data);
-    form.reset();
-    setPreview(null);
-    setErrors({});
-  };
-
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePictureChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const file = e.target.files?.[0];
-    if (file && ['image/png', 'image/jpeg'].includes(file.type)) {
+    if (file) {
       const reader = new FileReader();
-      reader.onloadend = (): void => setPreview(reader.result as string);
+      reader.onloadend = (): void => {
+        const base64 = reader.result as string;
+        setPreview(base64);
+        setValue('picture', base64, { shouldValidate: true });
+      };
       reader.readAsDataURL(file);
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors.picture;
-        return newErrors;
-      });
-    } else {
-      setErrors((prev) => ({
-        ...prev,
-        picture: 'Only PNG or JPEG files are allowed',
-      }));
     }
   };
+
+  const submitForm = (data: FormData): void => {
+    onSubmit(data);
+  };
+
+  const confirmPasswordError =
+    confirmPassword && password && !password.startsWith(confirmPassword)
+      ? 'Passwords do not match'
+      : '';
 
   return (
     <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-4 bg-white p-6 rounded-xl shadow-lg max-w-3xl mx-auto"
+      onSubmit={handleSubmit(submitForm)}
+      className="flex flex-col gap-4 bg-white p-6 rounded-xl shadow-lg w-full mx-auto"
     >
       <label className="flex flex-col">
         Name
         <input
-          name="name"
+          id="name"
+          {...register('name')}
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         {errors.name && (
-          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
         )}
       </label>
 
       <label className="flex flex-col">
         Age
         <input
-          name="age"
+          id="age"
           type="number"
+          {...register('age', { valueAsNumber: true })}
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         {errors.age && (
-          <p className="text-red-500 text-sm mt-1">{errors.age}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>
         )}
       </label>
 
       <label className="flex flex-col">
         Email
         <input
-          name="email"
+          id="email"
           type="email"
+          {...register('email')}
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
         )}
       </label>
 
       <label className="flex flex-col">
         Password
         <input
-          name="password"
+          id="password"
           type="password"
+          {...register('password')}
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
         )}
       </label>
 
       <label className="flex flex-col">
         Confirm Password
         <input
-          name="confirmPassword"
+          id="confirmPassword"
           type="password"
+          {...register('confirmPassword')}
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
-        )}
+        <p className="text-red-500 text-sm mt-1">
+          {confirmPasswordError || errors.confirmPassword?.message}
+        </p>
       </label>
 
       <fieldset className="flex flex-col gap-2">
         <legend className="font-medium">Gender</legend>
         <div className="flex gap-4">
           <label className="flex items-center gap-1">
-            <input type="radio" name="gender" value="male" />
+            <input type="radio" value="male" {...register('gender')} />
             Male
           </label>
           <label className="flex items-center gap-1">
-            <input type="radio" name="gender" value="female" />
+            <input type="radio" value="female" {...register('gender')} />
             Female
           </label>
         </div>
         {errors.gender && (
-          <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>
         )}
       </fieldset>
 
       <label className="flex flex-col">
         Country
         <input
-          name="country"
+          id="country"
+          list="countries"
+          {...register('country')}
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          autoComplete="off"
         />
+        <datalist id="countries">
+          {countries.map((country) => (
+            <option key={country} value={country} />
+          ))}
+        </datalist>
         {errors.country && (
-          <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>
         )}
       </label>
 
       <label className="flex items-center gap-2">
-        <input type="checkbox" name="accept" />
+        <input type="checkbox" {...register('accept')} />
         Accept Terms
       </label>
-      {errors.accept && <p className="text-red-500 text-sm">{errors.accept}</p>}
+      {errors.accept && (
+        <p className="text-red-500 text-sm">{errors.accept.message}</p>
+      )}
 
       <label className="flex flex-col">
         Picture
@@ -185,7 +180,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           id="fileInput"
           type="file"
           accept="image/png,image/jpeg"
-          onChange={handleFile}
+          onChange={handlePictureChange}
           className="hidden"
         />
         {preview && (
@@ -196,16 +191,21 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           />
         )}
         {errors.picture && (
-          <p className="text-red-500 text-sm mt-1">{errors.picture}</p>
+          <p className="text-red-500 text-sm mt-1">{errors.picture.message}</p>
         )}
       </label>
 
       <button
         type="submit"
-        className="px-4 py-2 rounded text-white font-semibold transition-colors duration-200 bg-green-500 hover:bg-green-600"
+        disabled={!isValid}
+        className={`px-4 py-2 rounded text-white font-semibold transition-colors duration-200 ${
+          isValid
+            ? 'bg-green-500 hover:bg-green-600'
+            : 'bg-gray-400 cursor-not-allowed'
+        }`}
       >
         Submit
       </button>
     </form>
   );
-};
+}

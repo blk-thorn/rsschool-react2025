@@ -13,6 +13,7 @@
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hook-form": "^7.62.0",
     "vitest": "^3.2.4",
     "zustand": "^5.0.8"
   },
