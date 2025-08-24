@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { countries } from '../constats/countries';
 import {
-  handleFileUpload,
   extractFormData,
   mapZodErrors,
   validateFormData,
@@ -9,6 +8,8 @@ import {
 } from '../utils/formUtils';
 import { type FormData } from '../utils/validation';
 import { useActionState } from 'react';
+import { handleFileUpload } from '../utils/handleFileUpload.ts';
+import { checkPasswordStrength } from '../utils/checkPasswordStrength.ts';
 
 interface Props {
   onSubmit: (data: FormData) => void;
@@ -18,12 +19,17 @@ interface Props {
 export const UncontrolledForm: React.FC<Props> = ({ onSubmit, onClose }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState<string | null>(null);
 
   const [errors, formAction, pending] = useActionState(async () => {
     if (!formRef.current) return {};
 
     const raw = new FormData(formRef.current);
     const data = extractFormData(raw, preview);
+
+    if (data.password) {
+      setPasswordStrength(checkPasswordStrength(data.password));
+    }
 
     const result = validateFormData(data);
 
@@ -80,6 +86,22 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit, onClose }) => {
           <p className="text-red-500 text-sm">{errors.password}</p>
         )}
       </label>
+      {passwordStrength && (
+        <p className="text-sm mt-1">
+          Password strength:{' '}
+          <span
+            className={
+              passwordStrength === 'Weak'
+                ? 'text-red-500'
+                : passwordStrength === 'Medium'
+                  ? 'text-yellow-500'
+                  : 'text-green-500'
+            }
+          >
+            {passwordStrength}
+          </span>
+        </p>
+      )}
       <label className="flex flex-col">
         Confirm Password
         <input

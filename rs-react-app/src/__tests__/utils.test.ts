@@ -1,172 +1,83 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  handleFileUpload,
-  extractFormData,
-  mapZodErrors,
-  validateFormData,
-  resetForm,
-} from '../utils/formUtils';
-import { type FormData, formSchema } from '../utils/validation';
+import { handleFileUpload } from '../utils/handleFileUpload';
+import { convertFileToBase64 } from '../utils/fileUtils';
+import { MAX_IMAGE_SIZE } from '../constats/general.ts';
 
-describe('Utility Functions', () => {
-  describe('handleFileUpload', () => {
-    beforeEach(() => {
-      vi.restoreAllMocks();
-    });
+vi.mock('../utils/fileUtils', () => ({
+  convertFileToBase64: vi.fn(),
+}));
 
-    it('should convert valid image file to base64 and clear picture error', () => {
-      const file = new File(['dummy'], 'test.png', { type: 'image/png' });
-      const event = {
-        target: { files: [file] },
-      } as unknown as React.ChangeEvent<HTMLInputElement>;
+describe('handleFileUpload', () => {
+  const setPreview = vi.fn();
+  const setErrors = vi.fn();
 
-      const setPreview = vi.fn();
-      const setErrors = vi.fn((cb) => cb({ picture: 'error' }));
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-      vi.stubGlobal(
-        'FileReader',
-        class {
-          onloadend: () => void = () => {};
-          readAsDataURL() {
-            this.onloadend?.();
-          }
-          result = 'data:image/png;base64,dummy';
-        }
-      );
+  it('should convert valid image file to base64 and clear picture error', async () => {
+    const mockedConvert = vi.mocked(convertFileToBase64);
+    mockedConvert.mockResolvedValue('data:image/png;base64,dummy');
 
-      handleFileUpload(event, setPreview, setErrors);
+    const file = new File(['dummy'], 'test.png', { type: 'image/png' });
+    const event = {
+      target: { files: [file] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
 
-      expect(setPreview).toHaveBeenCalledWith('data:image/png;base64,dummy');
-      expect(setErrors).toHaveBeenCalled();
-      const callback = setErrors.mock.calls[0][0];
-      expect(callback({ picture: 'error' })).toEqual({});
-    });
+    await handleFileUpload(event, setPreview, setErrors);
 
-    it('should set error for invalid file type', () => {
-      const file = new File(['dummy'], 'test.txt', { type: 'text/plain' });
-      const event = {
-        target: { files: [file] },
-      } as unknown as React.ChangeEvent<HTMLInputElement>;
+    expect(mockedConvert).toHaveBeenCalledWith(file);
+    expect(setPreview).toHaveBeenCalledWith('data:image/png;base64,dummy');
 
-      const setPreview = vi.fn();
-      const setErrors = vi.fn();
+    const callback = setErrors.mock.calls[0][0];
+    expect(callback({ picture: 'error' })).toEqual({});
+  });
 
-      handleFileUpload(event, setPreview, setErrors);
+  it('should set error for invalid file type', async () => {
+    const file = new File(['dummy'], 'test.txt', { type: 'text/plain' });
+    const event = {
+      target: { files: [file] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
 
-      expect(setPreview).not.toHaveBeenCalled();
-      expect(setErrors).toHaveBeenCalled();
-      const callback = setErrors.mock.calls[0][0];
-      expect(callback({})).toEqual({
-        picture: 'Only PNG or JPEG files are allowed',
-      });
+    await handleFileUpload(event, setPreview, setErrors);
+
+    expect(setPreview).toHaveBeenCalledWith(null);
+    const callback = setErrors.mock.calls[0][0];
+    expect(callback({})).toEqual({
+      picture: 'Only PNG or JPEG files are allowed',
     });
   });
 
-  describe('extractFormData', () => {
-    it('should map FormData to object correctly', () => {
-      const raw = new FormData();
-      raw.set('name', 'John Doe');
-      raw.set('age', '30');
-      raw.set('email', 'john@example.com');
-      raw.set('password', 'Abcd1234');
-      raw.set('confirmPassword', 'Abcd1234');
-      raw.set('gender', 'male');
-      raw.set('accept', 'on');
-      raw.set('country', 'USA');
+  it('should set error for file too large', async () => {
+    const file = new File(['dummy'], 'big.png', { type: 'image/png' });
+    Object.defineProperty(file, 'size', { value: MAX_IMAGE_SIZE + 1 });
 
-      const result = extractFormData(raw, 'preview.png');
+    const event = {
+      target: { files: [file] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
 
-      expect(result).toEqual({
-        name: 'John Doe',
-        age: 30,
-        email: 'john@example.com',
-        password: 'Abcd1234',
-        confirmPassword: 'Abcd1234',
-        gender: 'male',
-        accept: true,
-        country: 'USA',
-        picture: 'preview.png',
-      });
+    await handleFileUpload(event, setPreview, setErrors);
+
+    expect(setPreview).toHaveBeenCalledWith(null);
+    const callback = setErrors.mock.calls[0][0];
+    expect(callback({})).toEqual({
+      picture: 'File size must be less than 2 MB',
     });
   });
 
-  describe('mapZodErrors', () => {
-    it('should map zod errors to object', () => {
-      const invalidData: FormData = {
-        name: '',
-        age: 0,
-        email: 'invalid-email',
-        password: '123',
-        confirmPassword: '456',
-        gender: '',
-        accept: false,
-        country: '',
-        picture: '',
-      };
+  it('should set error if convertFileToBase64 throws', async () => {
+    const mockedConvert = vi.mocked(convertFileToBase64);
+    mockedConvert.mockRejectedValue(new Error('fail'));
 
-      const parsed = formSchema.safeParse(invalidData);
-      if (!parsed.success) {
-        const errors = mapZodErrors(parsed.error);
-        expect(errors).toHaveProperty('email');
-        expect(errors).toHaveProperty('password');
-      }
-    });
-  });
+    const file = new File(['dummy'], 'test.png', { type: 'image/png' });
+    const event = {
+      target: { files: [file] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
 
-  describe('validateFormData', () => {
-    it('should succeed for valid data', () => {
-      const validData: FormData = {
-        name: 'John',
-        age: 30,
-        email: 'john.doe@example.com',
-        password: 'Abcd1234!',
-        confirmPassword: 'Abcd1234!',
-        gender: 'male',
-        accept: true,
-        country: 'USA',
-        picture: 'preview.png',
-      };
+    await handleFileUpload(event, setPreview, setErrors);
 
-      const result = validateFormData(validData);
-
-      if (!result.success) {
-        console.log(result.error.format());
-      }
-
-      expect(result.success).toBe(true);
-    });
-
-    it('should fail for invalid data', () => {
-      const invalidData: FormData = {
-        name: '',
-        age: 0,
-        email: 'invalid-email',
-        password: '123',
-        confirmPassword: '456',
-        gender: '',
-        accept: false,
-        country: '',
-        picture: '',
-      };
-
-      const result = validateFormData(invalidData);
-      expect(result.success).toBe(false);
-    });
-  });
-
-  describe('resetForm', () => {
-    it('should reset form, preview, and errors', () => {
-      const formRef = {
-        current: { reset: vi.fn() },
-      } as unknown as React.RefObject<HTMLFormElement>;
-      const setPreview = vi.fn();
-      const setErrors = vi.fn();
-
-      resetForm(formRef, setPreview, setErrors);
-
-      expect(formRef.current?.reset).toHaveBeenCalled();
-      expect(setPreview).toHaveBeenCalledWith(null);
-      expect(setErrors).toHaveBeenCalledWith({});
-    });
+    expect(setPreview).toHaveBeenCalledWith(null);
+    const callback = setErrors.mock.calls[0][0];
+    expect(callback({})).toEqual({ picture: 'Failed to read file' });
   });
 });

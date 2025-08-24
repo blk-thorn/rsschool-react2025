@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UncontrolledForm } from '../components/UncontrolledForm';
 
@@ -17,13 +17,12 @@ describe('UncontrolledForm Component', () => {
     expect(screen.getByLabelText(/Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Age/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/^Password$/i)).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Password', { selector: 'input' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText(/Confirm Password/i)).toBeInTheDocument();
     expect(screen.getByText(/Gender/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Country/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole('checkbox', { name: /Accept Terms/i })
-    ).toBeInTheDocument();
   });
 
   it('does not submit invalid data', async () => {

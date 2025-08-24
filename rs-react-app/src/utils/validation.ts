@@ -13,30 +13,9 @@ export const formSchema = z
       .string()
       .min(1, 'Name is required')
       .regex(/^[A-Z][a-zA-Z]*$/, 'Name must start with an uppercase letter'),
-    age: z
-      .number()
-      .min(0, 'Age cannot be negative')
-      .refine((val: number): boolean => val >= 0, 'Age cannot be negative'),
+    age: z.number().min(0, 'Age cannot be negative'),
     email: z.string().email('Invalid email address'),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters long')
-      .refine(
-        (val: string): boolean => passwordRegex.number.test(val),
-        'Must contain a number'
-      )
-      .refine(
-        (val: string): boolean => passwordRegex.uppercase.test(val),
-        'Must contain an uppercase letter'
-      )
-      .refine(
-        (val: string): boolean => passwordRegex.lowercase.test(val),
-        'Must contain a lowercase letter'
-      )
-      .refine(
-        (val: string): boolean => passwordRegex.special.test(val),
-        'Must contain a special character'
-      ),
+    password: z.string().min(8, 'Password must be at least 8 characters long'),
     confirmPassword: z.string(),
     gender: z.string().min(1, 'Gender is required'),
     accept: z.boolean().refine((val: boolean): boolean => val, {
@@ -45,9 +24,36 @@ export const formSchema = z
     country: z.string().min(1, 'Country is required'),
     picture: z.string().min(1, 'Picture is required'),
   })
-  .refine((data): boolean => data.password === data.confirmPassword, {
-    message: 'Passwords must match',
-    path: ['confirmPassword'],
+  .superRefine((data, ctx) => {
+    const errors: string[] = [];
+    if (!passwordRegex.special.test(data.password))
+      errors.push('Must contain a special character');
+    if (!passwordRegex.number.test(data.password))
+      errors.push('Must contain a number');
+    if (!passwordRegex.uppercase.test(data.password))
+      errors.push('Must contain an uppercase letter');
+    if (!passwordRegex.lowercase.test(data.password))
+      errors.push('Must contain a lowercase letter');
+    if (data.password.length < 8)
+      errors.push('Password must be at least 8 characters long');
+
+    if (errors.length > 0) {
+      errors.forEach((err) =>
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: err,
+          path: ['password'],
+        })
+      );
+    }
+
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Passwords must match',
+        path: ['confirmPassword'],
+      });
+    }
   });
 
 export type FormData = z.infer<typeof formSchema>;

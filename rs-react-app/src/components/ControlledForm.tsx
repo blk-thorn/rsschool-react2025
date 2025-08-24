@@ -1,33 +1,28 @@
 import React, { useState } from 'react';
 import { type FormData } from '../utils/validation';
 import { countries } from '../constats/countries';
-import {
-  handleFileUpload,
-  mapZodErrors,
-  validateFormData,
-} from '../utils/formUtils';
+import { mapZodErrors, validateFormData } from '../utils/formUtils';
 import { formDefaults } from '../utils/formDefaults.ts';
 import { useActionState } from 'react';
+import { handleFileUpload } from '../utils/handleFileUpload.ts';
+import { checkPasswordStrength } from '../utils/checkPasswordStrength.ts';
 
 interface Props {
   onSubmit: (data: FormData) => void;
   onClose: () => void;
 }
 
-export const ControlledForm: React.FC<Props> = ({
-  onSubmit,
-  onClose,
-}: Props) => {
+export const ControlledForm: React.FC<Props> = ({ onSubmit, onClose }) => {
   const [formData, setFormData] = useState<FormData>(formDefaults);
   const [preview, setPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const [passwordStrength, setPasswordStrength] = useState<
+    'Weak' | 'Medium' | 'Strong' | null
+  >(null);
 
   const [, formAction, pending] = useActionState(
     async (_prevErrors: Record<string, string>, formData: FormData) => {
-      const result = validateFormData({
-        ...formData,
-        picture: preview ?? '',
-      });
+      const result = validateFormData({ ...formData, picture: preview ?? '' });
 
       if (!result.success) {
         const fieldErrors: Record<string, string> = mapZodErrors(result.error);
@@ -41,6 +36,7 @@ export const ControlledForm: React.FC<Props> = ({
       setFormData(formDefaults);
       setPreview(null);
       setErrors({});
+      setPasswordStrength('Weak');
 
       return {};
     },
@@ -53,16 +49,14 @@ export const ControlledForm: React.FC<Props> = ({
     const { name, type, value, checked } = e.target as HTMLInputElement;
 
     let newValue: string | number | boolean = value;
-    if (type === 'checkbox') {
-      newValue = checked;
-    } else if (type === 'number') {
-      newValue = value === '' ? '' : Number(value);
-    }
+    if (type === 'checkbox') newValue = checked;
+    else if (type === 'number') newValue = value === '' ? '' : Number(value);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
+
+    if (name === 'password' && typeof newValue === 'string') {
+      setPasswordStrength(checkPasswordStrength(newValue));
+    }
 
     const fieldResult = validateFormData({
       ...formData,
@@ -85,11 +79,7 @@ export const ControlledForm: React.FC<Props> = ({
       reader.onloadend = () => {
         const fileData = reader.result as string;
         setPreview(fileData);
-        setFormData((prev) => ({
-          ...prev,
-          picture: fileData,
-        }));
-
+        setFormData((prev) => ({ ...prev, picture: fileData }));
         setErrors((prev) => ({ ...prev, picture: undefined }));
       };
       reader.readAsDataURL(e.target.files[0]);
@@ -150,6 +140,22 @@ export const ControlledForm: React.FC<Props> = ({
         />
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password}</p>
+        )}
+        {formData.password && (
+          <p className="text-sm mt-1">
+            Password strength:{' '}
+            <span
+              className={
+                passwordStrength === 'Weak'
+                  ? 'text-red-500'
+                  : passwordStrength === 'Medium'
+                    ? 'text-yellow-500'
+                    : 'text-green-500'
+              }
+            >
+              {passwordStrength}
+            </span>
+          </p>
         )}
       </label>
 

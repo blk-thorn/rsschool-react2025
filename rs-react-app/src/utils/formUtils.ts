@@ -1,32 +1,6 @@
 import { formSchema, type FormData } from './validation';
 import type { ZodError, ZodIssue } from 'zod';
 
-export const handleFileUpload = (
-  e: React.ChangeEvent<HTMLInputElement>,
-  setPreview: (value: string | null) => void,
-  setErrors: (
-    cb: (prev: Record<string, string>) => Record<string, string>
-  ) => void
-): void => {
-  const file = e.target.files?.[0];
-  if (file && ['image/png', 'image/jpeg'].includes(file.type)) {
-    const reader = new FileReader();
-    reader.onloadend = (): void => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
-
-    setErrors((prev) => {
-      const copy = { ...prev };
-      delete copy.picture;
-      return copy;
-    });
-  } else {
-    setErrors((prev) => ({
-      ...prev,
-      picture: 'Only PNG or JPEG files are allowed',
-    }));
-  }
-};
-
 export const extractFormData = (
   raw: globalThis.FormData,
   preview: string | null
@@ -51,8 +25,7 @@ export const mapZodErrors = (
     return acc;
   }, {});
 
-export const validateFormData = (data: FormData) =>
-  formSchema.safeParse(data);
+export const validateFormData = (data: FormData) => formSchema.safeParse(data);
 
 export const resetForm = (
   formRef: React.RefObject<HTMLFormElement | null>,
