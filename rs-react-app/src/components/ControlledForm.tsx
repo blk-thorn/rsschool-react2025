@@ -243,6 +243,7 @@ export const ControlledForm: React.FC<Props> = ({
         </div>
         <input
           id="controlledFile"
+          data-testid="fileInput"
           type="file"
           accept="image/png,image/jpeg"
           onChange={handleFile}

@@ -142,6 +142,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit, onClose }) => {
         </div>
         <input
           id="fileInput"
+          data-testid="fileInput"
           type="file"
           accept="image/png,image/jpeg"
           onChange={(e) => handleFileUpload(e, setPreview, () => {})}

@@ -44,7 +44,11 @@ export const Modal: React.FC<ModalProps> = ({
 
   return ReactDOM.createPortal(
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose} />
+      <div
+        data-testid="modal-overlay"
+        className="fixed inset-0 bg-black bg-opacity-50"
+        onClick={onClose}
+      />
       <div
         ref={modalContentRef}
         tabIndex={-1}
