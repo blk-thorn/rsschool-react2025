@@ -1,13 +1,24 @@
-import { ReactNode } from 'react';
-import { NotFoundMessageProps } from '@/types/types.ts';
+'use client';
 
-export default function NotFoundMessage({searchTerm, show}: NotFoundMessageProps): ReactNode | null {
-    if (!show) return null;
-    return (
-      <div className="col-span-full text-center py-10">
-        <p className="text-gray-500 text-lg">
-          No characters found for "{searchTerm}"
-        </p>
-      </div>
-    )
-};
+import { useTranslations } from 'next-intl';
+import { JSX } from 'react';
+
+interface Props {
+  searchTerm: string;
+  show: boolean;
+}
+
+export default function NotFoundMessage({ searchTerm, show }: Props): JSX.Element {
+  const t = useTranslations('NotFoundMessage');
+
+  if (!show) return null;
+
+  return (
+    <div className="text-center mt-8">
+      <h2 className="text-2xl font-bold">{t('title')}</h2>
+      <p className="mt-2 text-gray-500">
+        {t('description', { searchTerm })}
+      </p>
+    </div>
+  );
+}

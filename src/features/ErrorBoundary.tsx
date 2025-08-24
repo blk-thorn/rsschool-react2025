@@ -1,9 +1,13 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { useTheme } from '@/context/ThemeContext.tsx';
-import { EmptyVoid, ErrorBoundaryProps, ErrorBoundaryState, Theme } from '@/types/types.ts';
+import { useTheme } from '@/context/UseTheme';
+import { EmptyVoid, ErrorBoundaryProps, ErrorBoundaryState, Theme } from '@/types/types';
 
 interface ThemedErrorBoundaryProps extends ErrorBoundaryProps {
   theme: Theme;
+  translate: ReturnType<typeof useTranslations<'ErrorBoundary'>>;
 }
 
 class ErrorBoundaryBase extends Component<ThemedErrorBoundaryProps, ErrorBoundaryState> {
@@ -36,17 +40,17 @@ class ErrorBoundaryBase extends Component<ThemedErrorBoundaryProps, ErrorBoundar
   };
 
   render(): ReactNode {
-    if (this.state.hasError) {
-      const { theme } = this.props;
+    const { theme, translate } = this.props;
 
+    if (this.state.hasError) {
       return (
         <main>
           <div className="animate-bounce">
             <h1 className={`mt-40 p-4 text-4xl rounded-lg ${theme === 'dark' ? 'text-red-400' : 'text-sky-600'}`}>
-              Something went wrong...
+              {translate('title')}
             </h1>
             <p className={`mb-10 text-3xl rounded-lg ${theme === 'dark' ? 'text-red-400' : 'text-sky-600'}`}>
-              Please reload the page.
+              {translate('description')}
             </p>
           </div>
           <button
@@ -58,7 +62,7 @@ class ErrorBoundaryBase extends Component<ThemedErrorBoundaryProps, ErrorBoundar
             }`}
             onClick={this.handleReload}
           >
-            Start Over
+            {translate('reload')}
           </button>
         </main>
       );
@@ -70,5 +74,6 @@ class ErrorBoundaryBase extends Component<ThemedErrorBoundaryProps, ErrorBoundar
 
 export default function ErrorBoundary(props: ErrorBoundaryProps): ReactNode {
   const { theme } = useTheme();
-  return <ErrorBoundaryBase {...props} theme={theme} />;
+  const translate = useTranslations('ErrorBoundary');
+  return <ErrorBoundaryBase {...props} theme={theme} translate={translate} />;
 }

@@ -1,70 +1,61 @@
-import { ReactElement, useRef } from 'react';
-import { useTheme } from '@/context/ThemeContext.tsx';
-import { useCharacterStore } from '@/store/useCharacterStore.ts';
-import { Character, DownloadFlyoutProps } from '@/types/types.ts';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
+import { cookies } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
+import { JSX } from 'react';
+import UnselectAllButton from './UnselectAllButton';
+import { Character } from '@/types/types';
+import { getCharactersByIds } from '@/utils/api';
 
-export default function DownloadFlyout({ characters }: DownloadFlyoutProps): ReactElement | null {
-  const { selectedItems, unselectAll } = useCharacterStore();
-  const downloadLinkRef = useRef<HTMLAnchorElement>(null);
-  const { theme } = useTheme();
+async function generateCsv(ids: number[]): Promise<string> {
+  const characters: Character[] = await getCharactersByIds(ids);
 
-  const handleDownload: () => void = (): void => {
-    if (!downloadLinkRef.current) return;
+  const headers: string[] = ['Name', 'Status', 'Species', 'Gender', 'Location', 'Details URL'];
+  const rows: string[][] = characters.map((char: Character): string[] => [
+    `"${char.name}"`,
+    `"${char.status}"`,
+    `"${char.species}"`,
+    `"${char.gender}"`,
+    `"${char.location.name}"`,
+    `"${process.env.NEXT_PUBLIC_APP_URL}/?details=${char.id}"`,
+  ]);
 
-    const headers: string[] = ['Name', 'Status', 'Species', 'Gender', 'Location', 'Details URL'];
-    const rows: string[][] = characters
-      .filter((char: Character): boolean => selectedItems.includes(char.id))
-      .map((char: Character): string[] => [
-        `"${char.name}"`,
-        `"${char.status}"`,
-        `"${char.species}"`,
-        `"${char.gender}"`,
-        `"${char.location.name}"`,
-        `"${window.location.origin}/?details=${char.id}"`
-      ]);
+  return [headers.join(','), ...rows.map((r: string[]): string => r.join(','))].join('\n');
+}
 
-    const csvContent: string = [headers.join(','), ...rows.map((row: string[]): string => row.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url: string = URL.createObjectURL(blob);
+export default async function DownloadFlyout(): Promise<JSX.Element | null> {
+  const cookieStore: ReadonlyRequestCookies = await cookies();
+  const locale: string = cookieStore.get('NEXT_LOCALE')?.value || 'en';
+  const t = await getTranslations({ locale, namespace: 'DownloadFlyout' });
 
-    downloadLinkRef.current.href = url;
-    downloadLinkRef.current.download = `${selectedItems.length}_items.csv`;
-    downloadLinkRef.current.click();
+  const selectedIdsCookie: string = cookieStore.get('selected-ids')?.value ?? '';
+  const ids: number[] = selectedIdsCookie ? selectedIdsCookie.split(',').map((id: string): number => Number(id)) : [];
 
-    setTimeout((): void => URL.revokeObjectURL(url), 100);
-  };
+  if (ids.length === 0) return null;
 
-  if (selectedItems.length === 0) return null;
+  const csvContent: string = await generateCsv(ids);
+  const base64: string = Buffer.from(csvContent, 'utf-8').toString('base64');
+
+  console.log('CSV Content:', csvContent);
+  console.log('Base64:', base64);
+
 
   return (
-    <>
-      <a
-        ref={downloadLinkRef}
-        className="hidden"
-        aria-hidden="true"
-      />
-
-      <div className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 border rounded-lg shadow-lg p-4 z-50 ${theme === 'dark' ? 'bg-slate-800 border-slate-400' : 'bg-slate-500  border-slate-600'}`}>
-        <div className="flex items-center justify-between gap-4">
-          <div className={`${theme === 'dark' ? 'text-slate-300' : 'text-white'}`}>
-            {selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'} selected
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={unselectAll}
-              className={`px-4 py-2 rounded-md transition-colors cursor-pointer ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 text-slate-300' : 'bg-sky-700 hover:bg-sky-800 text-white'}`}
-            >
-              Unselect all
-            </button>
-            <button
-              onClick={handleDownload}
-              className={`px-4 py-2 rounded-md transition-colors cursor-pointer ${theme === 'dark' ? 'bg-slate-600 hover:bg-slate-700 text-slate-300' : 'bg-sky-700 hover:bg-sky-800 text-white'}`}
-            >
-              Download
-            </button>
-          </div>
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 border rounded-lg shadow-lg p-4 z-50 bg-slate-800 border-slate-400">
+      <div className="flex items-center justify-between gap-4">
+        <div className="text-slate-300">
+          {t('selected', { count: ids.length })}
+        </div>
+        <div className="flex gap-2">
+          <UnselectAllButton />
+          <a
+            href={`data:text/csv;base64,${base64}`}
+            download={`${ids.length}_items.csv`}
+            className="px-4 py-2 rounded-md transition-colors cursor-pointer dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-slate-300 bg-sky-700 hover:bg-sky-800 text-white"
+          >
+            {t('download')}
+          </a>
         </div>
       </div>
-    </>
-  )
-};
+    </div>
+  );
+}

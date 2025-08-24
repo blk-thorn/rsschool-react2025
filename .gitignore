@@ -148,3 +148,5 @@ test-results.xml
 
 # macOS
 .DS_Store
+# Local Netlify folder
+.netlify

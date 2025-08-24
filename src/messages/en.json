@@ -1,0 +1,86 @@
+{
+  "Home": {
+    "searchPlaceholder": "Search characters...",
+    "notFound": "No characters found",
+    "loading": "Loading..."
+  },
+  "Header": {
+    "title": "The Rick and Morty API",
+    "about": "About",
+    "themeToggle": "Switch theme"
+  },
+  "NotFoundMessage": {
+    "title": "No results",
+    "description": "Nothing was found for your request: {searchTerm}"
+  },
+  "Loader": {
+    "loading": "Loading..."
+  },
+  "Card": {
+    "status": "Status",
+    "gender": "Gender",
+    "species": "Species",
+    "location": "Location"
+  },
+  "CharacterDetails": {
+    "error": "Failed to load character",
+    "title": "Character Details",
+    "name": "Name",
+    "status": "Status",
+    "species": "Species",
+    "gender": "Gender",
+    "origin": "Origin",
+    "location": "Location",
+    "close": "Close"
+  },
+  "CharacterList": {
+    "title": "Characters",
+    "prevPage": "Prev",
+    "nextPage": "Next",
+    "page": "Page {current} of {total}"
+  },
+  "CharacterPage": {
+    "invalidId": "Invalid character ID"
+  },
+  "About": {
+    "authorTitle": "Author Information:",
+    "authorDescription1": "This app was created as part of the RS School React course to demonstrate the use of React with TypeScript, React Router, and the Rick and Morty API.",
+    "authorDescription2": "It allows you to browse characters from the Rick and Morty universe, search for specific characters, and paginate through the results.",
+    "courseTitle": "Course Information:",
+    "backHome": "Back Home"
+  },
+  "SearchBar": {
+    "label": "Search",
+    "placeholder": "Search a character...",
+    "button": "Search"
+  },
+  "RefreshButton": {
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "noInternet": "No internet connection",
+    "failed": "Refresh failed"
+  },
+  "Pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "page": "Page {current} of {total}"
+  },
+  "ErrorButton": {
+    "label": "Error Button"
+  },
+  "ErrorBoundary": {
+    "title": "Something went wrong...",
+    "description": "Please reload the page.",
+    "reload": "Start Over"
+  },
+  "DownloadFlyout": {
+    "selected": "{count, plural, one {# item selected} other {# items selected}}",
+    "download": "Download",
+    "unselect": "Unselect all"
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "Oops! The page you’re looking for has been moved to a parallel universe. We’re working on bringing it back!",
+    "backHome": "Go Back Home"
+  }
+}

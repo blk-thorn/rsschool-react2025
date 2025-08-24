@@ -1,0 +1,87 @@
+{
+  "Home": {
+    "searchPlaceholder": "Поиск персонажей...",
+    "notFound": "Персонажи не найдены",
+    "loading": "Загрузка..."
+  },
+  "Header": {
+    "title": "Рик и Морти АПИ",
+    "about": "О проекте",
+    "themeToggle": "Сменить тему"
+  },
+  "NotFoundMessage": {
+    "title": "Ничего не найдено",
+    "description": "По вашему запросу ничего не найдено: {searchTerm}"
+  },
+  "Loader": {
+    "loading": "Загрузка..."
+  },
+  "Card": {
+    "status": "Статус",
+    "gender": "Пол",
+    "species": "Вид",
+    "location": "Локация"
+  },
+  "CharacterDetails": {
+    "error": "Ошибка загрузки персонажа",
+    "title": "Детали",
+    "name": "Имя",
+    "status": "Статус",
+    "species": "Вид",
+    "gender": "Пол",
+    "origin": "Происхождение",
+    "location": "Локация",
+    "episodes": "Эпизоды",
+    "close": "Закрыть"
+  },
+  "CharacterList": {
+    "title": "Персонажи",
+    "prevPage": "Предыдущая",
+    "nextPage": "Следующая",
+    "page": "Страница {current} из {total}"
+  },
+  "CharacterPage": {
+    "invalidId": "Некорректный ID персонажа"
+  },
+  "About": {
+    "authorTitle": "Информация об авторе:",
+    "authorDescription1": "Это приложение создано в рамках курса RS School React, чтобы продемонстрировать навыки использования React с TypeScript, React Router и Rick and Morty API.",
+    "authorDescription2": "Здесь можно просматривать персонажей из вселенной Рика и Морти, искать кого-то конкретного и переключаться между страницами.",
+    "courseTitle": "Информация о курсе:",
+    "backHome": "На главную"
+  },
+  "SearchBar": {
+    "label": "Поиск",
+    "placeholder": "Найти персонажа...",
+    "button": "Поиск"
+  },
+  "RefreshButton": {
+    "refresh": "Обновить",
+    "refreshing": "Обновление...",
+    "noInternet": "Подключение к Интернету отсутствует",
+    "failed": "Ошибка обновления"
+  },
+  "Pagination": {
+    "prev": "Назад",
+    "next": "Вперед",
+    "page": "Страница {current} из {total}"
+  },
+  "ErrorButton": {
+    "label": "Кнопка ошибки"
+  },
+  "ErrorBoundary": {
+    "title": "Что-то пошло не так...",
+    "description": "Пожалуйста, перезагрузите страницу.",
+    "reload": "Начать заново"
+  },
+  "DownloadFlyout": {
+    "selected": "{count, plural, one {Выбран # элемент} few {Выбрано # элемента} many {Выбрано # элементов} other {Выбрано # элементов}}",
+    "download": "Скачать",
+    "unselect": "Снять выделение"
+  },
+  "NotFound": {
+    "title": "Страница не найдена",
+    "description": "Страница, которую вы ищете, была перемещена в параллельную вселенную. Мы работаем над ее возвращением!",
+    "backHome": "Вернуться на главную"
+  }
+}

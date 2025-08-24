@@ -1,11 +1,13 @@
-import { useTheme } from '@/context/ThemeContext.tsx';
+import { JSX } from 'react';
+
+import { useTheme } from '@/context/UseTheme';
 
 interface ErrorMessageProps {
   message: string;
   onDismiss: () => void;
 }
 
-export default function ErrorMessage({ message, onDismiss }: ErrorMessageProps) {
+export default function ErrorMessage({ message, onDismiss }: ErrorMessageProps): JSX.Element {
   const { theme } = useTheme();
 
   return (

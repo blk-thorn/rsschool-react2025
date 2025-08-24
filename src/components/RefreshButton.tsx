@@ -1,18 +1,23 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { ReactNode, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { JSX, useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 import RefreshLoader from './RefreshLoader';
-import { useTheme } from '@/context/ThemeContext.tsx';
+import { useTheme } from '@/context/UseTheme';
+import { useCharacterStore } from '@/store/useCharacterStore';
 
-export default function RefreshButton(): ReactNode {
+export default function RefreshButton(): JSX.Element {
   const { theme } = useTheme();
   const queryClient: QueryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations('RefreshButton');
+
+  const selectedItems: number[] = useCharacterStore((state): number[] => state.selectedItems);
 
   const handleRefreshClick: () => Promise<void> = async (): Promise<void> => {
     if (!navigator.onLine) {
-      setError('No internet connection');
+      setError(t('noInternet'));
       return;
     }
 
@@ -24,8 +29,15 @@ export default function RefreshButton(): ReactNode {
         queryKey: ['characters'],
         refetchType: 'all',
       });
+
+      for (const id of selectedItems) {
+        await queryClient.invalidateQueries({
+          queryKey: ['character', id],
+          refetchType: 'all',
+        });
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Refresh failed');
+      setError(err instanceof Error ? err.message : t('failed'));
     } finally {
       setIsRefreshing(false);
     }
@@ -43,7 +55,7 @@ export default function RefreshButton(): ReactNode {
         } ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {isRefreshing ? (
-          <RefreshLoader text="Refreshing..." />
+          <RefreshLoader text={t('refreshing')} />
         ) : (
           <>
             <svg
@@ -62,7 +74,7 @@ export default function RefreshButton(): ReactNode {
                 d="M16 1v5h-5M2 17v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"
               />
             </svg>
-            Refresh
+            {t('refresh')}
           </>
         )}
       </button>

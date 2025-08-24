@@ -1,8 +1,8 @@
+import { UseQueryResult } from '@tanstack/react-query';
 import { RenderResult } from '@testing-library/react';
 import { ReactElement, ReactNode } from 'react';
 import type { Mock } from 'vitest';
-import { ApiResponse } from '@/types/types.ts';
-import { UseQueryResult } from '@tanstack/react-query';
+import { ApiResponse } from '@/types/types';
 
 export type ConsoleError = {
   (...data: []): void;

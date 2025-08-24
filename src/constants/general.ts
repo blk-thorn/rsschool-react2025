@@ -1,0 +1,1 @@
+export const CARD_SKELETON_LINES_COUNT = 4;
