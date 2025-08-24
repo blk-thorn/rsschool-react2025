@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { formSchema, type FormData } from '../utils/validation.ts';
+import { countries } from '../constats/countries.ts';
 
 interface Props {
   onSubmit: (data: FormData) => void;
@@ -18,7 +19,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
     const form: HTMLFormElement = formRef.current;
     const raw = new FormData(form);
 
-    const data = formSchema.safeParse({
+    const data = {
       name: raw.get('name') as string,
       age: Number(raw.get('age')),
       email: raw.get('email') as string,
@@ -28,7 +29,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
       accept: raw.get('accept') === 'on',
       country: raw.get('country') as string,
       picture: preview ?? '',
-    });
+    };
 
     const result = formSchema.safeParse(data);
 
@@ -154,8 +155,15 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         Country
         <input
           name="country"
+          list="countries"
           className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          autoComplete="off"
         />
+        <datalist id="countries">
+          {countries.map((country) => (
+            <option key={country} value={country} />
+          ))}
+        </datalist>
         {errors.country && (
           <p className="text-red-500 text-sm mt-1">{errors.country}</p>
         )}
