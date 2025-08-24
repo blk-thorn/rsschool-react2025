@@ -8,19 +8,19 @@ import {
   resetForm,
 } from '../utils/formUtils';
 import { type FormData } from '../utils/validation';
+import { useActionState } from 'react';
 
 interface Props {
   onSubmit: (data: FormData) => void;
+  onClose: () => void;
 }
 
-export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
+export const UncontrolledForm: React.FC<Props> = ({ onSubmit, onClose }) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-    if (!formRef.current) return;
+  const [errors, formAction, pending] = useActionState(async () => {
+    if (!formRef.current) return {};
 
     const raw = new FormData(formRef.current);
     const data = extractFormData(raw, preview);
@@ -28,79 +28,69 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
     const result = validateFormData(data);
 
     if (!result.success) {
-      setErrors(mapZodErrors(result.error));
-      return;
+      return mapZodErrors(result.error);
     }
 
     onSubmit(result.data);
-    resetForm(formRef, setPreview, setErrors);
-  };
+    onClose();
+    resetForm(formRef, setPreview, () => {});
+    return {};
+  }, {});
 
   return (
     <form
       ref={formRef}
-      onSubmit={handleSubmit}
+      action={formAction}
       className="flex flex-col gap-2 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto"
     >
       <label className="flex flex-col">
         Name
         <input
           name="name"
-          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1"
         />
-        {errors.name && (
-          <p className="text-red-500 text-sm">{errors.name}</p>
-        )}
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </label>
-
       <label className="flex flex-col">
         Age
         <input
           name="age"
           type="number"
-          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1"
         />
-        {errors.age && (
-          <p className="text-red-500 text-sm">{errors.age}</p>
-        )}
+        {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
       </label>
-
       <label className="flex flex-col">
         Email
         <input
           name="email"
           type="email"
-          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1"
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email}</p>
-        )}
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
       </label>
-
       <label className="flex flex-col">
         Password
         <input
           name="password"
           type="password"
-          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1"
         />
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password}</p>
         )}
       </label>
-
       <label className="flex flex-col">
         Confirm Password
         <input
           name="confirmPassword"
           type="password"
-          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1"
         />
         {errors.confirmPassword && (
           <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
         )}
       </label>
-
       <fieldset className="flex flex-col gap-2">
         <legend className="font-medium">Gender</legend>
         <div className="flex gap-4">
@@ -115,13 +105,12 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           <p className="text-red-500 text-sm">{errors.gender}</p>
         )}
       </fieldset>
-
       <label className="flex flex-col">
         Country
         <input
           name="country"
           list="countries"
-          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1"
           autoComplete="off"
         />
         <datalist id="countries">
@@ -133,12 +122,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           <p className="text-red-500 text-sm">{errors.country}</p>
         )}
       </label>
-
       <label className="flex items-center gap-2">
         <input type="checkbox" name="accept" /> Accept Terms
       </label>
       {errors.accept && <p className="text-red-500 text-sm">{errors.accept}</p>}
-
       <label className="flex flex-col">
         Picture
         <div className="flex items-center gap-4">
@@ -157,7 +144,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           id="fileInput"
           type="file"
           accept="image/png,image/jpeg"
-          onChange={(e) => handleFileUpload(e, setPreview, setErrors)}
+          onChange={(e) => handleFileUpload(e, setPreview, () => {})}
           className="hidden"
         />
         {preview && (
@@ -171,12 +158,12 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           <p className="text-red-500 text-sm">{errors.picture}</p>
         )}
       </label>
-
       <button
         type="submit"
-        className="px-4 py-2 rounded text-white font-semibold transition-colors duration-200 bg-green-400 hover:bg-green-500"
+        disabled={pending}
+        className="px-4 py-2 rounded text-white font-semibold transition-colors duration-200 bg-green-400 hover:bg-green-500 disabled:opacity-50"
       >
-        Submit
+        {pending ? 'Submitting...' : 'Submit'}
       </button>
     </form>
   );

@@ -1,4 +1,4 @@
-import React, { type ReactPortal, useEffect, useState } from 'react';
+import React, { type ReactPortal, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 interface ModalProps {
@@ -13,8 +13,9 @@ export const Modal: React.FC<ModalProps> = ({
   children,
 }: ModalProps): ReactPortal | null => {
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
-  useEffect((): (() => void) => {
+  useEffect(() => {
     let root: HTMLElement | null = document.getElementById('modal-root');
     if (!root) {
       root = document.createElement('div');
@@ -33,20 +34,28 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [onClose]);
 
+  useEffect((): void => {
+    if (isOpen) {
+      modalContentRef.current?.focus();
+    }
+  }, [isOpen]);
+
   if (!isOpen || !modalRoot) return null;
 
   return ReactDOM.createPortal(
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-      onClick={onClose}
-    >
+    <>
+      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose} />
       <div
-        className="bg-gray-400 p-4 rounded-xl shadow-xl w-[35%]"
+        ref={modalContentRef}
+        tabIndex={-1}
+        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-400 p-4 rounded-xl shadow-xl w-[35%] outline-none"
         onClick={(e): void => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
       >
         {children}
       </div>
-    </div>,
+    </>,
     modalRoot
   );
 };

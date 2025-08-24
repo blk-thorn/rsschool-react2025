@@ -48,12 +48,18 @@ export const MainPage: React.FC = () => {
 
       <Modal isOpen={modalA} onClose={(): void => setModalA(false)}>
         <h2 className="text-lg font-semibold mb-1">Uncontrolled Form</h2>
-        <UncontrolledForm onSubmit={handleUncontrolledSubmit} />
+        <UncontrolledForm
+          onSubmit={handleUncontrolledSubmit}
+          onClose={(): void => setModalA(false)}
+        />
       </Modal>
 
       <Modal isOpen={modalB} onClose={(): void => setModalB(false)}>
         <h2 className="text-lg font-semibold mb-1">Controlled Form</h2>
-        <ControlledForm onSubmit={handleControlledSubmit} />
+        <ControlledForm
+          onSubmit={handleControlledSubmit}
+          onClose={(): void => setModalB(false)}
+        />
       </Modal>
 
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 mx-auto min-w-[400px]">
