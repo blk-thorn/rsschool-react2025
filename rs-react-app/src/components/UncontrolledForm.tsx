@@ -1,6 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { formSchema, type FormData } from '../utils/validation.ts';
-import { countries } from '../constats/countries.ts';
+import { countries } from '../constats/countries';
+import {
+  handleFileUpload,
+  extractFormData,
+  mapZodErrors,
+  validateFormData,
+  resetForm,
+} from '../utils/formUtils';
+import { type FormData } from '../utils/validation';
 
 interface Props {
   onSubmit: (data: FormData) => void;
@@ -13,76 +20,36 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-
     if (!formRef.current) return;
 
-    const form: HTMLFormElement = formRef.current;
-    const raw = new FormData(form);
+    const raw = new FormData(formRef.current);
+    const data = extractFormData(raw, preview);
 
-    const data = {
-      name: raw.get('name') as string,
-      age: Number(raw.get('age')),
-      email: raw.get('email') as string,
-      password: raw.get('password') as string,
-      confirmPassword: raw.get('confirmPassword') as string,
-      gender: raw.get('gender') as string,
-      accept: raw.get('accept') === 'on',
-      country: raw.get('country') as string,
-      picture: preview ?? '',
-    };
-
-    const result = formSchema.safeParse(data);
+    const result = validateFormData(data);
 
     if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err): void => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
+      setErrors(mapZodErrors(result.error));
       return;
     }
 
     onSubmit(result.data);
-    form.reset();
-    setPreview(null);
-    setErrors({});
-  };
-
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && ['image/png', 'image/jpeg'].includes(file.type)) {
-      const reader = new FileReader();
-      reader.onloadend = (): void => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors.picture;
-        return newErrors;
-      });
-    } else {
-      setErrors((prev) => ({
-        ...prev,
-        picture: 'Only PNG or JPEG files are allowed',
-      }));
-    }
+    resetForm(formRef, setPreview, setErrors);
   };
 
   return (
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 bg-white p-6 rounded-xl shadow-lg max-w-3xl mx-auto"
+      className="flex flex-col gap-4 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto"
     >
       <label className="flex flex-col">
         Name
         <input
           name="name"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.name && (
-          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.name}</p>
         )}
       </label>
 
@@ -91,10 +58,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="age"
           type="number"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.age && (
-          <p className="text-red-500 text-sm mt-1">{errors.age}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.age}</p>
         )}
       </label>
 
@@ -103,10 +70,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="email"
           type="email"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.email}</p>
         )}
       </label>
 
@@ -115,10 +82,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="password"
           type="password"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.password}</p>
         )}
       </label>
 
@@ -127,10 +94,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="confirmPassword"
           type="password"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.confirmPassword && (
-          <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.confirmPassword}</p>
         )}
       </label>
 
@@ -138,16 +105,14 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <legend className="font-medium">Gender</legend>
         <div className="flex gap-4">
           <label className="flex items-center gap-1">
-            <input type="radio" name="gender" value="male" />
-            Male
+            <input type="radio" name="gender" value="male" /> Male
           </label>
           <label className="flex items-center gap-1">
-            <input type="radio" name="gender" value="female" />
-            Female
+            <input type="radio" name="gender" value="female" /> Female
           </label>
         </div>
         {errors.gender && (
-          <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.gender}</p>
         )}
       </fieldset>
 
@@ -156,7 +121,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="country"
           list="countries"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
           autoComplete="off"
         />
         <datalist id="countries">
@@ -165,15 +130,14 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           ))}
         </datalist>
         {errors.country && (
-          <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.country}</p>
         )}
       </label>
 
       <label className="flex items-center gap-2">
-        <input type="checkbox" name="accept" />
-        Accept Terms
+        <input type="checkbox" name="accept" /> Accept Terms
       </label>
-      {errors.accept && <p className="text-red-500 text-sm">{errors.accept}</p>}
+      {errors.accept && <p className="text-sky-500 text-sm">{errors.accept}</p>}
 
       <label className="flex flex-col">
         Picture
@@ -181,7 +145,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           <button
             type="button"
             onClick={() => document.getElementById('fileInput')?.click()}
-            className="px-4 py-2 rounded text-white bg-sky-500"
+            className="px-4 py-2 rounded text-white bg-sky-400 hover:bg-sky-500"
           >
             Choose File
           </button>
@@ -193,7 +157,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           id="fileInput"
           type="file"
           accept="image/png,image/jpeg"
-          onChange={handleFile}
+          onChange={(e) => handleFileUpload(e, setPreview, setErrors)}
           className="hidden"
         />
         {preview && (
@@ -204,13 +168,13 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           />
         )}
         {errors.picture && (
-          <p className="text-red-500 text-sm mt-1">{errors.picture}</p>
+          <p className="text-sky-500 text-sm mt-1">{errors.picture}</p>
         )}
       </label>
 
       <button
         type="submit"
-        className="px-4 py-2 rounded text-white font-semibold transition-colors duration-200 bg-green-500 hover:bg-green-600"
+        className="px-4 py-2 rounded text-white font-semibold transition-colors duration-200 bg-green-400 hover:bg-green-500"
       >
         Submit
       </button>
