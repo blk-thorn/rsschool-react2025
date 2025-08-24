@@ -66,7 +66,7 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto"
+      className="flex flex-col gap-2 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto"
     >
       <label className="flex flex-col">
         Name
@@ -74,10 +74,10 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.name && (
-          <p className="text-sky-500 text-sm mt-1">{errors.name}</p>
+          <p className="text-red-500 text-sm">{errors.name}</p>
         )}
       </label>
 
@@ -88,10 +88,10 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           type="number"
           value={formData.age || ''}
           onChange={handleChange}
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.age && (
-          <p className="text-sky-500 text-sm mt-1">{errors.age}</p>
+          <p className="text-red-500 text-sm">{errors.age}</p>
         )}
       </label>
 
@@ -102,10 +102,10 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.email && (
-          <p className="text-sky-500 text-sm mt-1">{errors.email}</p>
+          <p className="text-red-500 text-sm">{errors.email}</p>
         )}
       </label>
 
@@ -116,10 +116,10 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           type="password"
           value={formData.password}
           onChange={handleChange}
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.password && (
-          <p className="text-sky-500 text-sm mt-1">{errors.password}</p>
+          <p className="text-red-500 text-sm">{errors.password}</p>
         )}
       </label>
 
@@ -130,10 +130,10 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           type="password"
           value={formData.confirmPassword}
           onChange={handleChange}
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.confirmPassword && (
-          <p className="text-sky-500 text-sm mt-1">{errors.confirmPassword}</p>
+          <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
         )}
       </label>
 
@@ -162,7 +162,7 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           </label>
         </div>
         {errors.gender && (
-          <p className="text-sky-500 text-sm mt-1">{errors.gender}</p>
+          <p className="text-red-500 text-sm">{errors.gender}</p>
         )}
       </fieldset>
 
@@ -173,7 +173,7 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           list="countries"
           value={formData.country}
           onChange={handleChange}
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
           autoComplete="off"
         />
         <datalist id="countries">
@@ -182,7 +182,7 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           ))}
         </datalist>
         {errors.country && (
-          <p className="text-sky-500 text-sm mt-1">{errors.country}</p>
+          <p className="text-red-500 text-sm">{errors.country}</p>
         )}
       </label>
 
@@ -195,15 +195,15 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         />
         Accept Terms
       </label>
-      {errors.accept && <p className="text-sky-500 text-sm">{errors.accept}</p>}
+      {errors.accept && <p className="text-red-500 text-sm">{errors.accept}</p>}
 
       <label className="flex flex-col">
         Picture
-        <div className="flex items-center gap-4 mt-1">
+        <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={() => document.getElementById('controlledFile')?.click()}
-            className="px-4 py-2 rounded text-white bg-sky-400 hover:bg-sky-500"
+            className="px-4 py-1 rounded text-white bg-sky-400 hover:bg-sky-500"
           >
             Choose File
           </button>
@@ -226,7 +226,7 @@ export const ControlledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           />
         )}
         {errors.picture && (
-          <p className="text-sky-500 text-sm mt-1">{errors.picture}</p>
+          <p className="text-red-500 text-sm">{errors.picture}</p>
         )}
       </label>
 

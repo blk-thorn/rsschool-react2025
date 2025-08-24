@@ -40,16 +40,16 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto"
+      className="flex flex-col gap-2 bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto"
     >
       <label className="flex flex-col">
         Name
         <input
           name="name"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.name && (
-          <p className="text-sky-500 text-sm mt-1">{errors.name}</p>
+          <p className="text-red-500 text-sm">{errors.name}</p>
         )}
       </label>
 
@@ -58,10 +58,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="age"
           type="number"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.age && (
-          <p className="text-sky-500 text-sm mt-1">{errors.age}</p>
+          <p className="text-red-500 text-sm">{errors.age}</p>
         )}
       </label>
 
@@ -70,10 +70,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="email"
           type="email"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.email && (
-          <p className="text-sky-500 text-sm mt-1">{errors.email}</p>
+          <p className="text-red-500 text-sm">{errors.email}</p>
         )}
       </label>
 
@@ -82,10 +82,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="password"
           type="password"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.password && (
-          <p className="text-sky-500 text-sm mt-1">{errors.password}</p>
+          <p className="text-red-500 text-sm">{errors.password}</p>
         )}
       </label>
 
@@ -94,10 +94,10 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="confirmPassword"
           type="password"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
         />
         {errors.confirmPassword && (
-          <p className="text-sky-500 text-sm mt-1">{errors.confirmPassword}</p>
+          <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
         )}
       </label>
 
@@ -112,7 +112,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           </label>
         </div>
         {errors.gender && (
-          <p className="text-sky-500 text-sm mt-1">{errors.gender}</p>
+          <p className="text-red-500 text-sm">{errors.gender}</p>
         )}
       </fieldset>
 
@@ -121,7 +121,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
         <input
           name="country"
           list="countries"
-          className="border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-sky-300"
           autoComplete="off"
         />
         <datalist id="countries">
@@ -130,22 +130,22 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           ))}
         </datalist>
         {errors.country && (
-          <p className="text-sky-500 text-sm mt-1">{errors.country}</p>
+          <p className="text-red-500 text-sm">{errors.country}</p>
         )}
       </label>
 
       <label className="flex items-center gap-2">
         <input type="checkbox" name="accept" /> Accept Terms
       </label>
-      {errors.accept && <p className="text-sky-500 text-sm">{errors.accept}</p>}
+      {errors.accept && <p className="text-red-500 text-sm">{errors.accept}</p>}
 
       <label className="flex flex-col">
         Picture
-        <div className="flex items-center gap-4 mt-1">
+        <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={() => document.getElementById('fileInput')?.click()}
-            className="px-4 py-2 rounded text-white bg-sky-400 hover:bg-sky-500"
+            className="px-4 py-1 rounded text-white bg-sky-400 hover:bg-sky-500"
           >
             Choose File
           </button>
@@ -168,7 +168,7 @@ export const UncontrolledForm: React.FC<Props> = ({ onSubmit }: Props) => {
           />
         )}
         {errors.picture && (
-          <p className="text-sky-500 text-sm mt-1">{errors.picture}</p>
+          <p className="text-red-500 text-sm">{errors.picture}</p>
         )}
       </label>
 

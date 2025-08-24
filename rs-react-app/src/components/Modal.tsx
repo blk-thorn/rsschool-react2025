@@ -41,7 +41,7 @@ export const Modal: React.FC<ModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="bg-gray-400 p-6 rounded-xl shadow-xl w-[35%]"
+        className="bg-gray-400 p-4 rounded-xl shadow-xl w-[35%]"
         onClick={(e): void => e.stopPropagation()}
       >
         {children}
