@@ -1,15 +1,15 @@
 import { fetchCO2Data } from '../services/fetchData';
 import type { DataSet } from '../types';
 
-function wrapPromise<T>(promise: Promise<T>) {
-  let status = 'pending';
+function wrapPromise<T>(promise: Promise<T>): { read(): T } {
+  let status: string = 'pending';
   let result: T;
-  const suspender = promise.then(
-    (res) => {
+  const suspender: Promise<void> = promise.then(
+    (res: T): void => {
       status = 'success';
       result = res;
     },
-    (err) => {
+    (err): void => {
       status = 'error';
       result = err;
     }
@@ -29,7 +29,7 @@ function wrapPromise<T>(promise: Promise<T>) {
 
 let resource: { read: () => DataSet };
 
-export function useCO2Data() {
+export function useCO2Data(): DataSet {
   if (!resource) {
     resource = wrapPromise(fetchCO2Data());
   }
