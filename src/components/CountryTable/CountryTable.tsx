@@ -1,7 +1,8 @@
 import React, { useState, type JSX } from 'react';
-import type { DataSet, CountryData, YearlyData } from '../../types';
+import type { DataSet } from '../../types';
 import { CountryRow } from './CountryRow';
 import { Modal } from '../Modal/Modal.tsx';
+import { getAllYears, getPopulationAtYear } from '../../utils/utils.ts';
 
 type Props = { data: DataSet };
 
@@ -15,28 +16,6 @@ const allowedRegions: string[] = [
   'Oceania',
   'Antarctica',
 ];
-
-function getAllYears(data: DataSet): number[] {
-  const years = new Set<number>();
-
-  Object.values(data).forEach((country: CountryData) => {
-    country.data.forEach((yearData: YearlyData) => {
-      years.add(yearData.year);
-    });
-  });
-
-  return Array.from(years).sort((a, b) => a - b);
-}
-
-function getPopulationAtYear(
-  country: CountryData,
-  year: number
-): number | undefined {
-  const found: YearlyData | undefined = country.data.find(
-    (d: YearlyData): boolean => d.year === year
-  );
-  return found?.population;
-}
 
 type SortKind = 'name-asc' | 'name-desc' | 'pop-asc' | 'pop-desc';
 
@@ -72,7 +51,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
   }
 
   if (query.trim().length > 0) {
-    const q = query.trim().toLowerCase();
+    const q: string = query.trim().toLowerCase();
     entries = entries.filter(([name]): boolean =>
       name.toLowerCase().includes(q)
     );
