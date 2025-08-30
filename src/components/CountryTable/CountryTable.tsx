@@ -3,6 +3,7 @@ import type { DataSet } from '../../types';
 import { CountryRow } from './CountryRow';
 import { Modal } from '../Modal/Modal.tsx';
 import { getAllYears, getPopulationAtYear } from '../../utils/utils.ts';
+import { SortControl, type SortKind } from '../SortControl/SortControl';
 
 type Props = { data: DataSet };
 
@@ -17,8 +18,6 @@ const allowedRegions: string[] = [
   'Antarctica',
 ];
 
-type SortKind = 'name-asc' | 'name-desc' | 'pop-asc' | 'pop-desc';
-
 export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
   const years: number[] = getAllYears(data);
   const [selectedYear, setSelectedYear] = useState<number>(
@@ -31,7 +30,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
 
   const [region, setRegion] = useState<string>('All');
   const [query, setQuery] = useState<string>('');
-  const [sort, setSort] = useState<SortKind>('name-asc');
+  const [currentSort, setCurrentSort] = useState<SortKind>('name-asc');
 
   const baseColumns = ['year', 'population', 'co2', 'co2_per_capita'] as const;
   const additionalColumns = [
@@ -58,15 +57,15 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
   }
 
   entries.sort(([nameA, countryA], [nameB, countryB]): number => {
-    if (sort === 'name-asc' || sort === 'name-desc') {
+    if (currentSort === 'name-asc' || currentSort === 'name-desc') {
       const cmp: number = nameA.localeCompare(nameB);
-      return sort === 'name-asc' ? cmp : -cmp;
+      return currentSort === 'name-asc' ? cmp : -cmp;
     }
 
     const a: number = getPopulationAtYear(countryA, selectedYear) ?? 0;
     const b: number = getPopulationAtYear(countryB, selectedYear) ?? 0;
 
-    return sort === 'pop-asc' ? a - b : b - a;
+    return currentSort === 'pop-asc' ? a - b : b - a;
   });
 
   return (
@@ -114,19 +113,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <label className="text-slate-800 font-semibold">Sort:</label>
-          <select
-            value={sort}
-            onChange={(e): void => setSort(e.target.value as SortKind)}
-            className="px-2 py-1 rounded border border-slate-600 bg-white text-slate-800"
-          >
-            <option value="name-asc">Name ↑</option>
-            <option value="name-desc">Name ↓</option>
-            <option value="pop-asc">Population ↑</option>
-            <option value="pop-desc">Population ↓</option>
-          </select>
-        </div>
+        <SortControl initialSort={currentSort} onSortChange={setCurrentSort} />
 
         <div className="ml-auto">
           <button
