@@ -5,7 +5,7 @@ Climate Dashboard Performance Report
 ## Quick Overview
 
 I ran an initial performance check using **React DevTools Profiler** to see how my app handles typical user actions.  
-I wanted to understand how long things take when I interact with the app—like sorting the table, searching for a country, switching years, or adding/removing columns—and spot any areas that might be slowing it down.
+I wanted to understand how long things take when I interact with sorting the table, searching for a country, filter regions, switching years, or adding/removing columns—and spot any areas that might be slowing it down.
 
 ---
 
@@ -25,65 +25,80 @@ For each action, I recorded:
 
 ### Action: Sorting the table
 
-- **Commit Duration:** <!-- insert measured time -->
-- **Component Render Duration:** <!-- insert measured time -->
-- **Interaction Captured:** <!-- describe if Profiler captured it -->
+- **Commit Duration:** <!-- 3.3s -->
+- **Component Render Duration:** <!-- 0.7s -->
+- **Interaction Captured:** <!-- Selecting sort option from dropdown -->
 
 #### Visuals:
 
 **Flame Graph:**  
-![Flame Graph Sorting](docs/images/flame-sort-pre.png)
+![Flame Graph Sorting](/public/screenshots/Sort-flame_before.png)
 
 **Ranked Chart:**  
-![Ranked Chart Sorting](docs/images/ranked-sort-pre.png)
+![Ranked Chart Sorting](public/screenshots/Sort-ranked_before.png)
 
 ---
 
 ### Action: Searching for a country
 
-- **Commit Duration:** <!-- insert measured time -->
-- **Component Render Duration:** <!-- insert measured time -->
-- **Interaction Captured:** <!-- describe if Profiler captured it -->
+- **Commit Duration:** <!-- 2.1s -->
+- **Component Render Duration:** <!-- 31.4s -->
+- **Interaction Captured:** <!-- Typing in search field -->
 
 #### Visuals:
 
 **Flame Graph:**  
-![Flame Graph Search](docs/images/flame-search-pre.png)
+![Flame Graph Sorting](/public/screenshots/Searching-flame_before.png)
 
 **Ranked Chart:**  
-![Ranked Chart Search](docs/images/ranked-search-pre.png)
+![Ranked Chart Sorting](public/screenshots/Searching-ranked_before.png)
 
 ---
 
 ### Action: Switching years
 
-- **Commit Duration:** <!-- insert measured time -->
-- **Component Render Duration:** <!-- insert measured time -->
-- **Interaction Captured:** <!-- describe if Profiler captured it -->
+- **Commit Duration:** <!-- 3.3s -->
+- **Component Render Duration:** <!-- 155.5s -->
+- **Interaction Captured:** <!-- Choosing year from dropdown -->
 
 #### Visuals:
 
 **Flame Graph:**  
-![Flame Graph Year](docs/images/flame-year-pre.png)
+![Flame Graph Sorting](/public/screenshots/Yearchange-flame_before.png)
 
 **Ranked Chart:**  
-![Ranked Chart Year](docs/images/ranked-year-pre.png)
+![Ranked Chart Sorting](public/screenshots/Yearchange-ranked_before.png)
 
 ---
 
 ### Action: Adding or removing columns
 
-- **Commit Duration:** <!-- insert measured time -->
-- **Component Render Duration:** <!-- insert measured time -->
-- **Interaction Captured:** <!-- describe if Profiler captured it -->
+- **Commit Duration:** <!-- 1.2s -->
+- **Component Render Duration:** <!-- 147.6s -->
+- **Interaction Captured:** <!-- Checking/unchecking column checkbox -->
 
 #### Visuals:
 
 **Flame Graph:**  
-![Flame Graph Columns](docs/images/flame-columns-pre.png)
+![Flame Graph Sorting](/public/screenshots/Columns-flame_before.png)
 
 **Ranked Chart:**  
-![Ranked Chart Columns](docs/images/ranked-columns-pre.png)
+![Ranked Chart Sorting](public/screenshots/Columns-ranked_before.png)
+
+
+### Action: Filtering by region
+
+- **Commit Duration:** <!-- 3.4s -->
+- **Component Render Duration:** <!-- 36.6s -->
+- **Interaction Captured:** <!-- Selecting region from dropdown -->
+
+#### Visuals:
+
+**Flame Graph:**  
+![Flame Graph Sorting](/public/screenshots/Filter-flame_before.png)
+
+**Ranked Chart:**  
+![Ranked Chart Sorting](public/screenshots/Filter-ranked_before.png)
 
 ---
 
