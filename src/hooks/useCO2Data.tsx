@@ -2,27 +2,29 @@ import { fetchCO2Data } from '../services/fetchData';
 import type { DataSet } from '../types';
 
 function wrapPromise<T>(promise: Promise<T>): { read(): T } {
-  let status: string = 'pending';
+  let status: 'pending' | 'success' | 'error' = 'pending';
   let result: T;
+  let error: unknown;
+
   const suspender: Promise<void> = promise.then(
     (res: T): void => {
       status = 'success';
       result = res;
     },
-    (err): void => {
+    (err: unknown): void => {
       status = 'error';
-      result = err;
+      error = err;
     }
   );
+
   return {
     read(): T {
-      if (status === 'pending') {
-        throw suspender;
-      } else if (status === 'error') {
-        throw result;
-      } else {
-        return result;
+      if (status === 'pending') throw suspender;
+      if (status === 'error') {
+        if (error instanceof Error) throw error;
+        throw new Error(String(error));
       }
+      return result;
     },
   };
 }

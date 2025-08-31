@@ -63,7 +63,11 @@ const CountryRowComponent: React.FC<Props> = ({
       {expanded && (
         <tr>
           <td colSpan={3}>
-            <ExpandedTable data={country.data} columns={columns} />
+            <ExpandedTable
+              data={country.data}
+              columns={columns}
+              expandTrigger={expanded}
+            />
           </td>
         </tr>
       )}

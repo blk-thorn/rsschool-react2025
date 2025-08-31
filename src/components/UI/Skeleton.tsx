@@ -7,9 +7,9 @@ type SkeletonProps = {
 
 export const Skeleton: React.FC<SkeletonProps> = ({
   width = 'w-full',
-  height = 'h-5',
+  height = 'h-[5px]',
 }: SkeletonProps): JSX.Element => (
-  <div
-    className={`bg-gray-300 rounded-md my-2 animate-pulse ${width} ${height}`}
-  ></div>
+  <>
+    <div className={`bg-gray-300 rounded-md my-2 ${width} ${height}`}></div>
+  </>
 );
