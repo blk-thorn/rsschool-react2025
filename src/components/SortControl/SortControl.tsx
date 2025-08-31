@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 
 export type SortKind = 'name-asc' | 'name-desc' | 'pop-asc' | 'pop-desc';
 
@@ -7,11 +7,18 @@ interface SortControlProps {
   onSortChange: (sort: SortKind) => void;
 }
 
-export const SortControl: React.FC<SortControlProps> = ({
+const SortControlComponent: React.FC<SortControlProps> = ({
   initialSort = 'name-asc',
   onSortChange,
 }) => {
   const [internalSort, setInternalSort] = useState<SortKind>(initialSort);
+
+  const handleSortChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>): void => {
+      setInternalSort(e.target.value as SortKind);
+    },
+    []
+  );
 
   useEffect((): void => {
     onSortChange(internalSort);
@@ -22,7 +29,7 @@ export const SortControl: React.FC<SortControlProps> = ({
       <label className="text-slate-800 font-semibold">Sort:</label>
       <select
         value={internalSort}
-        onChange={(e): void => setInternalSort(e.target.value as SortKind)}
+        onChange={handleSortChange}
         className="px-2 py-1 rounded border border-slate-600 bg-white text-slate-800"
       >
         <option value="name-asc">Name ↑</option>
@@ -33,3 +40,5 @@ export const SortControl: React.FC<SortControlProps> = ({
     </div>
   );
 };
+
+export const SortControl = memo(SortControlComponent);
