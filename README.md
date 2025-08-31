@@ -111,3 +111,94 @@ From what I measured:
 - I think I can improve performance by using `React.memo` for components that don’t need to update every time, and `useMemo` for expensive calculations.
 
 > This gives me a baseline to compare after optimizations.
+
+---
+
+## Performance After Optimization
+
+### Action: Sorting the table
+
+- **Commit Duration:** <!-- 1s -->
+- **Component Render Duration:** <!-- 1s -->
+- **Interaction Captured:** <!-- Selecting sort option from dropdown -->
+
+#### Visuals:
+
+**Flame Graph:**  
+![Flame Graph Sorting](/public/screenshots/Sort-flame_after.png)
+
+**Ranked Chart:**  
+![Ranked Chart Sorting](public/screenshots/Sort-ranked_after.png)
+
+---
+
+### Action: Searching for a country
+
+- **Commit Duration:** <!-- 1.6s -->
+- **Component Render Duration:** <!-- 25s -->
+- **Interaction Captured:** <!-- Typing in search field -->
+
+#### Visuals:
+
+**Flame Graph:**  
+![Flame Graph Searching](/public/screenshots/Searching-flame_after.png)
+
+**Ranked Chart:**  
+![Ranked Chart Searching](public/screenshots/Searching-ranked_after.png)
+
+---
+
+### Action: Switching years
+
+- **Commit Duration:** <!-- 1.9s -->
+- **Component Render Duration:** <!-- 146.6s -->
+- **Interaction Captured:** <!-- Choosing year from dropdown -->
+
+#### Visuals:
+
+**Flame Graph:**  
+![Flame Graph Year Change](/public/screenshots/Yearchange-flame_after.png)
+
+**Ranked Chart:**  
+![Ranked Chart Year Change](public/screenshots/Yearchange-ranked_after.png)
+
+---
+
+### Action: Adding or removing columns
+
+- **Commit Duration:** <!-- 1s -->
+- **Component Render Duration:** <!-- 51s -->
+- **Interaction Captured:** <!-- Checking/unchecking column checkbox -->
+
+#### Visuals:
+
+**Flame Graph:**  
+![Flame Graph Columns](/public/screenshots/Columns-flame_after.png)
+
+**Ranked Chart:**  
+![Ranked Chart Columns](public/screenshots/Columns-ranked_after.png)
+
+---
+
+### Action: Filtering by region
+
+- **Commit Duration:** <!-- 1.6s -->
+- **Component Render Duration:** <!-- 29.9s -->
+- **Interaction Captured:** <!-- Selecting region from dropdown -->
+
+#### Visuals:
+
+**Flame Graph:**  
+![Flame Graph Filter](/public/screenshots/Filter-flame_after.png)
+
+**Ranked Chart:**  
+![Ranked Chart Filter](public/screenshots/Filter-ranked_after.png)
+
+---
+
+## Observations After Optimization
+
+- ✅ **Reduced unnecessary re-renders** with `React.memo`.
+- ✅ **Expensive calculations cached** with `useMemo` and `useCallback`.
+
+> Overall, the app seems smoother, with improvements in column toggling, filtering and year switching.  
