@@ -1,4 +1,4 @@
-import React, { type JSX } from 'react';
+import React, { type JSX, useCallback } from 'react';
 
 type Props = {
   available: string[];
@@ -7,19 +7,22 @@ type Props = {
   onClose: () => void;
 };
 
-export const Modal: React.FC<Props> = ({
+const ModalComponent: React.FC<Props> = ({
   available,
   selected,
   onChange,
   onClose,
 }: Props): JSX.Element => {
-  const toggle: (col: string) => void = (col: string): void => {
-    if (selected.includes(col)) {
-      onChange(selected.filter((c: string): boolean => c !== col));
-    } else {
-      onChange([...selected, col]);
-    }
-  };
+  const toggle = useCallback(
+    (col: string): void => {
+      if (selected.includes(col)) {
+        onChange(selected.filter((c: string): boolean => c !== col));
+      } else {
+        onChange([...selected, col]);
+      }
+    },
+    [selected, onChange]
+  );
 
   return (
     <div className="fixed inset-0 bg-slate-800 flex items-center justify-center z-50">
@@ -28,24 +31,20 @@ export const Modal: React.FC<Props> = ({
           Select Additional Columns
         </h2>
         <div className="space-y-2">
-          {available.map(
-            (col: string): JSX.Element => (
-              <label
-                key={col}
-                className="flex items-center space-x-2 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selected.includes(col)}
-                  onChange={(): void => toggle(col)}
-                  className="form-checkbox cursor-pointer"
-                />
-                <span className="text-slate-700">
-                  {col.replaceAll('_', ' ')}
-                </span>
-              </label>
-            )
-          )}
+          {available.map((col: string) => (
+            <label
+              key={col}
+              className="flex items-center space-x-2 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={selected.includes(col)}
+                onChange={(): void => toggle(col)}
+                className="form-checkbox cursor-pointer"
+              />
+              <span className="text-slate-700">{col.replaceAll('_', ' ')}</span>
+            </label>
+          ))}
         </div>
         <div className="mt-6 flex justify-end space-x-3">
           <button
@@ -59,3 +58,5 @@ export const Modal: React.FC<Props> = ({
     </div>
   );
 };
+
+export const Modal = React.memo(ModalComponent);

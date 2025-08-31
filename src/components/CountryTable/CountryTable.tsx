@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, type JSX } from 'react';
-import type { DataSet } from '../../types';
+import React, { useState, useMemo, type JSX } from 'react';
+import type { CountryData, DataSet } from '../../types';
 import { CountryRow } from './CountryRow';
 import { Modal } from '../Modal/Modal.tsx';
 import { getAllYears, getPopulationAtYear } from '../../utils/utils.ts';
@@ -18,11 +18,28 @@ const allowedRegions: string[] = [
   'Antarctica',
 ];
 
+const baseColumns: string[] = ['year', 'population', 'co2', 'co2_per_capita'];
+const additionalColumnsList: string[] = [
+  'methane',
+  'oil_co2',
+  'temperature_change_from_co2',
+  'total_ghg',
+];
+
+const MemoCountryRow = React.memo(CountryRow);
+
 export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
   const years: number[] = useMemo((): number[] => getAllYears(data), [data]);
-  const [selectedYear, setSelectedYear] = useState(
+
+  const [selectedYear, setSelectedYear] = useState<number>(
     years.length ? years[years.length - 1] : FALLBACK_YEAR
   );
+  const [region, setRegion] = useState<string>('All');
+  const [query, setQuery] = useState<string>('');
+  const [currentSort, setCurrentSort] = useState<SortKind>('name-asc');
+  const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
+  const [showSelector, setShowSelector] = useState<boolean>(false);
+
   const regions: string[] = useMemo(
     (): string[] =>
       Object.keys(data).filter((key: string): boolean =>
@@ -30,59 +47,26 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
       ),
     [data]
   );
-  const [region, setRegion] = useState('All');
-  const [query, setQuery] = useState('');
-  const [currentSort, setCurrentSort] = useState<SortKind>('name-asc');
-
-  const baseColumns: string[] = useMemo(
-    (): string[] => ['year', 'population', 'co2', 'co2_per_capita'],
-    []
-  );
-  const additionalColumnsList: string[] = useMemo(
-    (): string[] => [
-      'methane',
-      'oil_co2',
-      'temperature_change_from_co2',
-      'total_ghg',
-    ],
-    []
-  );
-  const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
-  const [showSelector, setShowSelector] = useState(false);
 
   const allColumns: string[] = useMemo(
     (): string[] => [...baseColumns, ...selectedColumns],
-    [baseColumns, selectedColumns]
+    [selectedColumns]
   );
 
-  const handleYearChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>): void =>
-      setSelectedYear(Number(e.target.value)),
-    []
-  );
-  const handleRegionChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>): void =>
-      setRegion(e.target.value),
-    []
-  );
-  const handleQueryChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => setQuery(e.target.value),
-    []
-  );
-  const handleColumnSelectorClose: () => void = useCallback(
-    (): void => setShowSelector(false),
-    []
-  );
-  const handleSortChange = useCallback(
-    (sort: SortKind): void => setCurrentSort(sort),
+  const collator: Intl.Collator = useMemo(
+    (): Intl.Collator => new Intl.Collator(undefined, { sensitivity: 'base' }),
     []
   );
 
-  const filteredEntries = useMemo(() => {
-    let entries = Object.entries(data);
+  const filteredEntries: [string, CountryData][] = useMemo(() => {
+    let entries: [string, CountryData][] = Object.entries(data) as [
+      string,
+      CountryData,
+    ][];
 
-    if (region !== 'All')
+    if (region !== 'All') {
       entries = entries.filter(([name]): boolean => name === region);
+    }
 
     if (query.trim()) {
       const q: string = query.trim().toLowerCase();
@@ -91,18 +75,25 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
       );
     }
 
-    entries.sort(([nameA, countryA], [nameB, countryB]): number => {
-      if (currentSort === 'name-asc' || currentSort === 'name-desc') {
-        const cmp: number = nameA.localeCompare(nameB);
-        return currentSort === 'name-asc' ? cmp : -cmp;
-      }
-      const a: number = getPopulationAtYear(countryA, selectedYear) ?? 0;
-      const b: number = getPopulationAtYear(countryB, selectedYear) ?? 0;
-      return currentSort === 'pop-asc' ? a - b : b - a;
-    });
+    switch (currentSort) {
+      case 'name-asc':
+        entries.sort(([a], [b]): number => collator.compare(a, b));
+        break;
+      case 'name-desc':
+        entries.sort(([a], [b]): number => collator.compare(b, a));
+        break;
+      case 'pop-asc':
+      case 'pop-desc':
+        entries.sort(([, a], [, b]): number => {
+          const pa: number = getPopulationAtYear(a, selectedYear) ?? 0;
+          const pb: number = getPopulationAtYear(b, selectedYear) ?? 0;
+          return currentSort === 'pop-asc' ? pa - pb : pb - pa;
+        });
+        break;
+    }
 
     return entries;
-  }, [data, region, query, currentSort, selectedYear]);
+  }, [data, region, query, currentSort, selectedYear, collator]);
 
   return (
     <div className="overflow-x-auto mt-4">
@@ -111,7 +102,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
           <label className="text-slate-800 font-semibold">Year:</label>
           <select
             value={selectedYear}
-            onChange={handleYearChange}
+            onChange={(e): void => setSelectedYear(Number(e.target.value))}
             className="px-2 py-1 rounded border border-slate-600 bg-white text-slate-800"
           >
             {years.map((year: number) => (
@@ -126,7 +117,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
           <label className="text-slate-800 font-semibold">Region:</label>
           <select
             value={region}
-            onChange={handleRegionChange}
+            onChange={(e): void => setRegion(e.target.value)}
             className="px-2 py-1 rounded border border-slate-600 bg-white text-slate-800"
           >
             <option value="All">All</option>
@@ -143,7 +134,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
           <input
             type="text"
             value={query}
-            onChange={handleQueryChange}
+            onChange={(e): void => setQuery(e.target.value)}
             placeholder="Country name…"
             className="px-2 py-1 rounded border border-slate-600 bg-white text-slate-800"
           />
@@ -151,7 +142,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
 
         <SortControl
           initialSort={currentSort}
-          onSortChange={handleSortChange}
+          onSortChange={(sort: SortKind): void => setCurrentSort(sort)}
         />
 
         <div className="ml-auto">
@@ -174,7 +165,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
         </thead>
         <tbody>
           {filteredEntries.map(([name, country]) => (
-            <CountryRow
+            <MemoCountryRow
               key={name}
               name={name}
               country={country}
@@ -190,7 +181,7 @@ export const CountryTable: React.FC<Props> = ({ data }: Props): JSX.Element => {
           available={[...additionalColumnsList]}
           selected={selectedColumns}
           onChange={setSelectedColumns}
-          onClose={handleColumnSelectorClose}
+          onClose={(): void => setShowSelector(false)}
         />
       )}
     </div>
